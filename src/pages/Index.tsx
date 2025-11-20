@@ -2,7 +2,7 @@ import { DashboardHeader } from "@/components/DashboardHeader";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { FilterBar } from "@/components/FilterBar";
 import { StatCard } from "@/components/StatCard";
-import { SalesPerformanceChart } from "@/components/SalesPerformanceChart";
+import { SalesJourneyChart } from "@/components/SalesJourneyChart";
 import { FollowUpTasks } from "@/components/FollowUpTasks";
 import { LeadStatusGrid } from "@/components/LeadStatusGrid";
 import { PipelineSnapshot } from "@/components/PipelineSnapshot";
@@ -37,6 +37,9 @@ const Index = () => {
 
             {/* Filters */}
             <FilterBar />
+
+            {/* Follow-up Tasks - Priority Section */}
+            <FollowUpTasks />
 
             {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -89,14 +92,11 @@ const Index = () => {
               />
             </div>
 
-            {/* Sales Performance & Lead Status */}
+            {/* Sales Journey & Lead Status */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <SalesPerformanceChart />
+              <SalesJourneyChart />
               <LeadStatusGrid />
             </div>
-
-            {/* Follow-up Tasks */}
-            <FollowUpTasks />
 
             {/* Pipeline Snapshot */}
             <PipelineSnapshot />
