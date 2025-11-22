@@ -11,10 +11,10 @@ import {
 import { NavLink } from "@/components/NavLink";
 
 const menuItems = [
-  { title: "Dashboard", icon: LayoutDashboard, url: "/" },
+  { title: "Sales Dashboard", icon: LayoutDashboard, url: "/" },
+  { title: "Account Management", icon: Building2, url: "/account-management" },
   { title: "Leads", icon: UserPlus, url: "/leads" },
   { title: "Contacts", icon: Users, url: "/contacts" },
-  { title: "Accounts", icon: Building2, url: "/accounts" },
   { title: "Deals", icon: TrendingUp, url: "/deals" },
   { title: "Tasks", icon: CheckSquare, url: "/tasks" },
   { title: "Reports", icon: BarChart3, url: "/reports" },
