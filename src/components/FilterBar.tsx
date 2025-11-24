@@ -1,4 +1,4 @@
-import { Calendar, Filter, Users } from "lucide-react";
+import { Calendar, Filter, Users, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -9,24 +9,23 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-const dateRanges = ["Today", "This Week", "This Month", "This Quarter"];
+const dateRanges = ["Today", "This Week", "This Month", "This Quarter", "Custom"];
 
 export const FilterBar = () => {
   return (
     <div className="bg-card border rounded-lg p-4 mb-6">
       <div className="flex flex-wrap items-center gap-4">
-        {/* Team/Owner Filter */}
+        {/* Lead Type Filter */}
         <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-muted-foreground" />
+          <Database className="w-4 h-4 text-muted-foreground" />
           <Select defaultValue="all">
-            <SelectTrigger className="w-[140px] bg-background">
+            <SelectTrigger className="w-[160px] bg-background">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-popover">
-              <SelectItem value="all">All Team</SelectItem>
-              <SelectItem value="my">My Leads</SelectItem>
-              <SelectItem value="team1">Team Alpha</SelectItem>
-              <SelectItem value="team2">Team Beta</SelectItem>
+              <SelectItem value="all">All Leads</SelectItem>
+              <SelectItem value="inbound">Inbound Only</SelectItem>
+              <SelectItem value="outbound">Outbound Only</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -47,19 +46,38 @@ export const FilterBar = () => {
           </div>
         </div>
 
-        {/* Pipeline Filter */}
+        {/* Source Filter */}
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-muted-foreground" />
           <Select defaultValue="all">
-            <SelectTrigger className="w-[160px] bg-background">
+            <SelectTrigger className="w-[180px] bg-background">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-popover">
-              <SelectItem value="all">All Pipelines</SelectItem>
-              <SelectItem value="inbound">Inbound</SelectItem>
-              <SelectItem value="outbound">Outbound</SelectItem>
-              <SelectItem value="enterprise">Enterprise</SelectItem>
-              <SelectItem value="smb">SMB</SelectItem>
+              <SelectItem value="all">All Sources</SelectItem>
+              <SelectItem value="website">Website</SelectItem>
+              <SelectItem value="signup">Signup Form</SelectItem>
+              <SelectItem value="cold-email">Cold Email</SelectItem>
+              <SelectItem value="cold-call">Cold Call</SelectItem>
+              <SelectItem value="linkedin">LinkedIn</SelectItem>
+              <SelectItem value="referral">Referral</SelectItem>
+              <SelectItem value="events">Events</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Owner Filter */}
+        <div className="flex items-center gap-2">
+          <Users className="w-4 h-4 text-muted-foreground" />
+          <Select defaultValue="my">
+            <SelectTrigger className="w-[140px] bg-background">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-popover">
+              <SelectItem value="my">My Leads</SelectItem>
+              <SelectItem value="all">All Team</SelectItem>
+              <SelectItem value="rajesh">Rajesh Kumar</SelectItem>
+              <SelectItem value="priya">Priya Sharma</SelectItem>
             </SelectContent>
           </Select>
         </div>
