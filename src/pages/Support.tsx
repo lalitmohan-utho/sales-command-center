@@ -10,6 +10,8 @@ import { SLAMetrics } from "@/components/SLAMetrics";
 import { TicketListTable } from "@/components/TicketListTable";
 import { ShiftHandover } from "@/components/ShiftHandover";
 import { SupportExperience } from "@/components/SupportExperience";
+import { AgentScorecardGrid } from "@/components/AgentScorecardGrid";
+import { AgentComparisonChart } from "@/components/AgentComparisonChart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Support = () => {
@@ -46,6 +48,12 @@ const Support = () => {
 
                 {/* Status & Severity Overview */}
                 <TicketStatusOverview />
+
+                {/* Agent Performance Scorecards */}
+                <AgentScorecardGrid />
+
+                {/* Agent Comparison Chart */}
+                <AgentComparisonChart />
 
                 {/* Team Performance */}
                 <AgentPerformanceTable />
