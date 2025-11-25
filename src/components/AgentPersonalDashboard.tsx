@@ -1,6 +1,7 @@
 import { StatCard } from "@/components/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { SupportScorecard } from "@/components/SupportScorecard";
 import {
   Inbox,
   CheckCircle2,
@@ -125,12 +126,45 @@ const severityColors: Record<string, string> = {
   Low: "outline",
 };
 
+const myPersonalScorecard = {
+  name: "Amit Kumar",
+  role: "L2 Support Engineer",
+  score: 85,
+  avgAllocationTime: 8,
+  avgFirstResponseTime: 14,
+  avgResolutionTime: 228,
+  allocationTarget: 10,
+  frtTarget: 15,
+  artTarget: 240,
+  ticketsHandled: 42,
+  ticketsResolved: 38,
+  ticketsReopened: 3,
+  reopenRate: 7.9,
+  slaBreaches: 2,
+  csat: 4.7,
+  frtTrend: "stable" as const,
+  artTrend: "down" as const,
+  warnings: [],
+  ticketJourney: {
+    waitingAssignment: 8,
+    assignedNoResponse: 12,
+    activeWork: 180,
+    waitingCustomer: 20,
+    resolved: 8,
+  },
+};
+
 export const AgentPersonalDashboard = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-foreground">
         My Personal Dashboard
       </h2>
+
+      {/* Personal Performance Scorecard */}
+      <div className="max-w-2xl">
+        <SupportScorecard agent={myPersonalScorecard} />
+      </div>
 
       {/* Personal KPI Strip */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
