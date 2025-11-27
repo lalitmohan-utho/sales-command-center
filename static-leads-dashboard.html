@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Generation Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; }
+        .sidebar { width: 240px; background: #1a1a1a; color: white; min-height: 100vh; position: fixed; }
+        .main-content { margin-left: 240px; background: #f8f9fa; min-height: 100vh; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stat-card { text-align: center; }
+        .stat-value { font-size: 32px; font-weight: bold; color: #1a1a1a; }
+        .stat-label { font-size: 14px; color: #666; margin-top: 8px; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+        .nav-link { padding: 12px 20px; display: block; color: #ccc; text-decoration: none; transition: all 0.2s; }
+        .nav-link:hover, .nav-link.active { background: #2a2a2a; color: white; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f8f9fa; font-weight: 600; font-size: 14px; }
+        .header { background: white; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; }
+        .filter-bar { background: white; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; flex-wrap: wrap; }
+        select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; }
+        .funnel-step { background: #e5e7eb; padding: 16px; margin: 8px 0; border-radius: 6px; position: relative; }
+        .funnel-step::before { content: '↓'; position: absolute; left: 50%; transform: translateX(-50%); bottom: -20px; font-size: 20px; color: #9ca3af; }
+        .funnel-step:last-child::before { display: none; }
+        .status-not-called { background: #f3f4f6; color: #374151; }
+        .status-invalid { background: #fee2e2; color: #991b1b; }
+        .status-no-answer { background: #fef3c7; color: #92400e; }
+        .status-not-interested { background: #fecaca; color: #991b1b; }
+        .status-meeting { background: #d1fae5; color: #065f46; }
+        .status-followup { background: #dbeafe; color: #1e40af; }
+        .status-dnc { background: #e5e7eb; color: #374151; }
+        .status-callback { background: #fbcfe8; color: #831843; }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div style="padding: 20px; border-bottom: 1px solid #2a2a2a;">
+            <h2 style="margin: 0; font-size: 20px;">Utho CRM</h2>
+        </div>
+        <nav>
+            <a href="static-sales-dashboard.html" class="nav-link">📊 Sales Dashboard</a>
+            <a href="#" class="nav-link active">🎯 Leads</a>
+            <a href="static-account-management.html" class="nav-link">👥 Accounts</a>
+            <a href="static-support-dashboard.html" class="nav-link">🎧 Support</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 style="margin: 0; font-size: 24px;">Lead Generation Dashboard</h1>
+            <p style="margin: 4px 0 0 0; color: #666;">Inbound + Outbound performance and pipeline visibility</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <select><option>All Leads</option><option>Inbound Only</option><option>Outbound Only</option></select>
+            <select><option>This Week</option><option>This Month</option><option>This Quarter</option></select>
+            <select><option>All Sources</option><option>Website</option><option>Cold Call</option><option>Email</option></select>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 24px;">
+            <!-- Global KPI Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                <div class="card stat-card">
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">Total Leads</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">842</div>
+                    <div class="stat-label">Called Leads</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">456</div>
+                    <div class="stat-label">Connected</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">124</div>
+                    <div class="stat-label">Meetings Scheduled</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">98</div>
+                    <div class="stat-label">Meetings Attended</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value">67</div>
+                    <div class="stat-label">Qualified Leads</div>
+                </div>
+            </div>
+
+            <!-- Inbound Section -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px;">📥 Inbound Leads (Website Signups)</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                    <div style="text-align: center; padding: 12px; background: #f9fafb; border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold;">482</div>
+                        <div style="font-size: 12px; color: #666;">Total Signups</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: #f9fafb; border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold;">398</div>
+                        <div style="font-size: 12px; color: #666;">Verified</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: #f9fafb; border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold;">245</div>
+                        <div style="font-size: 12px; color: #666;">Contacted</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: #f9fafb; border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold;">87</div>
+                        <div style="font-size: 12px; color: #666;">Meetings</div>
+                    </div>
+                </div>
+                <div style="max-width: 600px;">
+                    <div class="funnel-step" style="width: 100%;">
+                        <strong>Signup</strong> - 482 (100%)
+                    </div>
+                    <div class="funnel-step" style="width: 82%; margin-left: 9%;">
+                        <strong>Contacted</strong> - 398 (82.6%)
+                    </div>
+                    <div class="funnel-step" style="width: 64%; margin-left: 18%;">
+                        <strong>Connected</strong> - 310 (64.3%)
+                    </div>
+                    <div class="funnel-step" style="width: 46%; margin-left: 27%;">
+                        <strong>Meeting Scheduled</strong> - 87 (18%)
+                    </div>
+                    <div class="funnel-step" style="width: 28%; margin-left: 36%; background: #dcfce7;">
+                        <strong>Qualified</strong> - 42 (8.7%)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outbound Section -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px;">📤 Outbound Leads (Cold Outreach)</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                    <div style="text-align: center; padding: 12px; background: #f9fafb; border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold;">765</div>
+                        <div style="font-size: 12px; color: #666;">Data Assigned</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: #f9fafb; border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold;">1,248</div>
+                        <div style="font-size: 12px; color: #666;">Cold Calls</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: #f9fafb; border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold;">562</div>
+                        <div style="font-size: 12px; color: #666;">Emails Sent</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: #f9fafb; border-radius: 6px;">
+                        <div style="font-size: 24px; font-weight: bold;">37</div>
+                        <div style="font-size: 12px; color: #666;">Meetings</div>
+                    </div>
+                </div>
+                <canvas id="outboundChart" style="max-height: 200px;"></canvas>
+            </div>
+
+            <!-- Lead Status Overview -->
+            <div class="card" style="margin-bottom: 24px;">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px;">Lead Status Distribution</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                    <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px;">
+                        <span class="badge status-not-called">Not Called</span>
+                        <div style="margin-top: 8px;"><strong>142</strong> <span style="color: #666; font-size: 12px;">(11.4%)</span></div>
+                    </div>
+                    <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px;">
+                        <span class="badge status-no-answer">Called – No Answer</span>
+                        <div style="margin-top: 8px;"><strong>284</strong> <span style="color: #666; font-size: 12px;">(22.8%)</span></div>
+                    </div>
+                    <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px;">
+                        <span class="badge status-meeting">Meeting Scheduled</span>
+                        <div style="margin-top: 8px;"><strong>124</strong> <span style="color: #666; font-size: 12px;">(9.9%)</span></div>
+                    </div>
+                    <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px;">
+                        <span class="badge status-followup">Follow-up Required</span>
+                        <div style="margin-top: 8px;"><strong>198</strong> <span style="color: #666; font-size: 12px;">(15.9%)</span></div>
+                    </div>
+                    <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px;">
+                        <span class="badge status-not-interested">Not Interested</span>
+                        <div style="margin-top: 8px;"><strong>356</strong> <span style="color: #666; font-size: 12px;">(28.5%)</span></div>
+                    </div>
+                    <div style="padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px;">
+                        <span class="badge status-callback">Callback Requested</span>
+                        <div style="margin-top: 8px;"><strong>67</strong> <span style="color: #666; font-size: 12px;">(5.4%)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lead List -->
+            <div class="card">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px;">Lead Database</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Lead Name</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Agent</th>
+                            <th>Last Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge" style="background: #dbeafe; color: #1e40af;">Inbound</span></td>
+                            <td><strong>Rajesh Kumar</strong></td>
+                            <td>TechCorp Solutions</td>
+                            <td><span class="badge status-meeting">Meeting Scheduled</span></td>
+                            <td>Priya Singh</td>
+                            <td>2 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge" style="background: #fef3c7; color: #92400e;">Outbound</span></td>
+                            <td><strong>Amit Sharma</strong></td>
+                            <td>DataFlow Inc</td>
+                            <td><span class="badge status-followup">Follow-up Required</span></td>
+                            <td>Rahul Verma</td>
+                            <td>1 day ago</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge" style="background: #dbeafe; color: #1e40af;">Inbound</span></td>
+                            <td><strong>Sneha Patel</strong></td>
+                            <td>CloudNine Systems</td>
+                            <td><span class="badge status-not-called">Not Called</span></td>
+                            <td>Unassigned</td>
+                            <td>3 hours ago</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge" style="background: #fef3c7; color: #92400e;">Outbound</span></td>
+                            <td><strong>Vikram Singh</strong></td>
+                            <td>Enterprise Solutions</td>
+                            <td><span class="badge status-no-answer">Called – No Answer</span></td>
+                            <td>Amit Patel</td>
+                            <td>5 hours ago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Outbound Activity Chart
+        const outboundCtx = document.getElementById('outboundChart').getContext('2d');
+        new Chart(outboundCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                datasets: [{
+                    label: 'Calls',
+                    data: [220, 185, 245, 198, 234, 166],
+                    backgroundColor: '#3b82f6'
+                }, {
+                    label: 'Emails',
+                    data: [95, 82, 108, 76, 118, 83],
+                    backgroundColor: '#8b5cf6'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { position: 'bottom' } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    </script>
+</body>
+</html>
