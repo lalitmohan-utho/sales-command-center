@@ -8,6 +8,7 @@ import {
   BarChart3,
   Settings,
   Headphones,
+  Receipt,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 
@@ -16,6 +17,7 @@ const menuItems = [
   { title: "Account Management", icon: Building2, url: "/account-management" },
   { title: "Leads", icon: UserPlus, url: "/leads" },
   { title: "Support", icon: Headphones, url: "/support" },
+  { title: "Billing & Finance", icon: Receipt, url: "/billing" },
   { title: "Contacts", icon: Users, url: "/contacts" },
   { title: "Deals", icon: TrendingUp, url: "/deals" },
   { title: "Tasks", icon: CheckSquare, url: "/tasks" },
