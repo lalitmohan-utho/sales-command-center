@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            width: 250px;
+            padding: 20px;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .health-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .health-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .health-high { background-color: #10b981; }
+        .health-medium { background-color: #f59e0b; }
+        .health-low { background-color: #ef4444; }
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .renewal-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .renewal-upcoming { background: #fef3c7; color: #92400e; }
+        .renewal-at-risk { background: #fee2e2; color: #991b1b; }
+        .renewal-safe { background: #d1fae5; color: #065f46; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h4 class="mb-4">CRM Dashboard</h4>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="sales-dashboard.html"><i class="bi bi-graph-up me-2"></i> Sales Dashboard</a>
+            <a class="nav-link" href="leads-dashboard.html"><i class="bi bi-people me-2"></i> Leads</a>
+            <a class="nav-link active" href="#"><i class="bi bi-briefcase me-2"></i> Account Management</a>
+            <a class="nav-link" href="support-dashboard.html"><i class="bi bi-headset me-2"></i> Support</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Account Management Dashboard</h2>
+            <select class="form-select w-auto" id="periodFilter">
+                <option value="month" selected>This Month</option>
+                <option value="quarter">This Quarter</option>
+                <option value="year">This Year</option>
+            </select>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="row" id="amKPIs">
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary"></div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="chart-container">
+                    <h5 class="mb-3">Revenue & Renewals Trend</h5>
+                    <canvas id="revenueTrendChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h5 class="mb-3">Account Health Distribution</h5>
+                    <canvas id="healthChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounts At Risk Table -->
+        <div class="table-container mt-4">
+            <h5 class="mb-3">Accounts Requiring Attention</h5>
+            <div class="table-responsive">
+                <table class="table table-hover" id="accountsTable">
+                    <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Health Score</th>
+                            <th>ARR</th>
+                            <th>Renewal Date</th>
+                            <th>CSM</th>
+                            <th>Risk Level</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'account-management-api.php';
+        let revenueTrendChart = null;
+        let healthChart = null;
+
+        async function fetchAccountData(period) {
+            try {
+                const response = await fetch(`${API_BASE_URL}?period=${period}`);
+                const data = await response.json();
+                
+                renderKPIs(data.kpis);
+                renderRevenueTrend(data.revenueTrend);
+                renderHealthChart(data.healthDistribution);
+                renderAccountsTable(data.accounts);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function renderKPIs(kpis) {
+            const container = document.getElementById('amKPIs');
+            container.innerHTML = kpis.map(kpi => `
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card">
+                        <div class="text-muted small mb-2">${kpi.label}</div>
+                        <h3 class="mb-0">${kpi.value}</h3>
+                        <small class="text-${kpi.trend >= 0 ? 'success' : 'danger'}">
+                            <i class="bi bi-${kpi.trend >= 0 ? 'arrow-up' : 'arrow-down'}"></i>
+                            ${Math.abs(kpi.trend)}%
+                        </small>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderRevenueTrend(data) {
+            const ctx = document.getElementById('revenueTrendChart').getContext('2d');
+            if (revenueTrendChart) revenueTrendChart.destroy();
+            
+            revenueTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'MRR',
+                        data: data.mrr,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Renewals',
+                        data: data.renewals,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function renderHealthChart(data) {
+            const ctx = document.getElementById('healthChart').getContext('2d');
+            if (healthChart) healthChart.destroy();
+            
+            healthChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        data: data.values,
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function renderAccountsTable(accounts) {
+            const tbody = document.querySelector('#accountsTable tbody');
+            tbody.innerHTML = accounts.map(acc => `
+                <tr>
+                    <td><strong>${acc.name}</strong></td>
+                    <td>
+                        <span class="health-score">
+                            <span class="health-dot health-${acc.healthClass}"></span>
+                            ${acc.healthScore}
+                        </span>
+                    </td>
+                    <td>₹${acc.arr.toLocaleString()}</td>
+                    <td>${acc.renewalDate}</td>
+                    <td>${acc.csm}</td>
+                    <td><span class="renewal-badge renewal-${acc.riskClass}">${acc.riskLevel}</span></td>
+                    <td><button class="btn btn-sm btn-outline-primary">Review</button></td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('periodFilter').addEventListener('change', (e) => {
+            fetchAccountData(e.target.value);
+        });
+
+        fetchAccountData('month');
+    </script>
+</body>
+</html>
