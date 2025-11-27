@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Operations Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; }
+        .sidebar { width: 240px; background: #1a1a1a; color: white; min-height: 100vh; position: fixed; }
+        .main-content { margin-left: 240px; background: #f8f9fa; min-height: 100vh; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stat-card { text-align: center; }
+        .stat-value { font-size: 32px; font-weight: bold; color: #1a1a1a; }
+        .stat-label { font-size: 14px; color: #666; margin-top: 8px; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+        .badge-critical { background: #fee2e2; color: #991b1b; }
+        .badge-high { background: #fed7aa; color: #92400e; }
+        .badge-medium { background: #dbeafe; color: #1e40af; }
+        .badge-low { background: #e5e7eb; color: #374151; }
+        .nav-link { padding: 12px 20px; display: block; color: #ccc; text-decoration: none; transition: all 0.2s; }
+        .nav-link:hover, .nav-link.active { background: #2a2a2a; color: white; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f8f9fa; font-weight: 600; font-size: 14px; }
+        .header { background: white; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; }
+        .filter-bar { background: white; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; flex-wrap: wrap; }
+        select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; }
+        .scorecard { border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; }
+        .score-gauge { width: 120px; height: 120px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; }
+        .score-excellent { border: 4px solid #22c55e; background: #dcfce7; }
+        .score-attention { border: 4px solid #f59e0b; background: #fef3c7; }
+        .score-critical { border: 4px solid #ef4444; background: #fee2e2; }
+        .progress-bar { width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #3b82f6; }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div style="padding: 20px; border-bottom: 1px solid #2a2a2a;">
+            <h2 style="margin: 0; font-size: 20px;">Utho CRM</h2>
+        </div>
+        <nav>
+            <a href="static-sales-dashboard.html" class="nav-link">📊 Sales Dashboard</a>
+            <a href="static-leads-dashboard.html" class="nav-link">🎯 Leads</a>
+            <a href="static-account-management.html" class="nav-link">👥 Accounts</a>
+            <a href="#" class="nav-link active">🎧 Support</a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 style="margin: 0; font-size: 24px;">Support Operations Dashboard</h1>
+            <p style="margin: 4px 0 0 0; color: #666;">Real-time view of tickets, SLAs, and quality</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <select><option>Last 24h</option><option>Last 7 days</option><option>This Month</option></select>
+            <select><option>All Queues</option><option>Technical</option><option>Billing</option></select>
+            <select><option>All Severity</option><option>Critical</option><option>High</option></select>
+            <select><option>All Agents</option><option>Amit Kumar</option><option>Priya Singh</option></select>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 24px;">
+            <!-- Tabs -->
+            <div style="margin-bottom: 24px; border-bottom: 2px solid #e5e7eb;">
+                <button onclick="showView('manager')" id="managerTab" style="padding: 12px 24px; border: none; background: none; font-weight: 600; color: #3b82f6; border-bottom: 2px solid #3b82f6; margin-bottom: -2px; cursor: pointer;">Manager View</button>
+                <button onclick="showView('agent')" id="agentTab" style="padding: 12px 24px; border: none; background: none; font-weight: 600; color: #666; cursor: pointer;">Agent View</button>
+            </div>
+
+            <!-- Manager View -->
+            <div id="managerView">
+                <!-- Global KPI Cards -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                    <div class="card stat-card">
+                        <div class="stat-value">156</div>
+                        <div class="stat-label">Open Tickets</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">New (24h)</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value">38</div>
+                        <div class="stat-label">Resolved</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Reopened</div>
+                        <div style="color: #ef4444; font-size: 12px; margin-top: 8px;">18.4% rate</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">SLA Breaches</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value">14m</div>
+                        <div class="stat-label">Avg FRT</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value">3.8h</div>
+                        <div class="stat-label">Avg Resolution</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-value">4.6</div>
+                        <div class="stat-label">CSAT</div>
+                    </div>
+                </div>
+
+                <!-- Ticket Status Overview -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <h3 style="margin: 0 0 16px 0; font-size: 18px;">Ticket Status Distribution</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                        <div style="padding: 16px; background: #f9fafb; border-radius: 6px; border-left: 4px solid #3b82f6;">
+                            <div style="font-size: 24px; font-weight: bold;">42</div>
+                            <div style="font-size: 14px; color: #666;">New / Unassigned</div>
+                        </div>
+                        <div style="padding: 16px; background: #f9fafb; border-radius: 6px; border-left: 4px solid #8b5cf6;">
+                            <div style="font-size: 24px; font-weight: bold;">68</div>
+                            <div style="font-size: 14px; color: #666;">In Progress</div>
+                        </div>
+                        <div style="padding: 16px; background: #f9fafb; border-radius: 6px; border-left: 4px solid #f59e0b;">
+                            <div style="font-size: 24px; font-weight: bold;">28</div>
+                            <div style="font-size: 14px; color: #666;">Pending Customer</div>
+                        </div>
+                        <div style="padding: 16px; background: #f9fafb; border-radius: 6px; border-left: 4px solid #22c55e;">
+                            <div style="font-size: 24px; font-weight: bold;">38</div>
+                            <div style="font-size: 14px; color: #666;">Resolved</div>
+                        </div>
+                        <div style="padding: 16px; background: #f9fafb; border-radius: 6px; border-left: 4px solid #ef4444;">
+                            <div style="font-size: 24px; font-weight: bold;">7</div>
+                            <div style="font-size: 14px; color: #666;">Reopened</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Performance Scorecards -->
+                <div style="margin-bottom: 24px;">
+                    <h3 style="margin: 0 0 16px 0; font-size: 18px;">Agent Performance Scorecards</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        <!-- Scorecard 1 -->
+                        <div class="scorecard">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                <div>
+                                    <h4 style="margin: 0; font-size: 16px;">Amit Kumar</h4>
+                                    <span class="badge" style="background: #dbeafe; color: #1e40af; margin-top: 4px;">L2</span>
+                                </div>
+                            </div>
+                            <div class="score-gauge score-excellent">
+                                <div style="font-size: 36px; font-weight: bold; color: #22c55e;">85</div>
+                                <div style="font-size: 12px; color: #22c55e;">Excellent</div>
+                            </div>
+                            <div style="margin-top: 20px; space-y: 12px;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                        <span>Avg Allocation: 8m</span>
+                                        <span style="color: #666;">Target: &lt;10m</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 80%; background: #22c55e;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                        <span>Avg FRT: 14m</span>
+                                        <span style="color: #666;">Target: &lt;15m</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 93%; background: #22c55e;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                        <span>Avg Resolution: 3.8h</span>
+                                        <span style="color: #666;">Target: &lt;4h</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 95%; background: #22c55e;"></div></div>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px;">
+                                <div style="text-align: center; padding: 8px; background: #f9fafb; border-radius: 6px;">
+                                    <div style="font-size: 20px; font-weight: bold;">42</div>
+                                    <div style="font-size: 11px; color: #666;">Handled</div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: #f9fafb; border-radius: 6px;">
+                                    <div style="font-size: 20px; font-weight: bold;">38</div>
+                                    <div style="font-size: 11px; color: #666;">Resolved</div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: #f9fafb; border-radius: 6px;">
+                                    <div style="font-size: 20px; font-weight: bold; color: #ef4444;">3</div>
+                                    <div style="font-size: 11px; color: #666;">Reopened</div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: #f9fafb; border-radius: 6px;">
+                                    <div style="font-size: 20px; font-weight: bold;">4.7★</div>
+                                    <div style="font-size: 11px; color: #666;">CSAT</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scorecard 2 -->
+                        <div class="scorecard">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                <div>
+                                    <h4 style="margin: 0; font-size: 16px;">Priya Singh</h4>
+                                    <span class="badge" style="background: #dbeafe; color: #1e40af; margin-top: 4px;">L1</span>
+                                </div>
+                                <svg width="20" height="20" fill="#f59e0b" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                            </div>
+                            <div class="score-gauge score-attention">
+                                <div style="font-size: 36px; font-weight: bold; color: #f59e0b;">62</div>
+                                <div style="font-size: 12px; color: #f59e0b;">Needs Attention</div>
+                            </div>
+                            <div style="margin-top: 20px; space-y: 12px;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                        <span>Avg Allocation: 10m</span>
+                                        <span style="color: #666;">Target: &lt;10m</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: #f59e0b;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                        <span>Avg FRT: 18m</span>
+                                        <span style="color: #666;">Target: &lt;15m</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 120%; background: #ef4444;"></div></div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                                        <span>Avg Resolution: 4.5h</span>
+                                        <span style="color: #666;">Target: &lt;4h</span>
+                                    </div>
+                                    <div class="progress-bar"><div class="progress-fill" style="width: 112%; background: #ef4444;"></div></div>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px;">
+                                <div style="text-align: center; padding: 8px; background: #f9fafb; border-radius: 6px;">
+                                    <div style="font-size: 20px; font-weight: bold;">35</div>
+                                    <div style="font-size: 11px; color: #666;">Handled</div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: #f9fafb; border-radius: 6px;">
+                                    <div style="font-size: 20px; font-weight: bold;">28</div>
+                                    <div style="font-size: 11px; color: #666;">Resolved</div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: #f9fafb; border-radius: 6px;">
+                                    <div style="font-size: 20px; font-weight: bold; color: #ef4444;">5</div>
+                                    <div style="font-size: 11px; color: #666;">Reopened</div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; background: #f9fafb; border-radius: 6px;">
+                                    <div style="font-size: 20px; font-weight: bold;">4.5★</div>
+                                    <div style="font-size: 11px; color: #666;">CSAT</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 12px; padding: 12px; background: #fef3c7; border-radius: 6px; border-left: 4px solid #f59e0b;">
+                                <div style="font-size: 12px; color: #92400e; font-weight: 500;">⚠️ Needs coaching on resolution quality</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ticket List -->
+                <div class="card">
+                    <h3 style="margin: 0 0 16px 0; font-size: 18px;">Recent Tickets</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Customer</th>
+                                <th>Severity</th>
+                                <th>Status</th>
+                                <th>Agent</th>
+                                <th>SLA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#TKT-4521</strong></td>
+                                <td>TechCorp Solutions</td>
+                                <td><span class="badge badge-critical">Critical</span></td>
+                                <td><span class="badge" style="background: #dbeafe; color: #1e40af;">In Progress</span></td>
+                                <td>Amit Kumar</td>
+                                <td><span style="color: #22c55e;">✓ Within SLA</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TKT-4520</strong></td>
+                                <td>DataFlow Inc</td>
+                                <td><span class="badge badge-high">High</span></td>
+                                <td><span class="badge" style="background: #fef3c7; color: #92400e;">Pending Customer</span></td>
+                                <td>Priya Singh</td>
+                                <td><span style="color: #f59e0b;">⚠ At Risk</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TKT-4519</strong></td>
+                                <td>CloudNine Systems</td>
+                                <td><span class="badge badge-medium">Medium</span></td>
+                                <td><span class="badge" style="background: #dcfce7; color: #166534;">Resolved</span></td>
+                                <td>Rahul Verma</td>
+                                <td><span style="color: #22c55e;">✓ Within SLA</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Agent View -->
+            <div id="agentView" style="display: none;">
+                <div style="margin-bottom: 24px;">
+                    <div class="card" style="max-width: 600px; margin: 0 auto;">
+                        <div style="text-align: center;">
+                            <h3 style="margin: 0 0 8px 0;">Amit Kumar</h3>
+                            <span class="badge" style="background: #dbeafe; color: #1e40af;">L2 Support Engineer</span>
+                        </div>
+                        <div class="score-gauge score-excellent" style="margin: 24px auto;">
+                            <div style="font-size: 48px; font-weight: bold; color: #22c55e;">85</div>
+                            <div style="font-size: 14px; color: #22c55e;">Excellent Performance</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 24px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold;">12</div>
+                                <div style="font-size: 12px; color: #666;">My Open</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold;">5</div>
+                                <div style="font-size: 12px; color: #666;">New Today</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold;">8</div>
+                                <div style="font-size: 12px; color: #666;">Resolved</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold;">4.7★</div>
+                                <div style="font-size: 12px; color: #666;">My CSAT</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin: 0 0 16px 0; font-size: 18px;">My Ticket Queue</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Customer</th>
+                                <th>Issue</th>
+                                <th>Severity</th>
+                                <th>Status</th>
+                                <th>Time Remaining</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#TKT-4521</strong></td>
+                                <td>TechCorp Solutions</td>
+                                <td>VM performance degradation</td>
+                                <td><span class="badge badge-critical">Critical</span></td>
+                                <td><span class="badge" style="background: #dbeafe; color: #1e40af;">In Progress</span></td>
+                                <td><span style="color: #22c55e;">45m</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TKT-4518</strong></td>
+                                <td>StartupHub</td>
+                                <td>Kubernetes cluster scaling issue</td>
+                                <td><span class="badge badge-high">High</span></td>
+                                <td><span class="badge" style="background: #dbeafe; color: #1e40af;">In Progress</span></td>
+                                <td><span style="color: #22c55e;">1h 12m</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>#TKT-4515</strong></td>
+                                <td>CloudNine</td>
+                                <td>Billing inquiry</td>
+                                <td><span class="badge badge-low">Low</span></td>
+                                <td><span class="badge" style="background: #fef3c7; color: #92400e;">Pending Customer</span></td>
+                                <td><span style="color: #666;">N/A</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showView(view) {
+            const managerView = document.getElementById('managerView');
+            const agentView = document.getElementById('agentView');
+            const managerTab = document.getElementById('managerTab');
+            const agentTab = document.getElementById('agentTab');
+
+            if (view === 'manager') {
+                managerView.style.display = 'block';
+                agentView.style.display = 'none';
+                managerTab.style.color = '#3b82f6';
+                managerTab.style.borderBottom = '2px solid #3b82f6';
+                agentTab.style.color = '#666';
+                agentTab.style.borderBottom = 'none';
+            } else {
+                managerView.style.display = 'none';
+                agentView.style.display = 'block';
+                managerTab.style.color = '#666';
+                managerTab.style.borderBottom = 'none';
+                agentTab.style.color = '#3b82f6';
+                agentTab.style.borderBottom = '2px solid #3b82f6';
+            }
+        }
+    </script>
+</body>
+</html>
