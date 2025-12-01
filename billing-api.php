@@ -88,6 +88,15 @@ function generateBillingData() {
         'dso' => 28
     ];
 
+    // Top Customers
+    $data['topCustomers'] = [
+        ['name' => 'TechCorp Solutions', 'amount' => '8.5L'],
+        ['name' => 'CloudFast Inc', 'amount' => '6.2L'],
+        ['name' => 'GlobalTech USA', 'amount' => '5.8L'],
+        ['name' => 'DataSys Ltd', 'amount' => '4.9L'],
+        ['name' => 'SecureCloud Pro', 'amount' => '4.2L']
+    ];
+
     // Aging Buckets
     $data['agingBuckets'] = [
         ['label' => 'Not Due Yet', 'amount' => '3.6L', 'count' => 28, 'color' => '#10b981'],
@@ -163,6 +172,19 @@ function generateBillingData() {
             'daysOverdue' => 22,
             'status' => 'In Collection',
             'statusClass' => 'overdue'
+        ],
+        [
+            'customer' => 'TechFlow Systems',
+            'type' => 'Registered',
+            'typeClass' => 'registered',
+            'invoiceNo' => 'INV-2024-1378',
+            'invoiceDate' => '2024-03-08',
+            'dueDate' => '2024-03-22',
+            'amount' => '68,000',
+            'outstanding' => '68,000',
+            'daysOverdue' => 19,
+            'status' => 'Unpaid',
+            'statusClass' => 'unpaid'
         ]
     ];
 
@@ -231,6 +253,17 @@ function generateBillingData() {
             'amount' => '18,500',
             'reason' => 'Service Issue',
             'processedBy' => 'Sneha Verma',
+            'status' => 'Processed',
+            'statusClass' => 'paid'
+        ],
+        [
+            'date' => '2024-03-13',
+            'customer' => 'CloudBase Ltd',
+            'invoiceNo' => 'INV-2024-1298',
+            'refundId' => 'REF-2024-040',
+            'amount' => '9,800',
+            'reason' => 'Overbilling',
+            'processedBy' => 'Rajesh Kumar',
             'status' => 'Processed',
             'statusClass' => 'paid'
         ]
@@ -316,6 +349,18 @@ function generateBillingData() {
             'sgst' => '0',
             'igst' => '17,100',
             'totalGst' => '17,100'
+        ],
+        [
+            'invoiceNo' => 'INV-2024-1378',
+            'customer' => 'TechFlow Systems',
+            'type' => 'Registered',
+            'typeClass' => 'registered',
+            'placeOfSupply' => 'Tamil Nadu',
+            'taxableValue' => '68,000',
+            'cgst' => '0',
+            'sgst' => '0',
+            'igst' => '12,240',
+            'totalGst' => '12,240'
         ]
     ];
 
@@ -380,6 +425,26 @@ function generateBillingData() {
             'refundCount' => 1,
             'riskLevel' => 'Low',
             'riskClass' => 'healthy'
+        ],
+        [
+            'name' => 'CloudBase Ltd',
+            'healthScore' => 72,
+            'mrr' => '1.3L',
+            'avgDelay' => 15,
+            'totalOverdues' => '1.1L',
+            'refundCount' => 2,
+            'riskLevel' => 'Medium',
+            'riskClass' => 'risk'
+        ],
+        [
+            'name' => 'DataSync Pro',
+            'healthScore' => 58,
+            'mrr' => '1.1L',
+            'avgDelay' => 22,
+            'totalOverdues' => '1.9L',
+            'refundCount' => 4,
+            'riskLevel' => 'High',
+            'riskClass' => 'high-risk'
         ]
     ];
 
@@ -393,6 +458,82 @@ function generateBillingData() {
     $data['segmentRevenue'] = [
         'labels' => ['Startup', 'SMB', 'Enterprise', 'Government'],
         'values' => [12.5, 18.8, 11.2, 2.7]
+    ];
+
+    // Monthly Sales
+    $data['monthlySales'] = [
+        [
+            'month' => 'January 2024',
+            'invoiced' => '38.2L',
+            'collected' => '35.1L',
+            'pending' => '3.1L',
+            'refunds' => '0.8L',
+            'netRevenue' => '34.3L',
+            'collectionPct' => 91.9
+        ],
+        [
+            'month' => 'February 2024',
+            'invoiced' => '42.5L',
+            'collected' => '39.2L',
+            'pending' => '3.3L',
+            'refunds' => '1.1L',
+            'netRevenue' => '38.1L',
+            'collectionPct' => 92.2
+        ],
+        [
+            'month' => 'March 2024',
+            'invoiced' => '45.2L',
+            'collected' => '38.8L',
+            'pending' => '6.4L',
+            'refunds' => '1.2L',
+            'netRevenue' => '37.6L',
+            'collectionPct' => 85.8
+        ],
+        [
+            'month' => 'April 2024',
+            'invoiced' => '48.1L',
+            'collected' => '44.2L',
+            'pending' => '3.9L',
+            'refunds' => '0.9L',
+            'netRevenue' => '43.3L',
+            'collectionPct' => 91.9
+        ],
+        [
+            'month' => 'May 2024',
+            'invoiced' => '52.3L',
+            'collected' => '48.5L',
+            'pending' => '3.8L',
+            'refunds' => '1.3L',
+            'netRevenue' => '47.2L',
+            'collectionPct' => 92.7
+        ],
+        [
+            'month' => 'June 2024',
+            'invoiced' => '49.8L',
+            'collected' => '46.1L',
+            'pending' => '3.7L',
+            'refunds' => '1.0L',
+            'netRevenue' => '45.1L',
+            'collectionPct' => 92.6
+        ],
+        [
+            'month' => 'July 2024',
+            'invoiced' => '47.2L',
+            'collected' => '43.8L',
+            'pending' => '3.4L',
+            'refunds' => '0.9L',
+            'netRevenue' => '42.9L',
+            'collectionPct' => 92.8
+        ],
+        [
+            'month' => 'August 2024',
+            'invoiced' => '45.8L',
+            'collected' => '39.2L',
+            'pending' => '6.6L',
+            'refunds' => '1.1L',
+            'netRevenue' => '38.1L',
+            'collectionPct' => 85.6
+        ]
     ];
 
     // Team Performance
@@ -429,6 +570,17 @@ function generateBillingData() {
             'errorCount' => 2,
             'avgInvoiceTime' => '4.2 hrs',
             'avgPaymentTime' => '3.5 hrs'
+        ],
+        [
+            'name' => 'Priya Sharma',
+            'invoicesGenerated' => 118,
+            'invoiceAmount' => '14.8L',
+            'collectionsAmount' => '12.5L',
+            'remindersSent' => 68,
+            'refundsProcessed' => 7,
+            'errorCount' => 1,
+            'avgInvoiceTime' => '2.8 hrs',
+            'avgPaymentTime' => '2.1 hrs'
         ]
     ];
 
@@ -447,6 +599,12 @@ function generateBillingData() {
             'action' => 'Review billing practices and service quality'
         ],
         [
+            'severity' => 'high',
+            'title' => 'Payment Gateway Issue',
+            'description' => '12 transactions failed in last 24 hours',
+            'action' => 'Contact payment gateway support immediately'
+        ],
+        [
             'severity' => 'medium',
             'title' => 'Missing GSTIN',
             'description' => '3 registered customers have incomplete GST information',
@@ -459,6 +617,12 @@ function generateBillingData() {
             'action' => 'Review overdue follow-up processes'
         ],
         [
+            'severity' => 'medium',
+            'title' => 'Aging Receivables',
+            'description' => '₹0.3L in receivables are more than 60 days old',
+            'action' => 'Intensify collection efforts'
+        ],
+        [
             'severity' => 'low',
             'title' => 'Duplicate Payment',
             'description' => 'SecureCloud Inc made duplicate payment of ₹25K',
@@ -469,6 +633,12 @@ function generateBillingData() {
             'title' => 'Long Outstanding',
             'description' => '2 invoices outstanding for more than 90 days',
             'action' => 'Consider marking as bad debt after final escalation'
+        ],
+        [
+            'severity' => 'low',
+            'title' => 'Invoice Numbering Gap',
+            'description' => 'Missing invoice numbers detected in sequence',
+            'action' => 'Verify invoice generation logs for data integrity'
         ]
     ];
 
