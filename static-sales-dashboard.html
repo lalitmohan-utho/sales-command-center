@@ -397,10 +397,17 @@
             color: #1E40AF;
         }
 
-        /* Stats Grid */
-        .stats-grid {
+        /* Stats Grid - Two Rows */
+        .stats-grid-row-1 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .stats-grid-row-2 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             margin-top: 16px;
         }
@@ -413,6 +420,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+
+        .stat-card-large {
+            padding: 20px;
         }
 
         .stat-info h6 {
@@ -428,6 +439,10 @@
             margin: 0 0 4px 0;
         }
 
+        .stat-info h3.large {
+            font-size: 28px;
+        }
+
         .stat-info small {
             font-size: 11px;
             color: #6B7280;
@@ -441,6 +456,12 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
+        }
+
+        .stat-icon.large {
+            width: 52px;
+            height: 52px;
+            font-size: 24px;
         }
 
         .stat-icon.blue {
@@ -502,7 +523,10 @@
 
         .chart-wrapper {
             position: relative;
-            height: 240px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .chart-center-text {
@@ -511,6 +535,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
+            pointer-events: none;
         }
 
         .chart-center-text h2 {
@@ -748,6 +773,13 @@
             border-radius: 4px;
         }
 
+        @media (max-width: 1200px) {
+            .stats-grid-row-1,
+            .stats-grid-row-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -763,6 +795,11 @@
 
             .status-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats-grid-row-1,
+            .stats-grid-row-2 {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -970,9 +1007,14 @@
                     </div>
                 </div>
 
-                <!-- Stats Grid -->
-                <div class="stats-grid" id="statsGrid">
-                    <!-- Stats will be populated here -->
+                <!-- Stats Grid - Row 1: 4 Large Cards -->
+                <div class="stats-grid-row-1" id="statsGridRow1">
+                    <!-- Large stats will be populated here -->
+                </div>
+
+                <!-- Stats Grid - Row 2: 8 Smaller Cards -->
+                <div class="stats-grid-row-2" id="statsGridRow2">
+                    <!-- Small stats will be populated here -->
                 </div>
             </div>
 
@@ -985,7 +1027,9 @@
                         <button class="btn-sm">MRR</button>
                     </div>
                 </div>
-                <canvas id="salesTargetChart" style="height: 300px;"></canvas>
+                <div style="height: 300px; position: relative;">
+                    <canvas id="salesTargetChart"></canvas>
+                </div>
             </div>
 
             <!-- Lead & Contact Status and Lead Source & Stage Distribution -->
@@ -1006,9 +1050,13 @@
                         <h2 class="section-title">Lead Source & Stage Distribution</h2>
                     </div>
                     <p class="chart-subtitle">Lead Source</p>
-                    <canvas id="leadSourceChart" style="height: 180px; margin-bottom: 20px;"></canvas>
+                    <div style="height: 180px; margin-bottom: 20px;">
+                        <canvas id="leadSourceChart"></canvas>
+                    </div>
                     <p class="chart-subtitle">Lead Stages</p>
-                    <canvas id="leadStagesChart" style="height: 180px;"></canvas>
+                    <div style="height: 180px;">
+                        <canvas id="leadStagesChart"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -1131,12 +1179,32 @@
         }
 
         function renderStats(kpis) {
-            const statsGrid = document.getElementById('statsGrid');
-            const stats = [
+            const statsGridRow1 = document.getElementById('statsGridRow1');
+            const statsGridRow2 = document.getElementById('statsGridRow2');
+
+            // Row 1: 4 Large Cards
+            const largeStats = [
                 { title: 'Total Allocated (Q4)', value: kpis.totalAllocated, change: '+12.5% vs last quarter', icon: 'bi-file-earmark-text', color: 'blue' },
                 { title: 'Contacted & Hot', value: kpis.contactedHot, change: '+8.2% vs last quarter', icon: 'bi-telephone', color: 'green' },
                 { title: 'Deals In Pipe', value: kpis.dealsInPipe, change: '+15.3% vs last quarter', icon: 'bi-pie-chart', color: 'green' },
-                { title: 'Expected Value', value: kpis.expectedValue, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' },
+                { title: 'Expected Value', value: kpis.expectedValue, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' }
+            ];
+
+            statsGridRow1.innerHTML = largeStats.map(stat => `
+                <div class="stat-card stat-card-large">
+                    <div class="stat-info">
+                        <h6>${stat.title}</h6>
+                        <h3 class="large">${stat.value}</h3>
+                        <small>${stat.change}</small>
+                    </div>
+                    <div class="stat-icon large ${stat.color}">
+                        <i class="${stat.icon}"></i>
+                    </div>
+                </div>
+            `).join('');
+
+            // Row 2: 8 Smaller Cards
+            const smallStats = [
                 { title: 'New Meetings', value: kpis.newMeetings, change: '+6.3% vs last week', icon: 'bi-calendar-check', color: 'blue' },
                 { title: 'Lead Qualified', value: kpis.leadQualified, change: '+9.1% vs last week', icon: 'bi-check-circle', color: 'green' },
                 { title: 'New Leads', value: kpis.newLeads, change: '-2.4% vs last week', icon: 'bi-person-plus', color: 'blue' },
@@ -1147,7 +1215,7 @@
                 { title: 'Deals Won', value: kpis.dealsWon, change: '+14.2% vs last week', icon: 'bi-trophy', color: 'green' }
             ];
 
-            statsGrid.innerHTML = stats.map(stat => `
+            statsGridRow2.innerHTML = smallStats.map(stat => `
                 <div class="stat-card">
                     <div class="stat-info">
                         <h6>${stat.title}</h6>
@@ -1175,6 +1243,8 @@
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
                     cutout: '75%',
                     plugins: {
                         legend: { display: false },
@@ -1196,6 +1266,8 @@
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
                     cutout: '60%',
                     plugins: {
                         legend: { display: false }
@@ -1213,14 +1285,20 @@
                         label: 'Achieved',
                         data: [75, 92, 88],
                         backgroundColor: '#3B82F6',
-                        borderRadius: 8
+                        borderRadius: 8,
+                        barThickness: 60
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom' }
+                        legend: { 
+                            position: 'bottom',
+                            labels: {
+                                padding: 15
+                            }
+                        }
                     },
                     scales: {
                         y: {
@@ -1228,6 +1306,11 @@
                             max: 100,
                             ticks: {
                                 callback: value => value + '%'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
                             }
                         }
                     }
@@ -1247,9 +1330,19 @@
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     cutout: '60%',
                     plugins: {
-                        legend: { position: 'right' }
+                        legend: { 
+                            position: 'right',
+                            labels: {
+                                padding: 12,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
                     }
                 }
             });
@@ -1273,7 +1366,24 @@
                         legend: { display: false }
                     },
                     scales: {
-                        y: { beginAtZero: true }
+                        y: { 
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
                     }
                 }
             });
