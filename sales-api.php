@@ -2,277 +2,231 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-// Mock data for Sales & Leads Dashboard
 $dashboardData = [
-    'kpis' => [
-        'totalBusiness' => 68019,
-        'activeMRR' => 22850,
-        'newBusiness' => 45220,
-        'funnelSize' => 380000,
-        'totalLeads' => 1248,
-        'convertedLeads' => 186,
-        'conversionRate' => 14.9,
-        'activeContacts' => 842,
-        'urgentContacts' => 28
-    ],
-    
-    'quarterTarget' => [
-        'target' => 2500000,
-        'achieved' => 2087500,
-        'achievementPercent' => 83.5
-    ],
-    
-    'monthlyPerformance' => [
-        ['month' => 'Oct', 'target' => 800000, 'achieved' => 720000],
-        ['month' => 'Nov', 'target' => 850000, 'achieved' => 765000],
-        ['month' => 'Dec', 'target' => 850000, 'achieved' => 602500]
-    ],
-    
     'followUpTasks' => [
-        'today' => [
-            [
-                'id' => 1,
-                'priority' => 'High',
-                'contact' => 'Rohan Sharma',
-                'company' => 'TechCorp India',
-                'activityType' => 'Call',
-                'dueDateTime' => 'Today 3:30 PM',
-                'status' => 'Open'
-            ],
-            [
-                'id' => 2,
-                'priority' => 'Medium',
-                'contact' => 'Ananya Gupta',
-                'company' => 'CloudSolutions Pvt Ltd',
-                'activityType' => 'Email',
-                'dueDateTime' => 'Today 4:00 PM',
-                'status' => 'Open'
-            ],
-            [
-                'id' => 3,
-                'priority' => 'High',
-                'contact' => 'Vikram Singh',
-                'company' => 'StartupXYZ',
-                'activityType' => 'Meeting',
-                'dueDateTime' => 'Today 5:00 PM',
-                'status' => 'Scheduled'
-            ],
-            [
-                'id' => 4,
-                'priority' => 'Low',
-                'contact' => 'Priya Desai',
-                'company' => 'Enterprise Corp',
-                'activityType' => 'Call',
-                'dueDateTime' => 'Today 6:00 PM',
-                'status' => 'Open'
-            ],
-            [
-                'id' => 5,
-                'priority' => 'Medium',
-                'contact' => 'Amit Patel',
-                'company' => 'Digital Innovations',
-                'activityType' => 'Email',
-                'dueDateTime' => 'Today 6:30 PM',
-                'status' => 'Open'
-            ],
-            [
-                'id' => 6,
-                'priority' => 'High',
-                'contact' => 'Sneha Kumar',
-                'company' => 'Global Tech',
-                'activityType' => 'Call',
-                'dueDateTime' => 'Today 7:00 PM',
-                'status' => 'In Progress'
-            ],
-            [
-                'id' => 7,
-                'priority' => 'Medium',
-                'contact' => 'Rahul Verma',
-                'company' => 'CloudHost Pro',
-                'activityType' => 'Meeting',
-                'dueDateTime' => 'Today 7:30 PM',
-                'status' => 'Open'
-            ],
-            [
-                'id' => 8,
-                'priority' => 'Low',
-                'contact' => 'Neha Joshi',
-                'company' => 'Web Solutions Inc',
-                'activityType' => 'Email',
-                'dueDateTime' => 'Today 8:00 PM',
-                'status' => 'Open'
-            ]
+        [
+            'name' => 'Rohan Sharma',
+            'company' => 'Cloud Ventures',
+            'task' => 'Cloud Migration',
+            'type' => 'Call',
+            'time' => '2:45 PM',
+            'status' => 'Done'
         ],
-        'overdue' => [],
-        'next7days' => [],
-        'next30days' => []
-    ],
-    
-    'leadStatus' => [
-        'newLeads' => 342,
-        'activeContacts' => 842,
-        'notContacted' => 156,
-        'contacted' => 686,
-        'urgentContacts' => 28,
-        'retargetingContacts' => 94,
-        'junkLeads' => 87,
-        'lostCustomers' => 43
-    ],
-    
-    'leadSource' => [
-        'Website' => 428,
-        'Email Campaign' => 312,
-        'LinkedIn' => 186,
-        'Referral' => 154,
-        'Events' => 98,
-        'Others' => 70
-    ],
-    
-    'leadStages' => [
-        'New' => 342,
-        'Contacted' => 268,
-        'Qualified' => 186,
-        'Proposal' => 124,
-        'Negotiation' => 98,
-        'Won' => 156,
-        'Lost' => 74
-    ],
-    
-    'pipeline' => [
-        'New' => [
-            ['name' => 'Cloud Migration Project', 'company' => 'TechCorp', 'amount' => 250000, 'expectedClose' => '15 Dec'],
-            ['name' => 'VM Infrastructure', 'company' => 'StartupXYZ', 'amount' => 120000, 'expectedClose' => '20 Dec'],
-            ['name' => 'Kubernetes Setup', 'company' => 'Enterprise Corp', 'amount' => 180000, 'expectedClose' => '22 Dec']
+        [
+            'name' => 'Priya Patel',
+            'company' => 'Tech Innovations',
+            'task' => 'VDI Requirements Call',
+            'type' => 'Meeting',
+            'time' => '3:45 PM',
+            'status' => 'Done'
         ],
-        'Contacted' => [
-            ['name' => 'Database Hosting', 'company' => 'Digital Innovations', 'amount' => 95000, 'expectedClose' => '18 Dec'],
-            ['name' => 'Object Storage', 'company' => 'CloudSolutions', 'amount' => 75000, 'expectedClose' => '25 Dec']
-        ],
-        'Qualified' => [
-            ['name' => 'Load Balancer Setup', 'company' => 'Global Tech', 'amount' => 145000, 'expectedClose' => '28 Dec'],
-            ['name' => 'DR & Backup Solution', 'company' => 'Web Solutions', 'amount' => 220000, 'expectedClose' => '30 Dec']
-        ],
-        'Proposal' => [
-            ['name' => 'Multi-Cloud Strategy', 'company' => 'CloudHost Pro', 'amount' => 350000, 'expectedClose' => '5 Jan'],
-            ['name' => 'VM + Storage Bundle', 'company' => 'Tech Startups', 'amount' => 185000, 'expectedClose' => '10 Jan']
-        ],
-        'Negotiation' => [
-            ['name' => 'Enterprise Cloud Package', 'company' => 'MegaCorp Ltd', 'amount' => 450000, 'expectedClose' => '12 Jan']
-        ],
-        'Won' => [
-            ['name' => 'Kubernetes Cluster', 'company' => 'InnovateTech', 'amount' => 280000, 'expectedClose' => 'Closed'],
-            ['name' => 'Database Migration', 'company' => 'DataCorp', 'amount' => 195000, 'expectedClose' => 'Closed']
-        ],
-        'Lost' => [
-            ['name' => 'Basic VM Setup', 'company' => 'Budget Corp', 'amount' => 45000, 'expectedClose' => 'Lost']
+        [
+            'name' => 'Amit Kumar',
+            'company' => 'Digital Dynamics',
+            'task' => 'Product Introduction',
+            'type' => 'Email',
+            'time' => '11:00 AM',
+            'status' => 'Contacted'
         ]
     ],
-    
+    'kpis' => [
+        'totalAllocated' => '₹ 68.02L',
+        'contactedHot' => '₹ 45.3K',
+        'dealsInPipe' => '₹ 32.5L',
+        'expectedValue' => '₹ 125.8L',
+        'newMeetings' => '1,247',
+        'leadQualified' => '342',
+        'newLeads' => '89',
+        'coldCalling' => '523',
+        'followUp' => '156',
+        'proposalsSent' => '78',
+        'dealsLost' => '23',
+        'dealsWon' => '45'
+    ],
+    'leadStatus' => [
+        'newLeads' => 89,
+        'hotLeads' => 523,
+        'activeDeals' => 234,
+        'lostDeals' => 83,
+        'qualified' => 234,
+        'unresponsive' => 156
+    ],
+    'pipeline' => [
+        'stages' => [
+            [
+                'name' => 'New',
+                'count' => 7,
+                'value' => '₹ 2.8L',
+                'deals' => [
+                    [
+                        'name' => 'Cloud Migration',
+                        'company' => 'CloudTechies',
+                        'value' => '₹ 1.8Lk',
+                        'stage' => 'New'
+                    ],
+                    [
+                        'name' => 'AWS Implementation',
+                        'company' => 'GreenTech',
+                        'value' => '₹ 1Lk',
+                        'stage' => 'New'
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Contacted',
+                'count' => 12,
+                'value' => '₹ 5.2L',
+                'deals' => [
+                    [
+                        'name' => 'ERP System',
+                        'company' => 'Syntech',
+                        'value' => '₹ 2.2Lk',
+                        'stage' => 'Contacted'
+                    ],
+                    [
+                        'name' => 'Website Redesign',
+                        'company' => 'WebStudio',
+                        'value' => '₹ 3Lk',
+                        'stage' => 'Contacted'
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Qualified',
+                'count' => 10,
+                'value' => '₹ 8.4L',
+                'deals' => [
+                    [
+                        'name' => 'ICRM Solutions',
+                        'company' => 'SalesInc',
+                        'value' => '₹ 4Lk',
+                        'stage' => 'Qualified'
+                    ],
+                    [
+                        'name' => 'Mobile App',
+                        'company' => 'AppWorks',
+                        'value' => '₹ 4.4Lk',
+                        'stage' => 'Qualified'
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Proposal',
+                'count' => 15,
+                'value' => '₹ 12.5L',
+                'deals' => [
+                    [
+                        'name' => 'AI Chatbots',
+                        'company' => 'BotFactory',
+                        'value' => '₹ 6Lk',
+                        'stage' => 'Proposal'
+                    ],
+                    [
+                        'name' => 'Cybersecurity',
+                        'company' => 'SecureIT',
+                        'value' => '₹ 6.5Lk',
+                        'stage' => 'Proposal'
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Negotiation',
+                'count' => 9,
+                'value' => '₹ 18.2L',
+                'deals' => [
+                    [
+                        'name' => 'Cloud Infrastructure',
+                        'company' => 'Enterprise Corp',
+                        'value' => '₹ 10Lk',
+                        'stage' => 'Negotiation'
+                    ],
+                    [
+                        'name' => 'Data Analytics',
+                        'company' => 'DataViz',
+                        'value' => '₹ 8.2Lk',
+                        'stage' => 'Negotiation'
+                    ]
+                ]
+            ]
+        ]
+    ],
     'recentActivity' => [
         [
-            'type' => 'call',
-            'description' => '<strong>Lalit</strong> called <strong>Rohan Sharma</strong> (TechCorp India) – Outcome: Interested, follow-up scheduled for tomorrow.',
-            'timestamp' => '2 hours ago',
-            'owner' => 'Lalit Kumar'
+            'user' => 'Latif just',
+            'description' => 'added EMC Corp',
+            'details' => 'deal worth ₹2.5L to the pipeline from lead source',
+            'time' => '3 hours ago',
+            'type' => 'deal'
         ],
         [
-            'type' => 'deal',
-            'description' => '<strong>Nikhil</strong> moved Deal <strong>"XYZ Cloud Migration"</strong> to Negotiation stage – Deal value: ₹2,50,000.',
-            'timestamp' => '3 hours ago',
-            'owner' => 'Nikhil Verma'
+            'user' => 'Neelam Has',
+            'description' => 'scheduled a meeting with XYZ Corp for negotiation',
+            'details' => '',
+            'time' => '5 hours ago',
+            'type' => 'meeting'
         ],
         [
-            'type' => 'email',
-            'description' => '<strong>Ananya</strong> sent proposal email to <strong>Vikram Singh</strong> – Proposal for Kubernetes setup worth ₹1,80,000.',
-            'timestamp' => '4 hours ago',
-            'owner' => 'Ananya Gupta'
+            'user' => 'Aravind sent',
+            'description' => 'a help sheet lead about',
+            'details' => '',
+            'time' => '6 hours ago',
+            'type' => 'email'
         ],
         [
-            'type' => 'meeting',
-            'description' => '<strong>Lalit</strong> completed meeting with <strong>Priya Desai</strong> (Enterprise Corp) – Next steps: Send technical documentation.',
-            'timestamp' => '5 hours ago',
-            'owner' => 'Lalit Kumar'
+            'user' => 'VR with updated',
+            'description' => 'meeting with Apex Digital Agency',
+            'details' => '',
+            'time' => 'Yesterday',
+            'type' => 'meeting'
         ],
         [
-            'type' => 'deal',
-            'description' => '<strong>Rohan</strong> won Deal <strong>"Database Hosting Package"</strong> – Deal value: ₹1,95,000. Customer signed contract.',
-            'timestamp' => '6 hours ago',
-            'owner' => 'Rohan Sharma'
+            'user' => 'Lead call from',
+            'description' => 'S Wariya Pillage Gura',
+            'details' => '',
+            'time' => 'Yesterday',
+            'type' => 'call'
         ],
         [
-            'type' => 'call',
-            'description' => '<strong>Nikhil</strong> called <strong>Amit Patel</strong> (Digital Innovations) – Left voicemail, will retry tomorrow.',
-            'timestamp' => '7 hours ago',
-            'owner' => 'Nikhil Verma'
-        ],
-        [
-            'type' => 'note',
-            'description' => '<strong>Ananya</strong> added note to lead <strong>"Cloud Migration Project"</strong> – Customer concerned about pricing, needs competitive analysis.',
-            'timestamp' => '8 hours ago',
-            'owner' => 'Ananya Gupta'
-        ],
-        [
-            'type' => 'email',
-            'description' => '<strong>Lalit</strong> sent follow-up email to <strong>Sneha Kumar</strong> – Shared case studies and ROI calculator.',
-            'timestamp' => '9 hours ago',
-            'owner' => 'Lalit Kumar'
+            'user' => 'Aravind sent',
+            'description' => 'Khvistika Reddy on cold outreach list',
+            'details' => '',
+            'time' => 'Yesterday',
+            'type' => 'email'
         ]
     ],
-    
-    'monthlyTargets' => [
+    'salesTargets' => [
         [
-            'year' => 2025,
-            'quarter' => 'Q1',
-            'month' => 'January',
-            'targetBusiness' => 850000,
-            'achievedBusiness' => 720000,
-            'targetMRR' => 280000,
-            'achievedMRR' => 245000
-        ],
-        [
-            'year' => 2024,
-            'quarter' => 'Q4',
-            'month' => 'December',
-            'targetBusiness' => 850000,
-            'achievedBusiness' => 602500,
-            'targetMRR' => 270000,
-            'achievedMRR' => 238000
-        ],
-        [
-            'year' => 2024,
-            'quarter' => 'Q4',
-            'month' => 'November',
-            'targetBusiness' => 850000,
-            'achievedBusiness' => 765000,
-            'targetMRR' => 265000,
-            'achievedMRR' => 252000
-        ],
-        [
-            'year' => 2024,
+            'rep' => 'TRM',
             'quarter' => 'Q4',
             'month' => 'October',
-            'targetBusiness' => 800000,
-            'achievedBusiness' => 720000,
-            'targetMRR' => 260000,
-            'achievedMRR' => 248000
+            'targetBusiness' => '₹ 7,16Lk',
+            'achievedRevenue' => '₹ 6.23Lk',
+            'targetMRR' => '₹ 4.40K',
+            'achievedMRR' => '₹ 3.53K',
+            'achievement' => '88%',
+            'status' => 'On Track'
         ],
         [
-            'year' => 2024,
-            'quarter' => 'Q3',
-            'month' => 'September',
-            'targetBusiness' => 750000,
-            'achievedBusiness' => 695000,
-            'targetMRR' => 250000,
-            'achievedMRR' => 235000
+            'rep' => 'ZRM',
+            'quarter' => 'Q4',
+            'month' => 'November',
+            'targetBusiness' => '₹ 8,66Lk',
+            'achievedRevenue' => '₹ 8.02Lk',
+            'targetMRR' => '₹ 7.80K',
+            'achievedMRR' => '₹ 9.3K',
+            'achievement' => '106%',
+            'status' => 'On Track'
         ],
         [
-            'year' => 2024,
-            'quarter' => 'Q3',
-            'month' => 'August',
-            'targetBusiness' => 750000,
-            'achievedBusiness' => 680000,
-            'targetMRR' => 245000,
-            'achievedMRR' => 228000
+            'rep' => 'ZRM',
+            'quarter' => 'Q4',
+            'month' => 'December',
+            'targetBusiness' => '₹ 9,66Lk',
+            'achievedRevenue' => '₹ 7.60Lk',
+            'targetMRR' => '₹ 9.60K',
+            'achievedMRR' => '₹ 4.83K',
+            'achievement' => '67%',
+            'status' => 'At Risk'
         ]
     ]
 ];
