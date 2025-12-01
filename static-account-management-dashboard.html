@@ -3,326 +3,847 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Management Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Account Management Dashboard - Utho CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; background: #f8f9fa; }
-        .sidebar { width: 240px; background: #1a1a1a; color: white; min-height: 100vh; position: fixed; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8f9fa; }
+        
+        /* Sidebar */
+        .sidebar { position: fixed; left: 0; top: 0; width: 240px; height: 100vh; background: #1a1d29; color: white; overflow-y: auto; z-index: 1000; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h2 { font-size: 20px; font-weight: 700; margin: 0; }
+        .nav-link { display: flex; align-items: center; padding: 12px 20px; color: #b8bcc8; text-decoration: none; transition: all 0.2s; font-size: 14px; }
+        .nav-link:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-link.active { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-left: 3px solid #3b82f6; }
+        .nav-icon { margin-right: 12px; font-size: 18px; }
+        
+        /* Main Content */
         .main-content { margin-left: 240px; min-height: 100vh; }
-        .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .stat-card { text-align: center; }
-        .stat-value { font-size: 32px; font-weight: bold; color: #1a1a1a; }
-        .stat-label { font-size: 14px; color: #666; margin-top: 8px; }
-        .stat-subtitle { font-size: 12px; color: #999; margin-top: 4px; }
-        .trend-positive { color: #22c55e; font-size: 12px; margin-top: 4px; }
-        .trend-negative { color: #ef4444; font-size: 12px; margin-top: 4px; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; }
-        .badge-success { background: #d4edda; color: #155724; }
-        .badge-warning { background: #fff3cd; color: #856404; }
-        .badge-danger { background: #f8d7da; color: #721c24; }
-        .badge-info { background: #d1ecf1; color: #0c5460; }
-        .nav-link { padding: 12px 20px; display: block; color: #ccc; text-decoration: none; transition: all 0.2s; }
-        .nav-link:hover, .nav-link.active { background: #2a2a2a; color: white; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-        th { background: #f8f9fa; font-weight: 600; font-size: 14px; }
-        .header { background: white; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; }
-        .filter-bar { background: white; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; flex-wrap: wrap; }
-        select, input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; }
-        .health-score { display: flex; align-items: center; gap: 8px; }
-        .health-bar { width: 100px; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+        
+        /* Header */
+        .top-header { background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 32px; position: sticky; top: 0; z-index: 100; }
+        .header-title { font-size: 24px; font-weight: 700; color: #1f2937; margin: 0; }
+        .header-subtitle { font-size: 14px; color: #6b7280; margin-top: 4px; }
+        .search-box { max-width: 400px; }
+        
+        /* Filter Bar */
+        .filter-bar { background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 32px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .filter-bar select, .filter-bar input { padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+        
+        /* Cards */
+        .stat-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.3s; }
+        .stat-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .stat-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .stat-icon.blue { background: #dbeafe; color: #1e40af; }
+        .stat-icon.green { background: #dcfce7; color: #15803d; }
+        .stat-icon.orange { background: #fed7aa; color: #c2410c; }
+        .stat-icon.red { background: #fee2e2; color: #dc2626; }
+        .stat-icon.purple { background: #e9d5ff; color: #7e22ce; }
+        .stat-value { font-size: 28px; font-weight: 700; color: #1f2937; margin-top: 12px; }
+        .stat-label { font-size: 14px; color: #6b7280; margin-top: 4px; }
+        .stat-subtitle { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+        .trend-badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-top: 8px; }
+        .trend-up { background: #dcfce7; color: #15803d; }
+        .trend-down { background: #fee2e2; color: #dc2626; }
+        
+        /* Section Cards */
+        .section-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-title { font-size: 18px; font-weight: 700; color: #1f2937; margin: 0; }
+        
+        /* Tables */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead { background: #f9fafb; }
+        .data-table th { padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #4b5563; border-bottom: 2px solid #e5e7eb; }
+        .data-table td { padding: 12px; font-size: 14px; color: #1f2937; border-bottom: 1px solid #f3f4f6; }
+        .data-table tbody tr:hover { background: #f9fafb; }
+        
+        /* Badges */
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge-success { background: #dcfce7; color: #15803d; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-danger { background: #fee2e2; color: #dc2626; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .badge-secondary { background: #f3f4f6; color: #4b5563; }
+        
+        /* Health Score */
+        .health-score { display: flex; align-items: center; gap: 10px; }
+        .health-bar { width: 80px; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
         .health-fill { height: 100%; transition: width 0.3s; }
-        .health-good { background: #22c55e; }
-        .health-risk { background: #f59e0b; }
-        .health-critical { background: #ef4444; }
-        .progress-circle { position: relative; width: 120px; height: 120px; }
-        .activity-timeline { border-left: 2px solid #e5e7eb; padding-left: 20px; }
-        .activity-item { margin-bottom: 20px; position: relative; }
-        .activity-item::before { content: ''; position: absolute; left: -26px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; }
-        .risk-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-right: 4px; margin-bottom: 4px; }
-        .risk-overdue { background: #fee2e2; color: #991b1b; }
-        .risk-usage { background: #fef3c7; color: #92400e; }
-        .risk-tickets { background: #fed7aa; color: #7c2d12; }
-        .product-icon { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 6px; margin-right: 4px; }
+        .health-text { font-size: 14px; font-weight: 600; }
+        
+        /* At-Risk Cards */
+        .risk-card { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border-left: 4px solid #ef4444; padding: 16px; border-radius: 8px; margin-bottom: 12px; }
+        .risk-card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
+        .risk-account-name { font-size: 15px; font-weight: 600; color: #1f2937; }
+        .risk-details { font-size: 13px; color: #6b7280; margin-top: 4px; }
+        .risk-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+        .risk-tag { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+        .risk-tag.payment { background: #fee2e2; color: #991b1b; }
+        .risk-tag.usage { background: #fef3c7; color: #92400e; }
+        .risk-tag.tickets { background: #fed7aa; color: #7c2d12; }
+        .risk-tag.engagement { background: #fce7f3; color: #831843; }
+        .risk-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+        .risk-metric { font-size: 12px; }
+        .risk-metric strong { color: #1f2937; }
+        
+        /* Product Icons */
+        .product-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #f3f4f6; border-radius: 6px; font-size: 11px; font-weight: 600; color: #4b5563; margin-right: 4px; }
+        
+        /* Activity Timeline */
+        .activity-timeline { position: relative; padding-left: 30px; }
+        .activity-item { position: relative; margin-bottom: 24px; }
+        .activity-item::before { content: ''; position: absolute; left: -34px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; border: 3px solid white; box-shadow: 0 0 0 2px #dbeafe; }
+        .activity-timeline::after { content: ''; position: absolute; left: -28px; top: 0; bottom: 0; width: 2px; background: #e5e7eb; }
+        .activity-icon { font-size: 18px; margin-right: 8px; }
+        .activity-text { font-size: 14px; color: #1f2937; margin-bottom: 4px; }
+        .activity-time { font-size: 12px; color: #9ca3af; }
+        
+        /* Mini Stats */
+        .mini-stat-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; text-align: center; }
+        .mini-stat-value { font-size: 24px; font-weight: 700; color: #1f2937; }
+        .mini-stat-label { font-size: 13px; color: #6b7280; margin-top: 4px; }
+        
+        /* Tabs */
+        .tab-nav { display: flex; gap: 4px; border-bottom: 2px solid #e5e7eb; margin-bottom: 20px; }
+        .tab-button { padding: 10px 20px; background: none; border: none; font-size: 14px; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+        .tab-button:hover { color: #3b82f6; }
+        .tab-button.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Action Buttons */
+        .btn-primary { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-secondary { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary:hover { background: #e5e7eb; }
+        
+        /* Task Row Actions */
+        .task-actions { display: flex; gap: 8px; }
+        .action-icon { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; background: #f3f4f6; color: #6b7280; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .action-icon:hover { background: #e5e7eb; color: #1f2937; }
+        
+        /* Growth Indicators */
+        .growth-positive { color: #15803d; font-weight: 600; }
+        .growth-negative { color: #dc2626; font-weight: 600; }
+        .growth-stable { color: #6b7280; font-weight: 600; }
+        
+        /* Loading State */
+        .loading { text-align: center; padding: 40px; color: #9ca3af; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { width: 200px; }
+            .main-content { margin-left: 200px; }
+        }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <div style="padding: 20px; border-bottom: 1px solid #2a2a2a;">
-            <h2 style="margin: 0; font-size: 20px;">Utho CRM</h2>
+        <div class="sidebar-header">
+            <h2>Utho CRM</h2>
         </div>
         <nav>
-            <a href="static-sales-dashboard.html" class="nav-link">📊 Sales Dashboard</a>
-            <a href="static-leads-dashboard.html" class="nav-link">🎯 Leads</a>
-            <a href="#" class="nav-link active">👥 Accounts</a>
-            <a href="static-support-dashboard.html" class="nav-link">🎧 Support</a>
-            <a href="static-billing-dashboard.html" class="nav-link">💰 Billing</a>
+            <a href="static-sales-dashboard.html" class="nav-link">
+                <span class="nav-icon">📊</span>
+                <span>Sales Dashboard</span>
+            </a>
+            <a href="static-leads-dashboard.html" class="nav-link">
+                <span class="nav-icon">🎯</span>
+                <span>Leads</span>
+            </a>
+            <a href="static-account-management-dashboard.html" class="nav-link active">
+                <span class="nav-icon">👥</span>
+                <span>Account Management</span>
+            </a>
+            <a href="static-support-dashboard.html" class="nav-link">
+                <span class="nav-icon">🎧</span>
+                <span>Support</span>
+            </a>
+            <a href="static-billing-dashboard.html" class="nav-link">
+                <span class="nav-icon">💰</span>
+                <span>Billing & Finance</span>
+            </a>
         </nav>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
-        <div class="header">
-            <h1 style="margin: 0; font-size: 24px;">Account Management Dashboard</h1>
-            <p style="margin: 4px 0 0 0; color: #666;">Health, renewals & growth for your customers</p>
+        <!-- Top Header -->
+        <div class="top-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="header-title">Account Management Dashboard</h1>
+                    <p class="header-subtitle">Health, renewals & growth for your customers</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <input type="search" class="form-control search-box" placeholder="Search accounts, contacts...">
+                    <button class="btn-primary">+ Add Task</button>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600;">AM</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Filters -->
+        <!-- Filter Bar -->
         <div class="filter-bar">
-            <select><option>All Accounts</option><option>Enterprise</option><option>Mid-Market</option><option>SMB</option></select>
-            <select><option>All Health</option><option>Good</option><option>At Risk</option><option>Critical</option></select>
-            <select><option>This Quarter</option><option>This Month</option><option>This Year</option></select>
-            <input type="text" placeholder="Search accounts..." style="flex: 1; max-width: 300px;">
+            <label style="font-size: 14px; font-weight: 600; color: #4b5563;">Filters:</label>
+            <select id="ownerFilter">
+                <option value="all">All Accounts</option>
+                <option value="my">My Accounts</option>
+                <option value="team">My Team</option>
+            </select>
+            <select id="segmentFilter">
+                <option value="all">All Segments</option>
+                <option value="enterprise">Enterprise</option>
+                <option value="mid-market">Mid-Market</option>
+                <option value="smb">SMB</option>
+                <option value="startup">Startup</option>
+            </select>
+            <select id="healthFilter">
+                <option value="all">All Health</option>
+                <option value="healthy">Healthy (80-100)</option>
+                <option value="watchlist">Watchlist (60-79)</option>
+                <option value="at-risk">At Risk (40-59)</option>
+                <option value="critical">Critical (<40)</option>
+            </select>
+            <select id="periodFilter">
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+                <option value="quarter">This Quarter</option>
+                <option value="year">This Year</option>
+            </select>
+            <button class="btn-secondary">Apply Filters</button>
+            <button class="btn-secondary">Reset</button>
         </div>
 
-        <!-- Content -->
-        <div style="padding: 24px;">
-            <!-- Portfolio Overview KPIs -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                <div class="card stat-card">
-                    <div class="stat-value">₹42.8L</div>
-                    <div class="stat-label">Total MRR</div>
-                    <div class="stat-subtitle">Monthly Recurring Revenue</div>
-                    <div class="trend-positive">↑ 8.5% vs last month</div>
+        <!-- Content Area -->
+        <div style="padding: 32px;">
+            
+            <!-- Section A: Portfolio Overview KPIs -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6 col-lg-4 col-xl-2">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="stat-label">Total MRR</div>
+                                <div class="stat-value">₹42.8L</div>
+                                <div class="stat-subtitle">Monthly Recurring Revenue</div>
+                                <span class="trend-badge trend-up">↑ 8.5%</span>
+                            </div>
+                            <div class="stat-icon blue">💰</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card stat-card">
-                    <div class="stat-value">₹3.2L</div>
-                    <div class="stat-label">Net Revenue Change</div>
-                    <div class="stat-subtitle">Expansion - Contraction - Churn</div>
-                    <div class="trend-positive">↑ Last 30 days</div>
+                <div class="col-md-6 col-lg-4 col-xl-2">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="stat-label">Net Revenue Change</div>
+                                <div class="stat-value">₹3.2L</div>
+                                <div class="stat-subtitle">Expansion - Contraction - Churn</div>
+                                <span class="trend-badge trend-up">↑ Last 30 days</span>
+                            </div>
+                            <div class="stat-icon green">📈</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card stat-card">
-                    <div class="stat-value">2.4%</div>
-                    <div class="stat-label">Churn Rate</div>
-                    <div class="stat-subtitle">Last 90 days</div>
+                <div class="col-md-6 col-lg-4 col-xl-2">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="stat-label">Churn Rate</div>
+                                <div class="stat-value">2.4%</div>
+                                <div class="stat-subtitle">Last 90 days</div>
+                            </div>
+                            <div class="stat-icon orange">⚠️</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card stat-card">
-                    <div class="stat-value">12</div>
-                    <div class="stat-label">At-Risk Accounts</div>
-                    <div class="stat-subtitle">Based on health score</div>
+                <div class="col-md-6 col-lg-4 col-xl-2">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="stat-label">At-Risk Accounts</div>
+                                <div class="stat-value">12</div>
+                                <div class="stat-subtitle">Based on health score</div>
+                            </div>
+                            <div class="stat-icon red">🚨</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card stat-card">
-                    <div class="stat-value">34</div>
-                    <div class="stat-label">Active Advocates</div>
-                    <div class="stat-subtitle">Referral & testimonial ready</div>
-                    <div class="trend-positive">↑ 5 new this month</div>
+                <div class="col-md-6 col-lg-4 col-xl-2">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="stat-label">Active Advocates</div>
+                                <div class="stat-value">34</div>
+                                <div class="stat-subtitle">Referral & testimonial ready</div>
+                                <span class="trend-badge trend-up">↑ 5 new</span>
+                            </div>
+                            <div class="stat-icon purple">🤝</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card stat-card">
-                    <div class="stat-value">78/100</div>
-                    <div class="stat-label">Avg Health Score</div>
-                    <div class="stat-subtitle">Weighted average</div>
+                <div class="col-md-6 col-lg-4 col-xl-2">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="stat-label">Avg Health Score</div>
+                                <div class="stat-value">78/100</div>
+                                <div class="stat-subtitle">Weighted average</div>
+                            </div>
+                            <div class="stat-icon green">❤️</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Health & Churn Risk -->
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Account Health & Churn Risk</h3>
-                    <select><option>All Accounts</option><option>At Risk Only</option><option>Critical Only</option></select>
+            <!-- Section B: Health & Churn Risk -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Account Health & Churn Risk</h3>
+                    <select class="form-select" style="width: auto;">
+                        <option value="all">All At-Risk Accounts</option>
+                        <option value="critical">Critical Only</option>
+                        <option value="watchlist">Watchlist Only</option>
+                    </select>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
-                    <!-- Health Distribution Chart -->
-                    <div>
-                        <canvas id="healthChart" style="max-height: 250px;"></canvas>
-                    </div>
-
-                    <!-- At-Risk Accounts List -->
-                    <div>
-                        <h4 style="margin: 0 0 16px 0; font-size: 16px;">High Priority At-Risk Accounts</h4>
-                        <div id="atRiskList"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Renewals & Revenue -->
-            <div class="card">
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">Renewals & Revenue Pipeline</h3>
-                
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
-                    <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold; color: #3b82f6;">₹8.4L</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Next 30 Days</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold; color: #10b981;">₹12.6L</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Next 90 Days</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold; color: #f59e0b;">94%</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Renewal Rate</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold; color: #ef4444;">₹18.2L</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">At Risk Revenue</div>
-                    </div>
-                </div>
-
-                <canvas id="renewalsChart"></canvas>
-            </div>
-
-            <!-- Usage & Adoption -->
-            <div class="card">
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">Usage & Product Adoption</h3>
-                
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px;">
-                    <div>
-                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Active Users (Last 30 Days)</div>
-                        <div style="font-size: 24px; font-weight: bold;">2,847</div>
-                        <div style="font-size: 12px; color: #22c55e; margin-top: 4px;">↑ 12% vs last month</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Feature Adoption Rate</div>
-                        <div style="font-size: 24px; font-weight: bold;">68%</div>
-                        <div style="font-size: 12px; color: #f59e0b; margin-top: 4px;">↓ 3% vs last month</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Avg Session Duration</div>
-                        <div style="font-size: 24px; font-weight: bold;">18m 42s</div>
-                        <div style="font-size: 12px; color: #22c55e; margin-top: 4px;">↑ 5% vs last month</div>
-                    </div>
-                </div>
-
-                <canvas id="usageChart"></canvas>
-            </div>
-
-            <!-- Follow-up Tasks -->
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Follow-up Tasks & Activities</h3>
-                    <div style="display: flex; gap: 8px;">
-                        <button style="padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">Add Task</button>
-                        <select><option>All Tasks</option><option>My Tasks</option><option>Overdue</option></select>
-                    </div>
-                </div>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Account</th>
-                            <th>Task</th>
-                            <th>Priority</th>
-                            <th>Due Date</th>
-                            <th>Assigned To</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tasksTable"></tbody>
-                </table>
-            </div>
-
-            <!-- Referrals & Advocacy -->
-            <div class="card">
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">Referrals & Customer Advocacy</h3>
-                
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
-                    <div style="text-align: center; padding: 16px; background: #f0fdf4; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold; color: #22c55e;">34</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Active Advocates</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f0fdf4; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold; color: #22c55e;">18</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Referrals (This Q)</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f0fdf4; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold; color: #22c55e;">12</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Case Studies</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f0fdf4; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold; color: #22c55e;">27</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Testimonials</div>
-                    </div>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Account</th>
-                            <th>Advocacy Type</th>
-                            <th>Status</th>
-                            <th>Impact</th>
-                            <th>Last Activity</th>
-                        </tr>
-                    </thead>
-                    <tbody id="advocacyTable"></tbody>
-                </table>
-            </div>
-
-            <!-- Support Experience -->
-            <div class="card">
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">Support & Customer Experience</h3>
-                
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
-                    <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold;">4.6/5</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Avg CSAT Score</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold;">2.4h</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Avg Response Time</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold;">87</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Open Tickets</div>
-                    </div>
-                    <div style="text-align: center; padding: 16px; background: #f8f9fa; border-radius: 8px;">
-                        <div style="font-size: 28px; font-weight: bold;">3.2%</div>
-                        <div style="font-size: 13px; color: #666; margin-top: 4px;">Reopen Rate</div>
-                    </div>
-                </div>
-
-                <canvas id="supportChart"></canvas>
-            </div>
-
-            <!-- Account Portfolio & Activity -->
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
-                <!-- Account Portfolio Table -->
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Account Portfolio</h3>
-                        <select><option>All Accounts</option><option>My Accounts</option><option>At Risk</option></select>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Health Score Distribution</h5>
+                        <canvas id="healthDistributionChart" style="max-height: 300px;"></canvas>
+                        <div class="mt-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span style="font-size: 13px; color: #6b7280;">Healthy (80-100)</span>
+                                <strong style="font-size: 13px; color: #22c55e;">267 accounts</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span style="font-size: 13px; color: #6b7280;">Watchlist (60-79)</span>
+                                <strong style="font-size: 13px; color: #fbbf24;">38 accounts</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span style="font-size: 13px; color: #6b7280;">At Risk (40-59)</span>
+                                <strong style="font-size: 13px; color: #f59e0b;">25 accounts</strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span style="font-size: 13px; color: #6b7280;">Critical (<40)</span>
+                                <strong style="font-size: 13px; color: #ef4444;">12 accounts</strong>
+                            </div>
+                        </div>
                     </div>
                     
-                    <table>
+                    <div class="col-lg-8">
+                        <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">High Priority At-Risk Accounts</h5>
+                        <div id="atRiskAccountsList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section C: Renewals & Revenue Pipeline -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Renewals & Revenue Pipeline</h3>
+                    <select class="form-select" style="width: auto;">
+                        <option value="30">Next 30 Days</option>
+                        <option value="60">Next 60 Days</option>
+                        <option value="90">Next 90 Days</option>
+                    </select>
+                </div>
+                
+                <!-- Renewal Summary Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="mini-stat-card" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+                            <div class="mini-stat-value" style="color: #1e40af;">₹8.4L</div>
+                            <div class="mini-stat-label">Next 30 Days</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat-card" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);">
+                            <div class="mini-stat-value" style="color: #15803d;">₹12.6L</div>
+                            <div class="mini-stat-label">Next 90 Days</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat-card" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                            <div class="mini-stat-value" style="color: #92400e;">94%</div>
+                            <div class="mini-stat-label">Renewal Rate</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat-card" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);">
+                            <div class="mini-stat-value" style="color: #dc2626;">₹18.2L</div>
+                            <div class="mini-stat-label">At Risk Revenue</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Renewals Table -->
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Upcoming Renewals</h5>
+                <div class="table-responsive mb-4">
+                    <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Account</th>
-                                <th>Segment</th>
-                                <th>MRR</th>
-                                <th>Health</th>
-                                <th>Products</th>
-                                <th>Renewal</th>
-                                <th>Growth</th>
+                                <th>Renewal Date</th>
+                                <th>Account Name</th>
+                                <th>Current MRR</th>
+                                <th>Contract Type</th>
+                                <th>Renewal Probability</th>
+                                <th>Account Manager</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="portfolioTable"></tbody>
+                        <tbody id="renewalsTable"></tbody>
                     </table>
-                    
-                    <div style="text-align: center; margin-top: 16px;">
-                        <button style="padding: 8px 16px; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer;">View All Accounts</button>
+                </div>
+
+                <!-- MRR Trend Chart -->
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">MRR Trend & Growth</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <div style="padding: 12px; background: #f9fafb; border-radius: 6px;">
+                            <div style="font-size: 12px; color: #6b7280;">Expansion MRR</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #22c55e;">₹5.4L</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div style="padding: 12px; background: #f9fafb; border-radius: 6px;">
+                            <div style="font-size: 12px; color: #6b7280;">Contraction MRR</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #f59e0b;">₹1.8L</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div style="padding: 12px; background: #f9fafb; border-radius: 6px;">
+                            <div style="font-size: 12px; color: #6b7280;">Churned MRR</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #ef4444;">₹0.4L</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div style="padding: 12px; background: #f9fafb; border-radius: 6px;">
+                            <div style="font-size: 12px; color: #6b7280;">Net Growth</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #3b82f6;">₹3.2L</div>
+                        </div>
+                    </div>
+                </div>
+                <canvas id="mrrTrendChart" style="max-height: 350px;"></canvas>
+            </div>
+
+            <!-- Section D: Usage & Product Adoption -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Usage & Product Adoption</h3>
+                </div>
+                
+                <!-- Product Adoption Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 10px; border-left: 4px solid #0284c7;">
+                            <div style="display: flex; justify-content: between; align-items: start;">
+                                <div>
+                                    <div style="font-size: 14px; color: #0369a1; font-weight: 600;">Cloud VMs / Instances</div>
+                                    <div style="font-size: 28px; font-weight: 700; color: #0c4a6e; margin-top: 8px;">320</div>
+                                    <div style="font-size: 13px; color: #0369a1; margin-top: 4px;">Used by 267 accounts</div>
+                                    <span class="badge badge-info mt-2">High Adoption</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 10px; border-left: 4px solid #16a34a;">
+                            <div>
+                                <div style="font-size: 14px; color: #15803d; font-weight: 600;">Kubernetes Clusters</div>
+                                <div style="font-size: 28px; font-weight: 700; color: #14532d; margin-top: 8px;">180</div>
+                                <div style="font-size: 13px; color: #15803d; margin-top: 4px;">Used by 142 accounts</div>
+                                <span class="badge badge-success mt-2">Growing Fast</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); border-radius: 10px; border-left: 4px solid #ca8a04;">
+                            <div>
+                                <div style="font-size: 14px; color: #a16207; font-weight: 600;">Object Storage</div>
+                                <div style="font-size: 28px; font-weight: 700; color: #713f12; margin-top: 8px;">480 TB</div>
+                                <div style="font-size: 13px; color: #a16207; margin-top: 4px;">Used by 198 accounts</div>
+                                <span class="badge badge-warning mt-2">Medium Adoption</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border-radius: 10px; border-left: 4px solid #9333ea;">
+                            <div>
+                                <div style="font-size: 14px; color: #7e22ce; font-weight: 600;">Managed Databases</div>
+                                <div style="font-size: 28px; font-weight: 700; color: #581c87; margin-top: 8px;">156</div>
+                                <div style="font-size: 13px; color: #7e22ce; margin-top: 4px;">Used by 128 accounts</div>
+                                <span class="badge badge-info mt-2">Steady</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border-radius: 10px; border-left: 4px solid #dc2626;">
+                            <div>
+                                <div style="font-size: 14px; color: #b91c1c; font-weight: 600;">Load Balancers</div>
+                                <div style="font-size: 28px; font-weight: 700; color: #7f1d1d; margin-top: 8px;">94</div>
+                                <div style="font-size: 13px; color: #b91c1c; margin-top: 4px;">Used by 87 accounts</div>
+                                <span class="badge badge-secondary mt-2">Low Adoption</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-radius: 10px; border-left: 4px solid #7c3aed;">
+                            <div>
+                                <div style="font-size: 14px; color: #6d28d9; font-weight: 600;">DR & Backup</div>
+                                <div style="font-size: 28px; font-weight: 700; color: #4c1d95; margin-top: 8px;">72</div>
+                                <div style="font-size: 13px; color: #6d28d9; margin-top: 4px;">Used by 68 accounts</div>
+                                <span class="badge badge-secondary mt-2">Upsell Opportunity</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Activity Timeline -->
-                <div class="card">
-                    <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">Recent Activity</h3>
-                    <div class="activity-timeline" id="activityTimeline"></div>
+                <!-- Usage Anomalies Table -->
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Usage Anomalies & Optimization Opportunities</h5>
+                <div class="table-responsive mb-4">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Account Name</th>
+                                <th>Key Products</th>
+                                <th>Usage Metrics</th>
+                                <th>Utilization Status</th>
+                                <th>Recommendation</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usageAnomaliesTable"></tbody>
+                    </table>
+                </div>
+
+                <!-- Usage Trend Chart -->
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Product Usage Trend (Last 6 Months)</h5>
+                <canvas id="usageTrendChart" style="max-height: 300px;"></canvas>
+            </div>
+
+            <!-- Section E: Tasks & Follow-ups -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">My Follow-ups & QBRs</h3>
+                    <div class="d-flex gap-2">
+                        <button class="btn-primary">+ Add Task</button>
+                        <select class="form-select" style="width: auto;">
+                            <option value="all">All Tasks</option>
+                            <option value="qbr">QBRs Only</option>
+                            <option value="renewal">Renewal Discussions</option>
+                            <option value="upsell">Upsell Opportunities</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Task Tabs -->
+                <div class="tab-nav">
+                    <button class="tab-button active" onclick="switchTaskTab('today')">Today</button>
+                    <button class="tab-button" onclick="switchTaskTab('overdue')">Overdue</button>
+                    <button class="tab-button" onclick="switchTaskTab('week')">Next 7 Days</button>
+                    <button class="tab-button" onclick="switchTaskTab('month')">Next 30 Days</button>
+                </div>
+
+                <div id="todayTab" class="tab-content active">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox"></th>
+                                    <th>Priority</th>
+                                    <th>Account</th>
+                                    <th>Contact</th>
+                                    <th>Task Type</th>
+                                    <th>Due Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="todayTasksTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="overdueTab" class="tab-content">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox"></th>
+                                    <th>Priority</th>
+                                    <th>Account</th>
+                                    <th>Contact</th>
+                                    <th>Task Type</th>
+                                    <th>Due Date & Time</th>
+                                    <th>Days Overdue</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overdueTasksTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="weekTab" class="tab-content">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox"></th>
+                                    <th>Priority</th>
+                                    <th>Account</th>
+                                    <th>Contact</th>
+                                    <th>Task Type</th>
+                                    <th>Due Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weekTasksTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="monthTab" class="tab-content">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox"></th>
+                                    <th>Priority</th>
+                                    <th>Account</th>
+                                    <th>Contact</th>
+                                    <th>Task Type</th>
+                                    <th>Due Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthTasksTable"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <!-- Section F: Referrals & Advocacy -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Referrals & Customer Advocacy</h3>
+                </div>
+
+                <!-- Advocacy Summary Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #15803d;">34</div>
+                            <div style="font-size: 14px; color: #166534; margin-top: 4px;">Active Advocates</div>
+                            <div style="font-size: 12px; color: #16a34a; margin-top: 8px;">Ready for referrals</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #15803d;">18</div>
+                            <div style="font-size: 14px; color: #166534; margin-top: 4px;">Referrals (This Q)</div>
+                            <div style="font-size: 12px; color: #16a34a; margin-top: 8px;">5 converted to customers</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #15803d;">12</div>
+                            <div style="font-size: 14px; color: #166534; margin-top: 4px;">Case Studies</div>
+                            <div style="font-size: 12px; color: #16a34a; margin-top: 8px;">Published & live</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div style="padding: 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 10px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #15803d;">27</div>
+                            <div style="font-size: 14px; color: #166534; margin-top: 4px;">Testimonials</div>
+                            <div style="font-size: 12px; color: #16a34a; margin-top: 8px;">Approved & featured</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Pipeline Table -->
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Active Referral Pipeline</h5>
+                <div class="table-responsive mb-4">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Referring Customer</th>
+                                <th>Contact Person</th>
+                                <th>Referred Lead</th>
+                                <th>Potential MRR</th>
+                                <th>Status</th>
+                                <th>Last Update</th>
+                                <th>Owner</th>
+                            </tr>
+                        </thead>
+                        <tbody id="referralPipelineTable"></tbody>
+                    </table>
+                </div>
+
+                <!-- Advocacy Candidates -->
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Advocacy Candidates (Ready for Testimonials & Case Studies)</h5>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Account Name</th>
+                                <th>Health Score</th>
+                                <th>NPS Score</th>
+                                <th>Tenure</th>
+                                <th>Success Story</th>
+                                <th>Advocacy Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="advocacyCandidatesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section G: Support & Experience -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">Support Tickets & Customer Experience</h3>
+                </div>
+
+                <!-- Support KPI Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="mini-stat-card">
+                            <div class="mini-stat-value" style="color: #22c55e;">4.6/5</div>
+                            <div class="mini-stat-label">Avg CSAT Score</div>
+                            <span class="trend-badge trend-up mt-2" style="font-size: 11px;">↑ 0.3 vs last month</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat-card">
+                            <div class="mini-stat-value" style="color: #3b82f6;">2.4h</div>
+                            <div class="mini-stat-label">Avg First Response Time</div>
+                            <span class="trend-badge trend-down mt-2" style="font-size: 11px;">↓ 0.8h improvement</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat-card">
+                            <div class="mini-stat-value" style="color: #f59e0b;">87</div>
+                            <div class="mini-stat-label">Open Tickets</div>
+                            <div style="font-size: 11px; color: #ef4444; margin-top: 4px;">12 Critical</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat-card">
+                            <div class="mini-stat-value" style="color: #22c55e;">3.2%</div>
+                            <div class="mini-stat-label">Ticket Reopen Rate</div>
+                            <span class="trend-badge trend-down mt-2" style="font-size: 11px;">↓ 1.1% improvement</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tickets by Priority Chart -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Tickets by Priority & Status</h5>
+                        <canvas id="supportTicketsChart" style="max-height: 300px;"></canvas>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Support Trends (Last 4 Weeks)</h5>
+                        <canvas id="supportTrendsChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Support Issues Table -->
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Critical Tickets & Aging Issues</h5>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Account Name</th>
+                                <th>Subject</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Age</th>
+                                <th>Assigned To</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="criticalTicketsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section H & I: Account Portfolio & Activity Timeline -->
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">Account Portfolio</h3>
+                            <select class="form-select" style="width: auto;">
+                                <option value="all">All Accounts</option>
+                                <option value="my">My Accounts</option>
+                                <option value="at-risk">At Risk</option>
+                                <option value="expanding">Expanding</option>
+                            </select>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Account Name</th>
+                                        <th>Segment</th>
+                                        <th>MRR</th>
+                                        <th>Health Score</th>
+                                        <th>Products</th>
+                                        <th>Renewal Date</th>
+                                        <th>Growth</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="portfolioAccountsTable"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button class="btn-secondary">View All Accounts →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">Recent Activity</h3>
+                            <select class="form-select" style="width: auto; font-size: 13px;">
+                                <option value="my">My Activity</option>
+                                <option value="team">Team Activity</option>
+                            </select>
+                        </div>
+
+                        <div class="activity-timeline" id="activityTimeline"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Mock Data
-        const atRiskAccounts = [
+        // ===== MOCK DATA =====
+        
+        const atRiskAccountsData = [
             {
                 name: "CloudNine Systems",
                 health: 38,
-                mrr: "₹2.4L",
+                mrr: "₹2,45,000",
                 usage: "32%",
                 lastActivity: "14 days ago",
                 openTickets: 18,
@@ -332,168 +853,456 @@
             {
                 name: "DataFlow Inc",
                 health: 62,
-                mrr: "₹1.8L",
+                mrr: "₹1,85,000",
                 usage: "45%",
                 lastActivity: "8 days ago",
                 openTickets: 12,
                 renewal: "Feb 28, 2025",
-                risks: ["Low Usage", "Frequent Issues"]
+                risks: ["Low Usage", "Declining Engagement"]
             },
             {
                 name: "TechVentures Ltd",
                 health: 58,
-                mrr: "₹1.2L",
+                mrr: "₹1,25,000",
                 usage: "38%",
                 lastActivity: "11 days ago",
                 openTickets: 9,
                 renewal: "Apr 12, 2025",
                 risks: ["Declining Usage", "Support Escalations"]
+            },
+            {
+                name: "InnovateSoft",
+                health: 45,
+                mrr: "₹95,000",
+                usage: "28%",
+                lastActivity: "18 days ago",
+                openTickets: 6,
+                renewal: "Mar 20, 2025",
+                risks: ["Low Engagement", "Budget Concerns"]
             }
         ];
 
-        const tasks = [
-            { account: "CloudNine Systems", task: "Quarterly Business Review", priority: "High", due: "Jan 25, 2025", assignedTo: "Priya Singh", status: "Pending" },
-            { account: "TechCorp Solutions", task: "Feature Training Session", priority: "Medium", due: "Jan 28, 2025", assignedTo: "Amit Patel", status: "Scheduled" },
-            { account: "DataFlow Inc", task: "Usage Review Call", priority: "High", due: "Jan 22, 2025", assignedTo: "Sneha Sharma", status: "Overdue" },
-            { account: "Enterprise Solutions", task: "Renewal Discussion", priority: "High", due: "Jan 30, 2025", assignedTo: "Rajesh Kumar", status: "Pending" },
-            { account: "CloudNine Systems", task: "Escalation Follow-up", priority: "Critical", due: "Jan 23, 2025", assignedTo: "Priya Singh", status: "In Progress" }
+        const renewalsData = [
+            { date: "Jan 28, 2025", account: "TechCorp Solutions", mrr: "₹3,20,000", type: "Annual", probability: "95%", am: "Priya Singh", status: "In Discussion" },
+            { date: "Feb 5, 2025", account: "Enterprise Cloud Ltd", mrr: "₹2,80,000", type: "Annual", probability: "92%", am: "Amit Patel", status: "Proposal Sent" },
+            { date: "Feb 12, 2025", account: "GlobalTech Inc", mrr: "₹4,50,000", type: "Annual", probability: "88%", am: "Sneha Sharma", status: "Not Started" },
+            { date: "Feb 18, 2025", account: "CloudNine Systems", mrr: "₹2,45,000", type: "Annual", probability: "45%", am: "Rajesh Kumar", status: "At Risk" },
+            { date: "Feb 25, 2025", account: "DataFlow Inc", mrr: "₹1,85,000", type: "Annual", probability: "65%", am: "Priya Singh", status: "In Discussion" },
+            { date: "Mar 5, 2025", account: "Innovation Labs", mrr: "₹1,95,000", type: "Monthly", probability: "98%", am: "Amit Patel", status: "Auto-Renewal" }
         ];
 
-        const advocacyData = [
-            { account: "TechCorp Solutions", type: "Referral", status: "Active", impact: "High", lastActivity: "3 days ago" },
-            { account: "Enterprise Solutions", type: "Case Study", status: "Published", impact: "Medium", lastActivity: "1 week ago" },
-            { account: "Global Systems", type: "Testimonial", status: "Approved", impact: "High", lastActivity: "2 days ago" },
-            { account: "Innovation Labs", type: "Referral", status: "Converted", impact: "High", lastActivity: "5 days ago" }
+        const usageAnomaliesData = [
+            { account: "CloudNine Systems", products: "8 VMs, 2 K8s, 1TB Storage", usage: "32% avg utilization", status: "Under-utilized", recommendation: "Schedule optimization call", action: "Schedule" },
+            { account: "HyperScale Tech", products: "24 VMs, 850GB Storage", usage: "94% avg utilization", status: "Over-utilized", recommendation: "Recommend upgrade to higher plan", action: "Upsell" },
+            { account: "DataFlow Inc", products: "12 VMs, 3 DB, 2TB Storage", usage: "45% avg utilization", status: "Under-utilized", recommendation: "Educate about cost optimization", action: "Call" },
+            { account: "StartupXYZ", products: "4 VMs, 1 K8s", usage: "18% avg utilization", status: "Severely Under-utilized", recommendation: "Risk of churn - immediate action", action: "Urgent" },
+            { account: "GlobalTech Inc", products: "16 VMs, 4 K8s, 5TB Storage", usage: "78% avg utilization", status: "Normal", recommendation: "Monitor for expansion opportunity", action: "Monitor" }
         ];
 
-        const portfolioAccounts = [
-            { name: "TechCorp Solutions", segment: "Enterprise", mrr: "₹2.4M", health: 85, products: ["VMs", "K8s", "Storage"], renewal: "Mar 2025", growth: "+15%" },
-            { name: "DataFlow Inc", segment: "Mid-Market", mrr: "₹1.8M", health: 62, products: ["VMs", "DB"], renewal: "Feb 2025", growth: "-5%" },
-            { name: "CloudNine Systems", segment: "Enterprise", mrr: "₹3.2M", health: 38, products: ["K8s", "LB", "Storage"], renewal: "Mar 2025", growth: "-12%" },
-            { name: "Enterprise Solutions", segment: "Enterprise", mrr: "₹1.2M", health: 78, products: ["VMs", "Storage"], renewal: "Apr 2025", growth: "+8%" },
-            { name: "Innovation Labs", segment: "Mid-Market", mrr: "₹950K", health: 92, products: ["K8s", "DB", "Storage"], renewal: "May 2025", growth: "+22%" }
+        const todayTasksData = [
+            { priority: "High", account: "CloudNine Systems", contact: "Rahul Mehta", type: "QBR", due: "Today, 2:00 PM", status: "Pending" },
+            { priority: "Critical", account: "TechCorp Solutions", contact: "Anjali Desai", type: "Escalation Follow-up", due: "Today, 11:00 AM", status: "In Progress" },
+            { priority: "Medium", account: "DataFlow Inc", contact: "Vikram Shah", type: "Usage Review Call", due: "Today, 4:30 PM", status: "Scheduled" }
         ];
 
-        const activities = [
-            { text: "Quarterly review completed with TechCorp Solutions", time: "2 hours ago", icon: "📊" },
-            { text: "CloudNine Systems upgraded to Enterprise plan", time: "5 hours ago", icon: "⬆️" },
-            { text: "New referral from Innovation Labs", time: "1 day ago", icon: "🤝" },
-            { text: "Feature adoption webinar scheduled", time: "1 day ago", icon: "📅" },
-            { text: "DataFlow Inc requested feature demo", time: "2 days ago", icon: "💡" },
-            { text: "Health score improved for Global Systems", time: "3 days ago", icon: "💚" }
+        const overdueTasksData = [
+            { priority: "High", account: "StartupXYZ", contact: "Neha Kapoor", type: "Renewal Discussion", due: "Jan 18, 2025", daysOverdue: 4 },
+            { priority: "Critical", account: "GlobalTech Inc", contact: "Arjun Nair", type: "Payment Follow-up", due: "Jan 15, 2025", daysOverdue: 7 }
         ];
 
-        // Render At-Risk Accounts
+        const weekTasksData = [
+            { priority: "High", account: "Enterprise Cloud Ltd", contact: "Pooja Reddy", type: "Renewal Discussion", due: "Jan 24, 2025", status: "Pending" },
+            { priority: "Medium", account: "Innovation Labs", contact: "Karan Malhotra", type: "Feature Training", due: "Jan 26, 2025", status: "Scheduled" },
+            { priority: "Low", account: "HyperScale Tech", contact: "Simran Kaur", type: "Check-in Call", due: "Jan 27, 2025", status: "Pending" }
+        ];
+
+        const monthTasksData = [
+            { priority: "High", account: "TechVentures Ltd", contact: "Ravi Kumar", type: "QBR", due: "Feb 8, 2025", status: "Pending" },
+            { priority: "Medium", account: "InnovateSoft", contact: "Maya Iyer", type: "Upsell Discussion", due: "Feb 12, 2025", status: "Pending" },
+            { priority: "Medium", account: "CloudNine Systems", contact: "Rahul Mehta", type: "Renewal Prep Call", due: "Feb 20, 2025", status: "Pending" }
+        ];
+
+        const referralPipelineData = [
+            { referring: "TechCorp Solutions", contact: "Anjali Desai", referredLead: "MegaCorp Industries", potentialMrr: "₹5,60,000", status: "In Contact", lastUpdate: "3 days ago", owner: "Amit Patel" },
+            { referring: "Enterprise Cloud Ltd", contact: "Pooja Reddy", referredLead: "SmartSystems Pvt Ltd", potentialMrr: "₹3,20,000", status: "Converted", lastUpdate: "1 week ago", owner: "Priya Singh" },
+            { referring: "Innovation Labs", contact: "Karan Malhotra", referredLead: "NexGen Solutions", potentialMrr: "₹2,85,000", status: "New", lastUpdate: "2 days ago", owner: "Sneha Sharma" },
+            { referring: "GlobalTech Inc", contact: "Arjun Nair", referredLead: "CloudFirst Inc", potentialMrr: "₹4,20,000", status: "In Contact", lastUpdate: "5 days ago", owner: "Rajesh Kumar" }
+        ];
+
+        const advocacyCandidatesData = [
+            { account: "TechCorp Solutions", health: 92, nps: 9, tenure: "24 months", story: "50% cost reduction with K8s migration", type: "Case Study", action: "Request" },
+            { account: "Enterprise Cloud Ltd", health: 88, nps: 9, tenure: "18 months", story: "Scaled from 10 to 100 VMs seamlessly", type: "Testimonial", action: "Request" },
+            { account: "Innovation Labs", health: 94, nps: 10, tenure: "30 months", story: "Referral champion - 4 successful referrals", type: "Referral Program", action: "Reward" },
+            { account: "GlobalTech Inc", health: 85, nps: 8, tenure: "22 months", story: "Zero downtime during DR testing", type: "Video Testimonial", action: "Schedule" }
+        ];
+
+        const criticalTicketsData = [
+            { id: "TKT-8842", account: "CloudNine Systems", subject: "VM Performance Degradation", priority: "Critical", status: "In Progress", age: "18h", assignedTo: "DevOps Team" },
+            { id: "TKT-8835", account: "DataFlow Inc", subject: "Database Connection Timeouts", priority: "High", status: "Waiting Customer", age: "2d 4h", assignedTo: "DB Team" },
+            { id: "TKT-8829", account: "HyperScale Tech", subject: "K8s Cluster Not Scaling", priority: "Critical", status: "Escalated", age: "6h", assignedTo: "Platform Team" },
+            { id: "TKT-8820", account: "StartupXYZ", subject: "Storage I/O Bottleneck", priority: "High", status: "In Progress", age: "1d 8h", assignedTo: "Storage Team" }
+        ];
+
+        const portfolioAccountsData = [
+            { name: "TechCorp Solutions", segment: "Enterprise", mrr: "₹3,20,000", health: 92, products: ["VM", "K8s", "DB", "Storage"], renewal: "Jan 2025", growth: "+18%" },
+            { name: "Enterprise Cloud Ltd", segment: "Enterprise", mrr: "₹2,80,000", health: 88, products: ["VM", "K8s", "Storage"], renewal: "Feb 2025", growth: "+12%" },
+            { name: "GlobalTech Inc", segment: "Enterprise", mrr: "₹4,50,000", health: 85, products: ["VM", "K8s", "DB", "LB", "Storage"], renewal: "Feb 2025", growth: "+22%" },
+            { name: "CloudNine Systems", segment: "Mid-Market", mrr: "₹2,45,000", health: 38, products: ["VM", "K8s", "Storage"], renewal: "Mar 2025", growth: "-15%" },
+            { name: "DataFlow Inc", segment: "Mid-Market", mrr: "₹1,85,000", health: 62, products: ["VM", "DB", "Storage"], renewal: "Feb 2025", growth: "-8%" },
+            { name: "Innovation Labs", segment: "Mid-Market", mrr: "₹1,95,000", health: 94, products: ["K8s", "DB", "Storage"], renewal: "Mar 2025", growth: "+28%" },
+            { name: "TechVentures Ltd", segment: "SMB", mrr: "₹1,25,000", health: 58, products: ["VM", "Storage"], renewal: "Apr 2025", growth: "-5%" },
+            { name: "HyperScale Tech", segment: "Enterprise", mrr: "₹3,80,000", health: 78, products: ["VM", "K8s", "LB", "Storage"], renewal: "May 2025", growth: "+9%" }
+        ];
+
+        const activitiesData = [
+            { text: "Renewal closed – TechCorp Solutions renewed annual contract (₹3,20,000)", time: "2 hours ago", icon: "✅", type: "renewal" },
+            { text: "QBR completed with Enterprise Cloud Ltd – Health score improved to 88", time: "5 hours ago", icon: "📊", type: "qbr" },
+            { text: "Upsell activated – GlobalTech Inc added 10 VMs (₹45,000 MRR)", time: "1 day ago", icon: "⬆️", type: "upsell" },
+            { text: "Churn event – StartupXYZ cancelled (₹25,000 MRR). Reason: Budget cuts", time: "2 days ago", icon: "❌", type: "churn" },
+            { text: "Customer call – DataFlow Inc discussed usage optimization", time: "3 days ago", icon: "📞", type: "call" },
+            { text: "Follow-up sent – Renewal proposal sent to CloudNine Systems", time: "4 days ago", icon: "📧", type: "email" },
+            { text: "Referral received – Innovation Labs referred NexGen Solutions", time: "5 days ago", icon: "🤝", type: "referral" },
+            { text: "Health score alert – TechVentures Ltd dropped to 58 (was 72)", time: "6 days ago", icon: "⚠️", type: "alert" }
+        ];
+
+        // ===== RENDER FUNCTIONS =====
+
         function renderAtRiskAccounts() {
-            const container = document.getElementById('atRiskList');
-            container.innerHTML = atRiskAccounts.map(account => `
-                <div style="padding: 16px; background: #fef2f2; border-left: 4px solid #ef4444; border-radius: 8px; margin-bottom: 12px;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                        <div>
-                            <div style="font-weight: 600; font-size: 15px;">${account.name}</div>
-                            <div style="font-size: 13px; color: #666; margin-top: 4px;">${account.mrr} MRR • Renewal: ${account.renewal}</div>
+            const container = document.getElementById('atRiskAccountsList');
+            container.innerHTML = atRiskAccountsData.map(account => {
+                const riskClass = account.health < 50 ? 'badge-danger' : 'badge-warning';
+                return `
+                    <div class="risk-card">
+                        <div class="risk-card-header">
+                            <div>
+                                <div class="risk-account-name">${account.name}</div>
+                                <div class="risk-details">${account.mrr} MRR • Renewal: ${account.renewal}</div>
+                            </div>
+                            <span class="badge ${riskClass}">Health: ${account.health}</span>
                         </div>
-                        <span class="badge ${account.health < 50 ? 'badge-danger' : 'badge-warning'}">
-                            Health: ${account.health}
-                        </span>
+                        <div class="risk-tags">
+                            ${account.risks.map(risk => {
+                                let tagClass = 'usage';
+                                if (risk.includes('Payment') || risk.includes('Overdue')) tagClass = 'payment';
+                                if (risk.includes('Ticket') || risk.includes('Escalation')) tagClass = 'tickets';
+                                if (risk.includes('Engagement') || risk.includes('Activity')) tagClass = 'engagement';
+                                return `<span class="risk-tag ${tagClass}">${risk}</span>`;
+                            }).join('')}
+                        </div>
+                        <div class="risk-metrics">
+                            <div class="risk-metric"><strong>Usage:</strong> ${account.usage}</div>
+                            <div class="risk-metric"><strong>Last Activity:</strong> ${account.lastActivity}</div>
+                            <div class="risk-metric"><strong>Open Tickets:</strong> ${account.openTickets}</div>
+                        </div>
                     </div>
-                    <div style="margin: 8px 0;">
-                        ${account.risks.map(risk => {
-                            const riskClass = risk.includes('Overdue') ? 'risk-overdue' : risk.includes('Usage') ? 'risk-usage' : 'risk-tickets';
-                            return `<span class="risk-tag ${riskClass}">${risk}</span>`;
-                        }).join('')}
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; font-size: 12px;">
-                        <div><strong>Usage:</strong> ${account.usage}</div>
-                        <div><strong>Last Activity:</strong> ${account.lastActivity}</div>
-                        <div><strong>Open Tickets:</strong> ${account.openTickets}</div>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Render Tasks Table
-        function renderTasksTable() {
-            const tbody = document.getElementById('tasksTable');
-            tbody.innerHTML = tasks.map(task => {
-                const priorityBadge = task.priority === 'Critical' ? 'badge-danger' : task.priority === 'High' ? 'badge-warning' : 'badge-info';
-                const statusBadge = task.status === 'Overdue' ? 'badge-danger' : task.status === 'In Progress' ? 'badge-info' : 'badge-success';
+        function renderRenewalsTable() {
+            const tbody = document.getElementById('renewalsTable');
+            tbody.innerHTML = renewalsData.map(renewal => {
+                let statusClass = 'badge-success';
+                if (renewal.status === 'At Risk') statusClass = 'badge-danger';
+                else if (renewal.status === 'In Discussion') statusClass = 'badge-info';
+                else if (renewal.status === 'Not Started') statusClass = 'badge-secondary';
+                
                 return `
                     <tr>
-                        <td><strong>${task.account}</strong></td>
-                        <td>${task.task}</td>
-                        <td><span class="badge ${priorityBadge}">${task.priority}</span></td>
-                        <td>${task.due}</td>
-                        <td>${task.assignedTo}</td>
-                        <td><span class="badge ${statusBadge}">${task.status}</span></td>
+                        <td><strong>${renewal.date}</strong></td>
+                        <td>${renewal.account}</td>
+                        <td><strong>${renewal.mrr}</strong></td>
+                        <td><span class="badge badge-info">${renewal.type}</span></td>
+                        <td><span style="font-weight: 600; color: ${renewal.probability.startsWith('9') ? '#22c55e' : renewal.probability.startsWith('4') ? '#ef4444' : '#f59e0b'};">${renewal.probability}</span></td>
+                        <td>${renewal.am}</td>
+                        <td><span class="badge ${statusClass}">${renewal.status}</span></td>
+                        <td><button class="btn-secondary btn-sm">View Plan</button></td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // Render Advocacy Table
-        function renderAdvocacyTable() {
-            const tbody = document.getElementById('advocacyTable');
-            tbody.innerHTML = advocacyData.map(item => `
-                <tr>
-                    <td><strong>${item.account}</strong></td>
-                    <td>${item.type}</td>
-                    <td><span class="badge badge-success">${item.status}</span></td>
-                    <td><span class="badge ${item.impact === 'High' ? 'badge-success' : 'badge-info'}">${item.impact}</span></td>
-                    <td>${item.lastActivity}</td>
-                </tr>
-            `).join('');
+        function renderUsageAnomaliesTable() {
+            const tbody = document.getElementById('usageAnomaliesTable');
+            tbody.innerHTML = usageAnomaliesData.map(item => {
+                let statusClass = 'badge-warning';
+                if (item.status.includes('Severely')) statusClass = 'badge-danger';
+                if (item.status === 'Over-utilized') statusClass = 'badge-info';
+                if (item.status === 'Normal') statusClass = 'badge-success';
+
+                return `
+                    <tr>
+                        <td><strong>${item.account}</strong></td>
+                        <td>${item.products}</td>
+                        <td>${item.usage}</td>
+                        <td><span class="badge ${statusClass}">${item.status}</span></td>
+                        <td style="font-size: 13px;">${item.recommendation}</td>
+                        <td><button class="btn-primary btn-sm">${item.action}</button></td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        // Render Portfolio Table
-        function renderPortfolioTable() {
-            const tbody = document.getElementById('portfolioTable');
-            tbody.innerHTML = portfolioAccounts.map(account => {
-                const healthColor = account.health >= 75 ? 'health-good' : account.health >= 60 ? 'risk-usage' : 'health-critical';
-                const healthBg = account.health >= 75 ? '#22c55e' : account.health >= 60 ? '#f59e0b' : '#ef4444';
+        function renderTasksTable(data, tableId) {
+            const tbody = document.getElementById(tableId);
+            tbody.innerHTML = data.map(task => {
+                let priorityClass = 'badge-info';
+                if (task.priority === 'Critical') priorityClass = 'badge-danger';
+                else if (task.priority === 'High') priorityClass = 'badge-warning';
+                
+                let statusClass = 'badge-secondary';
+                if (task.status === 'In Progress') statusClass = 'badge-info';
+                else if (task.status === 'Scheduled') statusClass = 'badge-success';
+
+                const overdueCol = task.daysOverdue ? `<td><span class="badge badge-danger">${task.daysOverdue} days</span></td>` : '';
+
+                return `
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><span class="badge ${priorityClass}">${task.priority}</span></td>
+                        <td><strong>${task.account}</strong></td>
+                        <td>${task.contact}</td>
+                        <td>${task.type}</td>
+                        <td>${task.due}</td>
+                        ${overdueCol}
+                        ${!task.daysOverdue ? `<td><span class="badge ${statusClass}">${task.status}</span></td>` : ''}
+                        <td>
+                            <div class="task-actions">
+                                <a href="#" class="action-icon" title="Call">📞</a>
+                                <a href="#" class="action-icon" title="Email">📧</a>
+                                <a href="#" class="action-icon" title="Complete">✓</a>
+                                <a href="#" class="action-icon" title="More">⋮</a>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderReferralPipelineTable() {
+            const tbody = document.getElementById('referralPipelineTable');
+            tbody.innerHTML = referralPipelineData.map(item => {
+                let statusClass = 'badge-info';
+                if (item.status === 'Converted') statusClass = 'badge-success';
+                else if (item.status === 'New') statusClass = 'badge-secondary';
+
+                return `
+                    <tr>
+                        <td><strong>${item.referring}</strong></td>
+                        <td>${item.contact}</td>
+                        <td>${item.referredLead}</td>
+                        <td><strong>${item.potentialMrr}</strong></td>
+                        <td><span class="badge ${statusClass}">${item.status}</span></td>
+                        <td>${item.lastUpdate}</td>
+                        <td>${item.owner}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderAdvocacyCandidatesTable() {
+            const tbody = document.getElementById('advocacyCandidatesTable');
+            tbody.innerHTML = advocacyCandidatesData.map(item => {
+                const healthColor = item.health >= 85 ? '#22c55e' : item.health >= 75 ? '#3b82f6' : '#f59e0b';
+                return `
+                    <tr>
+                        <td><strong>${item.account}</strong></td>
+                        <td><span style="font-weight: 600; color: ${healthColor};">${item.health}</span></td>
+                        <td><span style="font-weight: 600; color: #22c55e;">${item.nps}/10</span></td>
+                        <td>${item.tenure}</td>
+                        <td style="font-size: 13px;">${item.story}</td>
+                        <td><span class="badge badge-info">${item.type}</span></td>
+                        <td><button class="btn-primary btn-sm">${item.action}</button></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderCriticalTicketsTable() {
+            const tbody = document.getElementById('criticalTicketsTable');
+            tbody.innerHTML = criticalTicketsData.map(ticket => {
+                let priorityClass = 'badge-danger';
+                if (ticket.priority === 'High') priorityClass = 'badge-warning';
+
+                let statusClass = 'badge-info';
+                if (ticket.status === 'Escalated') statusClass = 'badge-danger';
+                else if (ticket.status === 'Waiting Customer') statusClass = 'badge-warning';
+
+                return `
+                    <tr>
+                        <td><strong>${ticket.id}</strong></td>
+                        <td>${ticket.account}</td>
+                        <td style="font-size: 13px;">${ticket.subject}</td>
+                        <td><span class="badge ${priorityClass}">${ticket.priority}</span></td>
+                        <td><span class="badge ${statusClass}">${ticket.status}</span></td>
+                        <td>${ticket.age}</td>
+                        <td>${ticket.assignedTo}</td>
+                        <td><button class="btn-secondary btn-sm">View</button></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderPortfolioAccountsTable() {
+            const tbody = document.getElementById('portfolioAccountsTable');
+            tbody.innerHTML = portfolioAccountsData.map(account => {
+                const healthColor = account.health >= 80 ? '#22c55e' : account.health >= 60 ? '#f59e0b' : '#ef4444';
+                const growthColor = account.growth.includes('+') ? '#22c55e' : account.growth.includes('-') ? '#ef4444' : '#6b7280';
+
                 return `
                     <tr>
                         <td><strong>${account.name}</strong></td>
                         <td><span class="badge badge-info">${account.segment}</span></td>
-                        <td>${account.mrr}</td>
+                        <td><strong>${account.mrr}</strong></td>
                         <td>
                             <div class="health-score">
                                 <div class="health-bar">
-                                    <div class="health-fill" style="width: ${account.health}%; background: ${healthBg};"></div>
+                                    <div class="health-fill" style="width: ${account.health}%; background: ${healthColor};"></div>
                                 </div>
-                                <span style="font-weight: 600; color: ${healthBg};">${account.health}</span>
+                                <span class="health-text" style="color: ${healthColor};">${account.health}</span>
                             </div>
                         </td>
                         <td>
-                            ${account.products.map(p => `<span class="product-icon" title="${p}">${p.substring(0, 2)}</span>`).join('')}
+                            ${account.products.map(p => `<span class="product-icon" title="${p}">${p}</span>`).join('')}
                         </td>
                         <td>${account.renewal}</td>
-                        <td style="color: ${account.growth.includes('+') ? '#22c55e' : '#ef4444'}; font-weight: 600;">${account.growth}</td>
+                        <td><span class="growth-${account.growth.includes('+') ? 'positive' : 'negative'}" style="color: ${growthColor};">${account.growth}</span></td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // Render Activity Timeline
         function renderActivityTimeline() {
             const container = document.getElementById('activityTimeline');
-            container.innerHTML = activities.map(activity => `
+            container.innerHTML = activitiesData.map(activity => `
                 <div class="activity-item">
-                    <div style="font-size: 13px; color: #1a1a1a; margin-bottom: 4px;">${activity.icon} ${activity.text}</div>
-                    <div style="font-size: 11px; color: #999;">${activity.time}</div>
+                    <div class="activity-text"><span class="activity-icon">${activity.icon}</span>${activity.text}</div>
+                    <div class="activity-time">${activity.time}</div>
                 </div>
             `).join('');
         }
 
+        // ===== TAB SWITCHING =====
+        function switchTaskTab(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tab}Tab`).classList.add('active');
+        }
+
+        // ===== CHARTS =====
+
         // Health Distribution Chart
-        const healthCtx = document.getElementById('healthChart').getContext('2d');
+        const healthCtx = document.getElementById('healthDistributionChart').getContext('2d');
         new Chart(healthCtx, {
             type: 'doughnut',
             data: {
                 labels: ['Healthy', 'Watchlist', 'At Risk', 'Critical'],
                 datasets: [{
                     data: [267, 38, 25, 12],
-                    backgroundColor: ['#22c55e', '#fbbf24', '#f59e0b', '#ef4444']
+                    backgroundColor: ['#22c55e', '#fbbf24', '#f59e0b', '#ef4444'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // MRR Trend Chart
+        const mrrCtx = document.getElementById('mrrTrendChart').getContext('2d');
+        new Chart(mrrCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+                datasets: [
+                    {
+                        label: 'New MRR',
+                        data: [32, 38, 42, 45, 41, 39, 43],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Expansion MRR',
+                        data: [12, 15, 18, 22, 19, 24, 28],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Churned MRR',
+                        data: [-2, -3, -2, -4, -3, -5, -4],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value + 'L';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Usage Trend Chart
+        const usageCtx = document.getElementById('usageTrendChart').getContext('2d');
+        new Chart(usageCtx, {
+            type: 'bar',
+            data: {
+                labels: ['VMs', 'Kubernetes', 'Databases', 'Storage', 'Load Balancers', 'DR/Backup'],
+                datasets: [{
+                    label: 'Accounts Using',
+                    data: [267, 142, 128, 198, 87, 68],
+                    backgroundColor: ['#3b82f6', '#22c55e', '#a855f7', '#f59e0b', '#ef4444', '#8b5cf6']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Number of Accounts' }
+                    }
+                }
+            }
+        });
+
+        // Support Tickets Chart
+        const supportTicketsCtx = document.getElementById('supportTicketsChart').getContext('2d');
+        new Chart(supportTicketsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Critical', 'High', 'Medium', 'Low'],
+                datasets: [{
+                    data: [12, 28, 32, 15],
+                    backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#94a3b8'],
+                    borderWidth: 0
                 }]
             },
             options: {
@@ -505,79 +1314,55 @@
             }
         });
 
-        // Renewals Chart
-        const renewalsCtx = document.getElementById('renewalsChart').getContext('2d');
-        new Chart(renewalsCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Renewals Due',
-                    data: [8.4, 12.6, 15.2, 9.8, 11.4, 13.7],
-                    backgroundColor: '#3b82f6'
-                }, {
-                    label: 'Renewed',
-                    data: [7.9, 11.8, 14.2, 9.2, 10.8, 12.9],
-                    backgroundColor: '#22c55e'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } },
-                scales: { y: { beginAtZero: true, title: { display: true, text: 'Revenue (₹L)' } } }
-            }
-        });
-
-        // Usage Chart
-        const usageCtx = document.getElementById('usageChart').getContext('2d');
-        new Chart(usageCtx, {
+        // Support Trends Chart
+        const supportTrendsCtx = document.getElementById('supportTrendsChart').getContext('2d');
+        new Chart(supportTrendsCtx, {
             type: 'line',
             data: {
                 labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                datasets: [{
-                    label: 'Active Users',
-                    data: [2547, 2689, 2734, 2847],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
+                datasets: [
+                    {
+                        label: 'Tickets Created',
+                        data: [94, 87, 102, 87],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Tickets Resolved',
+                        data: [88, 92, 96, 94],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: false } }
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
             }
         });
 
-        // Support Chart
-        const supportCtx = document.getElementById('supportChart').getContext('2d');
-        new Chart(supportCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                datasets: [{
-                    label: 'Tickets Created',
-                    data: [234, 198, 256, 187],
-                    backgroundColor: '#94a3b8'
-                }, {
-                    label: 'Tickets Resolved',
-                    data: [221, 203, 241, 194],
-                    backgroundColor: '#22c55e'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
-
-        // Initialize
+        // ===== INITIALIZE ALL RENDERS =====
         renderAtRiskAccounts();
-        renderTasksTable();
-        renderAdvocacyTable();
-        renderPortfolioTable();
+        renderRenewalsTable();
+        renderUsageAnomaliesTable();
+        renderTasksTable(todayTasksData, 'todayTasksTable');
+        renderTasksTable(overdueTasksData, 'overdueTasksTable');
+        renderTasksTable(weekTasksData, 'weekTasksTable');
+        renderTasksTable(monthTasksData, 'monthTasksTable');
+        renderReferralPipelineTable();
+        renderAdvocacyCandidatesTable();
+        renderCriticalTicketsTable();
+        renderPortfolioAccountsTable();
         renderActivityTimeline();
     </script>
 </body>
