@@ -8,6 +8,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <style>
+        :root {
+            --primary-color: #0066FF;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --info-color: #3B82F6;
+            --sidebar-bg: #FFFFFF;
+            --sidebar-hover: #F3F4F6;
+            --sidebar-active: #EEF2FF;
+            --border-color: #E5E7EB;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,586 +27,656 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: #f5f5f5;
-            font-size: 13px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F9FAFB;
+            color: #1F2937;
         }
 
-        .top-nav {
-            background: white;
-            border-bottom: 1px solid #ddd;
-            padding: 8px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 1000;
         }
 
-        .top-nav-left {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .top-nav-left a {
-            color: #666;
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 500;
-            text-transform: uppercase;
-        }
-
-        .top-nav-right {
-            display: flex;
-            gap: 8px;
-        }
-
-        .top-nav-right .btn {
-            font-size: 11px;
-            padding: 4px 12px;
-        }
-
-        .header {
-            background: white;
+        .sidebar-logo {
             padding: 20px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            padding: 16px 12px;
+        }
+
+        .sidebar-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: #6B7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-menu-item:hover {
+            background: var(--sidebar-hover);
+            color: #1F2937;
+        }
+
+        .sidebar-menu-item.active {
+            background: var(--sidebar-active);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .sidebar-menu-item i {
+            font-size: 18px;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .top-header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
         }
 
         .header-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title h1 {
             font-size: 20px;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin: 0;
         }
 
-        .header-subtitle {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 15px;
+        .header-title small {
+            color: #6B7280;
+            font-size: 13px;
         }
 
-        .header-controls {
+        .header-search {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .header-search input {
+            width: 100%;
+            padding: 8px 16px 8px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+        }
+
+        .header-actions {
             display: flex;
-            gap: 10px;
             align-items: center;
+            gap: 12px;
         }
 
-        .header-controls input[type="date"] {
-            border: 1px solid #ddd;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
+        .btn-add {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        .header-controls select {
-            border: 1px solid #ddd;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger-color);
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #E0E7FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Filter Bar */
         .filter-bar {
             background: white;
-            padding: 12px 20px;
-            border-bottom: 1px solid #ddd;
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        .chips {
+        .filter-chips {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
+            flex: 1;
         }
 
-        .chip {
-            padding: 5px 15px;
-            background: white;
-            border: 1px solid #ddd;
+        .filter-chip {
+            padding: 6px 14px;
+            border: 1px solid var(--border-color);
             border-radius: 20px;
-            font-size: 12px;
+            background: white;
+            font-size: 13px;
+            color: #6B7280;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .chip:hover,
-        .chip.active {
-            background: #007bff;
+        .filter-chip:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .filter-chip.active {
+            background: var(--primary-color);
             color: white;
-            border-color: #007bff;
+            border-color: var(--primary-color);
         }
 
         .filter-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .container-main {
-            padding: 20px;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        .banner {
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .banner-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .banner-title {
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .banner-subtitle {
-            background: rgba(255,255,255,0.2);
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            margin-left: 10px;
-        }
-
-        .badge-pending {
-            background: white;
-            color: #ff6b35;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 5px;
-            border-bottom: 2px solid #f0f0f0;
-            margin-bottom: 15px;
-        }
-
-        .tab {
-            padding: 8px 20px;
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            font-size: 13px;
-            font-weight: 500;
-            color: #666;
-            cursor: pointer;
-        }
-
-        .tab.active {
-            color: #333;
-            border-bottom-color: #007bff;
-        }
-
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .task-row {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border: 1px solid #e0e0e0;
+        .btn-filter {
+            padding: 6px 16px;
             border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .task-row:hover {
-            background: #fafafa;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .priority-badge {
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-right: 12px;
-        }
-
-        .priority-high {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .priority-medium {
-            background: #fff3e0;
-            color: #ef6c00;
-        }
-
-        .priority-low {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .task-info {
-            flex: 1;
-        }
-
-        .task-contact {
-            font-weight: 600;
-        }
-
-        .task-company {
-            color: #666;
-            margin-left: 8px;
-        }
-
-        .task-type {
-            color: #999;
-            font-size: 12px;
-        }
-
-        .task-time {
-            margin-right: 15px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #666;
-        }
-
-        .task-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-icon {
-            width: 30px;
-            height: 30px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             background: white;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 13px;
             cursor: pointer;
         }
 
-        .btn-icon:hover {
-            background: #f5f5f5;
-            border-color: #007bff;
-            color: #007bff;
+        .btn-filter.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
 
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 15px;
+        /* Content Area */
+        .content-area {
+            padding: 24px 32px;
         }
 
-        .kpi-card {
+        /* Section */
+        .section {
             background: white;
-            border-radius: 8px;
-            padding: 18px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            border-left: 4px solid;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
         }
 
-        .kpi-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
+        .section-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-            font-size: 22px;
-        }
-
-        .kpi-label {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 6px;
-        }
-
-        .kpi-value {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .kpi-change {
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
+            justify-content: space-between;
+            margin-bottom: 16px;
         }
 
         .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 13px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Task Table */
+        .task-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        .task-table thead th {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6B7280;
+            text-transform: uppercase;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .task-table tbody tr {
+            background: #F9FAFB;
+            border-radius: 8px;
+        }
+
+        .task-table tbody td {
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .task-table tbody tr td:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .task-table tbody tr td:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .user-info {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 8px;
         }
 
-        .section-subtitle {
+        .user-avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 12px;
-            color: #999;
-            margin-bottom: 15px;
+            font-weight: 600;
+            color: white;
         }
 
-        .chart-row {
+        .user-details h6 {
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .user-details small {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge.done {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge.contacted {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-info h6 {
+            font-size: 12px;
+            color: #6B7280;
+            margin: 0 0 6px 0;
+            font-weight: 500;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+        }
+
+        .stat-info small {
+            font-size: 11px;
+            color: #6B7280;
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-icon.blue {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .stat-icon.green {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .stat-icon.yellow {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .stat-icon.orange {
+            background: #FFEDD5;
+            color: #9A3412;
+        }
+
+        .stat-icon.purple {
+            background: #EDE9FE;
+            color: #5B21B6;
+        }
+
+        .stat-icon.red {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* Two Column Layout */
+        .two-column {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
         }
 
         .chart-title {
-            text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
+        }
+
+        .chart-subtitle {
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 16px;
         }
 
         .chart-wrapper {
             position: relative;
-            height: 200px;
+            height: 240px;
         }
 
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+        .chart-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
         }
 
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 6px;
-        }
-
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: #999;
-        }
-
-        .stat-value {
-            font-size: 18px;
+        .chart-center-text h2 {
+            font-size: 32px;
             font-weight: 700;
+            margin: 0;
+            color: var(--success-color);
         }
 
+        .chart-center-text small {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .chart-legend {
+            margin-top: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .legend-item:last-child {
+            border-bottom: none;
+        }
+
+        .legend-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Status Grid */
         .status-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
 
         .status-card {
-            padding: 15px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 10px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
+            text-align: center;
+            border: 1px solid var(--border-color);
         }
 
-        .status-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .status-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 26px;
-        }
-
-        .status-label {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .status-value {
-            font-size: 26px;
+        .status-card h2 {
+            font-size: 28px;
             font-weight: 700;
+            margin: 8px 0 4px 0;
         }
 
-        .pipeline-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+        .status-card small {
+            font-size: 12px;
+            color: #6B7280;
+            font-weight: 500;
         }
 
-        .pipeline-col {
-            background: #fafafa;
+        .status-card i {
+            font-size: 24px;
+            padding: 8px;
             border-radius: 8px;
-            padding: 12px;
         }
 
-        .pipeline-header {
+        /* Pipeline */
+        .pipeline-container {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
-            margin-bottom: 12px;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 10px 0;
         }
 
         .pipeline-stage {
+            min-width: 220px;
+            flex-shrink: 0;
+        }
+
+        .stage-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .stage-title {
             font-size: 13px;
+            font-weight: 600;
+            color: #6B7280;
+        }
+
+        .stage-count {
+            background: #F3F4F6;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 600;
         }
 
-        .deal-card {
-            background: white;
-            padding: 12px;
-            border-radius: 6px;
-            border-left: 3px solid;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-
-        .deal-card:hover {
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-
-        .deal-name {
-            font-size: 13px;
-            font-weight: 600;
+        .stage-value {
+            font-size: 12px;
+            color: #6B7280;
             margin-bottom: 8px;
         }
 
-        .deal-meta {
+        .pipeline-card {
+            background: #F9FAFB;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .pipeline-card h6 {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 0 0 6px 0;
+        }
+
+        .pipeline-card-row {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            font-size: 11px;
-            color: #666;
-        }
-
-        .bottom-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 15px;
-        }
-
-        .table-controls {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        table {
-            width: 100%;
             font-size: 12px;
-            border-collapse: collapse;
+            color: #6B7280;
+            margin-bottom: 4px;
         }
 
-        th {
-            background: #f8f8f8;
-            padding: 10px;
-            text-align: left;
+        .pipeline-card-value {
             font-weight: 600;
-            border-bottom: 2px solid #e0e0e0;
+            color: #1F2937;
         }
 
-        td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .progress-bar-wrapper {
-            height: 6px;
-            background: #e8e8e8;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4caf50, #66bb6a);
-        }
-
-        .status-pill {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        .status-on-track {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status-at-risk {
-            background: #fff3e0;
-            color: #ef6c00;
-        }
-
-        .time-badge {
-            background: #007bff;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-
-        .activity-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        /* Activity Timeline */
+        .activity-timeline {
+            position: relative;
         }
 
         .activity-item {
             display: flex;
             gap: 12px;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 12px 0;
+            border-bottom: 1px solid #F3F4F6;
+            position: relative;
         }
 
-        .activity-item:hover {
-            background: #f8f8f8;
+        .activity-item:last-child {
+            border-bottom: none;
         }
 
         .activity-icon {
@@ -604,433 +686,641 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 16px;
             flex-shrink: 0;
         }
 
-        .activity-text {
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content p {
+            margin: 0 0 4px 0;
+            font-size: 13px;
+        }
+
+        .activity-content small {
+            color: #9CA3AF;
             font-size: 12px;
-            line-height: 1.5;
-            margin-bottom: 4px;
         }
 
         .activity-time {
-            font-size: 11px;
-            color: #999;
+            font-size: 12px;
+            color: #9CA3AF;
         }
 
-        @media (max-width: 1200px) {
-            .kpi-grid {
-                grid-template-columns: repeat(2, 1fr);
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead th {
+            background: #F9FAFB;
+            padding: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6B7280;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tbody td {
+            padding: 12px;
+            font-size: 13px;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .data-table tbody tr:hover {
+            background: #F9FAFB;
+        }
+
+        .progress-bar-custom {
+            background: #E5E7EB;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
             }
-            .pipeline-grid {
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .status-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
-    <!-- Top Navigation -->
-    <div class="top-nav">
-        <div class="top-nav-left">
-            <a href="#">WHATSAPP CHAT</a>
-            <a href="#">TICKETS</a>
-            <a href="#">PROCESS</a>
-            <select>
-                <option>Call Status: On Call</option>
-            </select>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">S</div>
+            <strong>SalesCRM</strong>
         </div>
-        <div class="top-nav-right">
-            <button class="btn btn-sm btn-outline-danger">Create a ticket/contact</button>
-            <button class="btn btn-sm btn-outline-danger">Contact</button>
-            <button class="btn btn-sm btn-outline-danger">Logs</button>
-            <button class="btn btn-sm btn-outline-danger">Credit</button>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <div class="header">
-        <h1 class="header-title">Sales & Leads Dashboard</h1>
-        <p class="header-subtitle">Today's snapshot of your pipeline & targets</p>
-        <div class="header-controls">
-            <input type="date" value="2025-11-11">
-            <span>to</span>
-            <input type="date" value="2025-12-01">
-            <select>
-                <option>Good Singh</option>
-            </select>
-            <button class="btn btn-sm btn-primary">Edit Report</button>
-            <button class="btn btn-sm btn-primary">Manage Targets</button>
-        </div>
-    </div>
-
-    <!-- Filter Bar -->
-    <div class="filter-bar">
-        <div class="chips">
-            <button class="chip active">All Team</button>
-            <button class="chip">Today</button>
-            <button class="chip">This Week</button>
-            <button class="chip">This Month</button>
-            <button class="chip">This Quarter</button>
-        </div>
-        <div class="filter-actions">
-            <select class="form-select form-select-sm">
-                <option>All Pipelines</option>
-            </select>
-            <button class="btn btn-sm btn-outline-secondary">Reset</button>
-            <button class="btn btn-sm btn-primary">Apply Filters</button>
+        <div class="sidebar-menu">
+            <a href="static-sales-dashboard.html" class="sidebar-menu-item active">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="static-leads-dashboard.html" class="sidebar-menu-item">
+                <i class="bi bi-person-plus"></i>
+                <span>Leads</span>
+            </a>
+            <a href="static-account-management-dashboard.html" class="sidebar-menu-item">
+                <i class="bi bi-building"></i>
+                <span>Accounts</span>
+            </a>
+            <a href="static-support-dashboard.html" class="sidebar-menu-item">
+                <i class="bi bi-headset"></i>
+                <span>Support</span>
+            </a>
+            <a href="static-billing-dashboard.html" class="sidebar-menu-item">
+                <i class="bi bi-receipt"></i>
+                <span>Billing</span>
+            </a>
+            <a href="#" class="sidebar-menu-item">
+                <i class="bi bi-people"></i>
+                <span>Contacts</span>
+            </a>
+            <a href="#" class="sidebar-menu-item">
+                <i class="bi bi-graph-up"></i>
+                <span>Deals</span>
+            </a>
+            <a href="#" class="sidebar-menu-item">
+                <i class="bi bi-check-square"></i>
+                <span>Tasks</span>
+            </a>
+            <a href="#" class="sidebar-menu-item">
+                <i class="bi bi-bar-chart"></i>
+                <span>Reports</span>
+            </a>
+            <a href="#" class="sidebar-menu-item">
+                <i class="bi bi-gear"></i>
+                <span>Settings</span>
+            </a>
         </div>
     </div>
 
-    <!-- Main Container -->
-    <div class="container-main">
-        <!-- Tasks Banner -->
-        <div class="banner">
-            <div class="banner-left">
-                <i class="bi bi-list-check" style="font-size: 20px;"></i>
-                <div>
-                    <span class="banner-title">Follow-ups & Tasks</span>
-                    <span class="banner-subtitle">Due today or overdue</span>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="top-header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>Sales & Leads Dashboard</h1>
+                    <small>Track all sales & contacts in one place</small>
                 </div>
-            </div>
-            <span class="badge-pending">3 Pending</span>
-        </div>
-
-        <!-- Tasks Card -->
-        <div class="card">
-            <div class="tabs">
-                <button class="tab active">Today</button>
-                <button class="tab">Overdue</button>
-                <button class="tab">Next 7 Days</button>
-                <button class="tab">Next 30 Days</button>
-            </div>
-            <div class="task-list" id="taskList"></div>
-        </div>
-
-        <!-- KPI Cards Row 1 -->
-        <div class="kpi-grid">
-            <div class="kpi-card" style="border-left-color: #2196f3;">
-                <div class="kpi-icon" style="background: #e3f2fd; color: #2196f3;">
-                    <i class="bi bi-currency-dollar"></i>
+                <div class="header-search">
+                    <div class="search-wrapper">
+                        <i class="bi bi-search"></i>
+                        <input type="text" placeholder="Search leads, contacts, accounts, deals...">
+                    </div>
                 </div>
-                <div class="kpi-label">Total Business</div>
-                <div class="kpi-value">₹68.49k</div>
-                <div class="kpi-change" style="color: #4caf50;">+32% vs Q3</div>
-            </div>
-            <div class="kpi-card" style="border-left-color: #4caf50;">
-                <div class="kpi-icon" style="background: #e8f5e9; color: #4caf50;">
-                    <i class="bi bi-arrow-repeat"></i>
+                <div class="header-actions">
+                    <button class="btn-add">
+                        <i class="bi bi-plus-lg"></i>
+                        Add
+                    </button>
+                    <button class="btn-icon">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn-icon">
+                        <i class="bi bi-chat-dots"></i>
+                    </button>
+                    <div class="user-avatar">JD</div>
                 </div>
-                <div class="kpi-label">Active MRR</div>
-                <div class="kpi-value">₹2.7k</div>
-                <div class="kpi-change" style="color: #4caf50;">+8% vs last month</div>
-            </div>
-            <div class="kpi-card" style="border-left-color: #ff9800;">
-                <div class="kpi-icon" style="background: #fff3e0; color: #ff9800;">
-                    <i class="bi bi-graph-up-arrow"></i>
-                </div>
-                <div class="kpi-label">New Business</div>
-                <div class="kpi-value">₹32.4k</div>
-                <div class="kpi-change" style="color: #4caf50;">+39% vs Q3</div>
-            </div>
-            <div class="kpi-card" style="border-left-color: #9c27b0;">
-                <div class="kpi-icon" style="background: #f3e5f5; color: #9c27b0;">
-                    <i class="bi bi-funnel"></i>
-                </div>
-                <div class="kpi-label">Funnel Size</div>
-                <div class="kpi-value">₹142.4k</div>
-                <div class="kpi-change">Open pipeline value</div>
             </div>
         </div>
 
-        <!-- KPI Cards Row 2 -->
-        <div class="kpi-grid">
-            <div class="kpi-card" style="border-left-color: #00bcd4;">
-                <div class="kpi-icon" style="background: #e0f7fa; color: #00bcd4;">
-                    <i class="bi bi-people"></i>
-                </div>
-                <div class="kpi-label">Total Leads</div>
-                <div class="kpi-value">632</div>
-                <div class="kpi-change" style="color: #4caf50;">+2% vs last month</div>
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-chips">
+                <button class="filter-chip">All Years</button>
+                <button class="filter-chip active">Today</button>
+                <button class="filter-chip">This Week</button>
+                <button class="filter-chip">This Month</button>
+                <button class="filter-chip">This Quarter</button>
+                <button class="filter-chip">Custom</button>
+                <button class="filter-chip">All Statuses</button>
             </div>
-            <div class="kpi-card" style="border-left-color: #4caf50;">
-                <div class="kpi-icon" style="background: #e8f5e9; color: #4caf50;">
-                    <i class="bi bi-check-circle"></i>
-                </div>
-                <div class="kpi-label">Converted Leads</div>
-                <div class="kpi-value">23K</div>
-                <div class="kpi-change" style="color: #4caf50;">+3% vs last month</div>
-            </div>
-            <div class="kpi-card" style="border-left-color: #e91e63;">
-                <div class="kpi-icon" style="background: #fce4ec; color: #e91e63;">
-                    <i class="bi bi-person-check"></i>
-                </div>
-                <div class="kpi-label">Active Contacts</div>
-                <div class="kpi-value">456</div>
-                <div class="kpi-change" style="color: #4caf50;">+1% vs last month</div>
-            </div>
-            <div class="kpi-card" style="border-left-color: #ffc107;">
-                <div class="kpi-icon" style="background: #fff8e1; color: #ffc107;">
-                    <i class="bi bi-exclamation-triangle"></i>
-                </div>
-                <div class="kpi-label">Urgent Contacts</div>
-                <div class="kpi-value">23</div>
-                <div class="kpi-change">Needs attention</div>
+            <div class="filter-actions">
+                <button class="btn-filter">Reset</button>
+                <button class="btn-filter primary">Apply</button>
             </div>
         </div>
 
-        <!-- Charts Row -->
-        <div class="two-col">
-            <!-- Sales Target & Journey -->
-            <div class="card">
-                <div class="section-title">
-                    <i class="bi bi-graph-up"></i>
-                    Sales Target & Journey
-                </div>
-                <p class="section-subtitle">Track your complete sales funnel overview</p>
-
-                <div class="chart-row">
-                    <div>
-                        <div class="chart-title">Target Achievement</div>
-                        <div class="chart-wrapper">
-                            <canvas id="targetChart"></canvas>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="chart-title">Lead to Payment Journey</div>
-                        <div class="chart-wrapper">
-                            <canvas id="journeyChart"></canvas>
-                        </div>
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Follow-ups & Tasks -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Follow-ups & Tasks</h2>
+                    <div class="section-actions">
+                        <button class="btn-sm">See Tasks</button>
+                        <button class="btn-sm">All Parts</button>
                     </div>
                 </div>
-
-                <div class="stat-grid">
-                    <div class="stat-item" style="background: #e3f2fd;">
-                        <div class="stat-icon" style="background: #2196f3;">
-                            <i class="bi bi-bullseye"></i>
-                        </div>
-                        <div>
-                            <div class="stat-label">Target</div>
-                            <div class="stat-value">34.104M</div>
-                        </div>
-                    </div>
-                    <div class="stat-item" style="background: #e8f5e9;">
-                        <div class="stat-icon" style="background: #4caf50;">
-                            <i class="bi bi-diagram-3"></i>
-                        </div>
-                        <div>
-                            <div class="stat-label">Allocated</div>
-                            <div class="stat-value">650</div>
-                        </div>
-                    </div>
-                    <div class="stat-item" style="background: #e8f5e9;">
-                        <div class="stat-icon" style="background: #2e7d32;">
-                            <i class="bi bi-check-circle"></i>
-                        </div>
-                        <div>
-                            <div class="stat-label">Achieved</div>
-                            <div class="stat-value">77.104M</div>
-                        </div>
-                    </div>
-                    <div class="stat-item" style="background: #fff3e0;">
-                        <div class="stat-icon" style="background: #ff9800;">
-                            <i class="bi bi-hourglass"></i>
-                        </div>
-                        <div>
-                            <div class="stat-label">Remaining</div>
-                            <div class="stat-value">81.104M</div>
-                        </div>
-                    </div>
-                    <div class="stat-item" style="background: #f3e5f5;">
-                        <div class="stat-icon" style="background: #9c27b0;">
-                            <i class="bi bi-bar-chart"></i>
-                        </div>
-                        <div>
-                            <div class="stat-label">Conversion</div>
-                            <div class="stat-value">8.4%</div>
-                        </div>
-                    </div>
-                    <div class="stat-item" style="background: #fff8e1;">
-                        <div class="stat-icon" style="background: #ffc107;">
-                            <i class="bi bi-currency-rupee"></i>
-                        </div>
-                        <div>
-                            <div class="stat-label">Conversion</div>
-                            <div class="stat-value">₹110K</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lead & Contact Status -->
-            <div class="card">
-                <div class="section-title">
-                    <i class="bi bi-people"></i>
-                    Lead & Contact Status
-                </div>
-                <p class="section-subtitle">Visualize pipeline health</p>
-                <div class="status-grid" id="statusGrid"></div>
-            </div>
-        </div>
-
-        <!-- Pipeline Snapshot -->
-        <div class="card">
-            <div class="section-title">
-                <i class="bi bi-kanban"></i>
-                Pipeline Snapshot
-            </div>
-            <p class="section-subtitle">Active deals by stage</p>
-            <div class="pipeline-grid" id="pipelineGrid"></div>
-        </div>
-
-        <!-- Bottom Row -->
-        <div class="bottom-row">
-            <!-- Sales Target Management -->
-            <div class="card">
-                <div class="section-title">
-                    <i class="bi bi-clipboard-data"></i>
-                    Sales Target Management
-                </div>
-                <p class="section-subtitle">Track and manage quarterly targets</p>
-
-                <div class="table-controls">
-                    <div style="display: flex; gap: 8px;">
-                        <select class="form-select form-select-sm">
-                            <option>2025</option>
-                        </select>
-                        <select class="form-select form-select-sm">
-                            <option>Q1</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-primary me-2">Add Target</button>
-                        <button class="btn btn-sm btn-outline-secondary">Export</button>
-                    </div>
-                </div>
-
-                <table>
+                <table class="task-table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Year</th>
-                            <th>Quarter</th>
-                            <th>Month</th>
-                            <th>Target Business</th>
-                            <th>Achieved Business</th>
-                            <th>Target MRR</th>
-                            <th>Achieved MRR</th>
-                            <th>Achievement</th>
-                            <th>Status</th>
+                            <th></th>
+                            <th>TODAY (3)</th>
+                            <th>OVERDUE (0)</th>
+                            <th>NEXT 7 DAYS (2)</th>
+                            <th>NEXT 30 DAYS (0)</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody id="targetTable"></tbody>
+                    <tbody id="tasksTableBody">
+                        <!-- Tasks will be populated here -->
+                    </tbody>
                 </table>
             </div>
 
-            <!-- Recent Activity -->
-            <div class="card">
-                <div class="section-title">
-                    <i class="bi bi-clock-history"></i>
-                    Recent Activity
+            <!-- Sales Target & Performance Overview -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Sales Target & Performance Overview</h2>
                 </div>
-                <p class="section-subtitle">Latest updates</p>
-                <span class="time-badge">3 hours ago</span>
-                <div class="activity-list" id="activityList"></div>
+                <div class="two-column">
+                    <!-- Quarter Target Achievement -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">Quarter Target Achievement</h3>
+                        <p class="chart-subtitle">Q4 2024 (Oct, Nov, Dec) Performance to Date</p>
+                        <div class="chart-wrapper">
+                            <canvas id="quarterTargetChart"></canvas>
+                            <div class="chart-center-text">
+                                <h2 id="achievementPercent">86.1%</h2>
+                                <small>ACHIEVED</small>
+                            </div>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <span class="legend-dot" style="background: #10B981;"></span>
+                                    <span>Target Achieved</span>
+                                </div>
+                                <span class="legend-value" id="targetAchieved">₹ 11.5Lk</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <span class="legend-dot" style="background: #E5E7EB;"></span>
+                                    <span>Remaining Target</span>
+                                </div>
+                                <span class="legend-value" id="remainingTarget">₹ 11.5Lk</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lead Allocation & Performance -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">Lead Allocation & Performance</h3>
+                        <p class="chart-subtitle">All agent funnel from allocated to close</p>
+                        <div class="chart-wrapper">
+                            <canvas id="leadAllocationChart"></canvas>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <span class="legend-dot" style="background: #10B981;"></span>
+                                    <span>Contacted & Hot</span>
+                                </div>
+                                <span class="legend-value" id="contactedHot">₹ 60.6Lk</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <span class="legend-dot" style="background: #3B82F6;"></span>
+                                    <span>In Pipeline</span>
+                                </div>
+                                <span class="legend-value" id="inPipeline">₹ 66.6Lk</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <span class="legend-dot" style="background: #EAB308;"></span>
+                                    <span>Conversion Funnel</span>
+                                </div>
+                                <span class="legend-value" id="conversionFunnel">8.40M</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <span class="legend-dot" style="background: #E5E7EB;"></span>
+                                    <span>Remaining Target</span>
+                                </div>
+                                <span class="legend-value" id="remainingTarget2">₹ 11.7Lk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Stats will be populated here -->
+                </div>
+            </div>
+
+            <!-- Sales Target vs Achieved -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Sales Target vs Achieved - Q4 2024</h2>
+                    <div class="section-actions">
+                        <button class="btn-sm">Revenue</button>
+                        <button class="btn-sm">MRR</button>
+                    </div>
+                </div>
+                <canvas id="salesTargetChart" style="height: 300px;"></canvas>
+            </div>
+
+            <!-- Lead & Contact Status and Lead Source & Stage Distribution -->
+            <div class="two-column">
+                <!-- Lead & Contact Status -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Lead & Contact Status</h2>
+                    </div>
+                    <div class="status-grid" id="statusGrid">
+                        <!-- Status cards will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Lead Source & Stage Distribution -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Lead Source & Stage Distribution</h2>
+                    </div>
+                    <p class="chart-subtitle">Lead Source</p>
+                    <canvas id="leadSourceChart" style="height: 180px; margin-bottom: 20px;"></canvas>
+                    <p class="chart-subtitle">Lead Stages</p>
+                    <canvas id="leadStagesChart" style="height: 180px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Pipeline Snapshot -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Pipeline Snapshot</h2>
+                    <a href="#" style="color: var(--primary-color); text-decoration: none; font-size: 14px;">View Full Pipeline →</a>
+                </div>
+                <div class="pipeline-container" id="pipelineContainer">
+                    <!-- Pipeline stages will be populated here -->
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Activity</h2>
+                    <div class="section-actions">
+                        <button class="btn-sm">Team Activity</button>
+                        <button class="btn-sm">All Types</button>
+                    </div>
+                </div>
+                <div class="activity-timeline" id="activityTimeline">
+                    <!-- Activities will be populated here -->
+                </div>
+                <div style="text-align: center; margin-top: 16px;">
+                    <button class="btn-sm">Load More Activities</button>
+                </div>
+            </div>
+
+            <!-- Manage Sales Targets -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Manage Sales Targets</h2>
+                    <div class="section-actions">
+                        <button class="btn-sm">Edit</button>
+                        <button class="btn-sm">Q4</button>
+                    </div>
+                </div>
+                <table class="data-table" id="targetsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>REP</th>
+                            <th>QUARTER</th>
+                            <th>MONTH</th>
+                            <th>TARGET BUSINESS</th>
+                            <th>ACHIEVED REVENUE</th>
+                            <th>TARGET MRR</th>
+                            <th>ACHIEVED MRR</th>
+                            <th>ACHIEVEMENT</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
-        const API = 'sales-api.php';
+        const API_URL = 'sales-api.php';
 
-        async function loadData() {
+        // Fetch and render dashboard data
+        async function loadDashboard() {
             try {
-                const res = await fetch(API);
-                const data = await res.json();
-                
-                renderTasks(data.followUpTasks.today);
-                renderStatus(data.leadStatus);
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                renderTasks(data.followUpTasks);
+                renderStats(data.kpis);
+                renderCharts(data);
+                renderStatusGrid(data.leadStatus);
                 renderPipeline(data.pipeline);
-                renderTargets(data.monthlyTargets);
                 renderActivity(data.recentActivity);
-                renderCharts();
-            } catch (e) {
-                console.error('Error:', e);
+                renderTargetsTable(data.salesTargets);
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
             }
         }
 
         function renderTasks(tasks) {
-            document.getElementById('taskList').innerHTML = tasks.map(t => `
-                <div class="task-row">
-                    <input type="checkbox">
-                    <span class="priority-badge priority-${t.priority.toLowerCase()}">${t.priority}</span>
-                    <div class="task-info">
-                        <div>
-                            <span class="task-contact">${t.contact}</span>
-                            <span class="task-company">· ${t.company}</span>
-                        </div>
-                        <div class="task-type">${t.activityType}</div>
+            const tbody = document.getElementById('tasksTableBody');
+            tbody.innerHTML = tasks.map((task, index) => {
+                const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D'];
+                const bgColor = colors[index % colors.length];
+                return `
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar-sm" style="background: ${bgColor};">
+                                    ${task.name.split(' ').map(n => n[0]).join('')}
+                                </div>
+                                <div class="user-details">
+                                    <h6>${task.name}</h6>
+                                    <small>${task.company}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${task.task}</td>
+                        <td>
+                            <i class="bi bi-${task.type === 'Call' ? 'telephone' : task.type === 'Meeting' ? 'calendar-event' : 'envelope'}"></i>
+                            ${task.type}
+                        </td>
+                        <td>${task.time}</td>
+                        <td><span class="badge ${task.status.toLowerCase()}">${task.status}</span></td>
+                        <td>
+                            <i class="bi bi-telephone"></i>
+                            <i class="bi bi-envelope"></i>
+                            <i class="bi bi-chat-dots"></i>
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderStats(kpis) {
+            const statsGrid = document.getElementById('statsGrid');
+            const stats = [
+                { title: 'Total Allocated (Q4)', value: kpis.totalAllocated, change: '+12.5% vs last quarter', icon: 'bi-file-earmark-text', color: 'blue' },
+                { title: 'Contacted & Hot', value: kpis.contactedHot, change: '+8.2% vs last quarter', icon: 'bi-telephone', color: 'green' },
+                { title: 'Deals In Pipe', value: kpis.dealsInPipe, change: '+15.3% vs last quarter', icon: 'bi-pie-chart', color: 'green' },
+                { title: 'Expected Value', value: kpis.expectedValue, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' },
+                { title: 'New Meetings', value: kpis.newMeetings, change: '+6.3% vs last week', icon: 'bi-calendar-check', color: 'blue' },
+                { title: 'Lead Qualified', value: kpis.leadQualified, change: '+9.1% vs last week', icon: 'bi-check-circle', color: 'green' },
+                { title: 'New Leads', value: kpis.newLeads, change: '-2.4% vs last week', icon: 'bi-person-plus', color: 'blue' },
+                { title: 'Cold Calling', value: kpis.coldCalling, change: '+4.8% vs last week', icon: 'bi-telephone-outbound', color: 'purple' },
+                { title: 'Follow Up', value: kpis.followUp, change: '+3.2% vs last week', icon: 'bi-clock-history', color: 'yellow' },
+                { title: 'Proposals Sent', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'Deals Lost', value: kpis.dealsLost, change: '-5.7% vs last week', icon: 'bi-x-circle', color: 'red' },
+                { title: 'Deals Won', value: kpis.dealsWon, change: '+14.2% vs last week', icon: 'bi-trophy', color: 'green' }
+            ];
+
+            statsGrid.innerHTML = stats.map(stat => `
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h6>${stat.title}</h6>
+                        <h3>${stat.value}</h3>
+                        <small>${stat.change}</small>
                     </div>
-                    <div class="task-time">
-                        <i class="bi bi-clock"></i>
-                        <span>${t.dueDateTime}</span>
-                    </div>
-                    <div class="task-actions">
-                        <button class="btn-icon"><i class="bi bi-telephone"></i></button>
-                        <button class="btn-icon"><i class="bi bi-envelope"></i></button>
-                        <button class="btn-icon"><i class="bi bi-check"></i></button>
-                        <button class="btn-icon"><i class="bi bi-three-dots"></i></button>
+                    <div class="stat-icon ${stat.color}">
+                        <i class="${stat.icon}"></i>
                     </div>
                 </div>
             `).join('');
         }
 
-        function renderStatus(status) {
-            const items = [
-                { k: 'newLeads', l: 'New Leads', i: 'bi-envelope', c: '#4285f4' },
-                { k: 'activeContacts', l: 'Active Contacts', i: 'bi-people', c: '#34a853' },
-                { k: 'notContacted', l: 'Not Contacted', i: 'bi-telephone-x', c: '#fbbc04' },
-                { k: 'contacted', l: 'Contacted', i: 'bi-check-circle', c: '#17a2b8' },
-                { k: 'urgentContacts', l: 'Urgent Contacts', i: 'bi-exclamation-triangle', c: '#ea4335' },
-                { k: 'retargetingContacts', l: 'Retargeting', i: 'bi-arrow-repeat', c: '#20c997' },
-                { k: 'junkLeads', l: 'Junk Leads', i: 'bi-trash', c: '#6c757d' },
-                { k: 'lostCustomers', l: 'Lost Customers', i: 'bi-x-circle', c: '#e74c3c' }
+        function renderCharts(data) {
+            // Quarter Target Achievement Chart
+            const quarterCtx = document.getElementById('quarterTargetChart').getContext('2d');
+            new Chart(quarterCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Achieved', 'Remaining'],
+                    datasets: [{
+                        data: [86.1, 13.9],
+                        backgroundColor: ['#10B981', '#E5E7EB'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+
+            // Lead Allocation Chart
+            const leadCtx = document.getElementById('leadAllocationChart').getContext('2d');
+            new Chart(leadCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Contacted & Hot', 'In Pipeline', 'Conversion Funnel', 'Remaining'],
+                    datasets: [{
+                        data: [25, 30, 20, 25],
+                        backgroundColor: ['#10B981', '#3B82F6', '#EAB308', '#E5E7EB'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '60%',
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Sales Target Chart
+            const salesCtx = document.getElementById('salesTargetChart').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3'],
+                    datasets: [{
+                        label: 'Achieved',
+                        data: [75, 92, 88],
+                        backgroundColor: '#3B82F6',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: value => value + '%'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Lead Source Chart
+            const sourceCtx = document.getElementById('leadSourceChart').getContext('2d');
+            new Chart(sourceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Website', 'Referral', 'LinkedIn', 'Cold Call', 'Partner'],
+                    datasets: [{
+                        data: [420, 240, 145, 130, 90],
+                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+
+            // Lead Stages Chart
+            const stagesCtx = document.getElementById('leadStagesChart').getContext('2d');
+            new Chart(stagesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['New', 'Contacted', 'Qualified', 'Proposal', 'Negotiation', 'Closed', 'Lost'],
+                    datasets: [{
+                        data: [89, 342, 234, 156, 78, 523, 45],
+                        backgroundColor: '#3B82F6',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function renderStatusGrid(statusData) {
+            const statusGrid = document.getElementById('statusGrid');
+            const statuses = [
+                { label: 'New Leads', value: statusData.newLeads, icon: 'bi-person-plus', color: '#DBEAFE', textColor: '#1E40AF' },
+                { label: 'Hot Leads', value: statusData.hotLeads, icon: 'bi-fire', color: '#FEE2E2', textColor: '#991B1B' },
+                { label: 'Active Deals', value: statusData.activeDeals, icon: 'bi-graph-up', color: '#D1FAE5', textColor: '#065F46' },
+                { label: 'Lost Deals', value: statusData.lostDeals, icon: 'bi-x-circle', color: '#FEE2E2', textColor: '#991B1B' },
+                { label: 'Qualified', value: statusData.qualified, icon: 'bi-check-circle', color: '#D1FAE5', textColor: '#065F46' },
+                { label: 'Unresponsive', value: statusData.unresponsive, icon: 'bi-dash-circle', color: '#FEF3C7', textColor: '#92400E' }
             ];
 
-            document.getElementById('statusGrid').innerHTML = items.map(x => `
-                <div class="status-card" style="background: ${x.c}15;">
-                    <div class="status-icon" style="background: ${x.c};">
-                        <i class="${x.i}"></i>
-                    </div>
-                    <div>
-                        <div class="status-label">${x.l}</div>
-                        <div class="status-value">${status[x.k]}</div>
-                    </div>
+            statusGrid.innerHTML = statuses.map(status => `
+                <div class="status-card" style="background: ${status.color};">
+                    <i class="${status.icon}" style="background: white; color: ${status.textColor};"></i>
+                    <h2 style="color: ${status.textColor};">${status.value}</h2>
+                    <small style="color: ${status.textColor};">${status.label}</small>
                 </div>
             `).join('');
         }
 
         function renderPipeline(pipeline) {
-            const stages = [
-                { k: 'New', i: 'bi-flag', c: '#4285f4' },
-                { k: 'Qualified', i: 'bi-flag', c: '#34a853' },
-                { k: 'Proposal', i: 'bi-flag', c: '#fbbc04' },
-                { k: 'Negotiation', i: 'bi-flag', c: '#ea4335' }
-            ];
-
-            document.getElementById('pipelineGrid').innerHTML = stages.map(s => `
-                <div class="pipeline-col">
-                    <div class="pipeline-header">
-                        <i class="${s.i}" style="color: ${s.c};"></i>
-                        <span class="pipeline-stage">${s.k}</span>
+            const container = document.getElementById('pipelineContainer');
+            container.innerHTML = pipeline.stages.map(stage => `
+                <div class="pipeline-stage">
+                    <div class="stage-header">
+                        <span class="stage-title">${stage.name}</span>
+                        <span class="stage-count">${stage.count}</span>
                     </div>
-                    ${pipeline[s.k].slice(0, 3).map(d => `
-                        <div class="deal-card" style="border-left-color: ${s.c};">
-                            <div class="deal-name">${d.name}</div>
-                            <div class="deal-meta">
-                                <span>${d.amount}</span>
-                                <span>Leads</span>
+                    <div class="stage-value">${stage.value}</div>
+                    ${stage.deals.map(deal => `
+                        <div class="pipeline-card">
+                            <h6>${deal.name}</h6>
+                            <div class="pipeline-card-row">
+                                <span>${deal.company}</span>
+                            </div>
+                            <div class="pipeline-card-row">
+                                <span>Value:</span>
+                                <span class="pipeline-card-value">${deal.value}</span>
+                            </div>
+                            <div class="pipeline-card-row">
+                                <span>Stage:</span>
+                                <span class="pipeline-card-value">${deal.stage}</span>
                             </div>
                         </div>
                     `).join('')}
@@ -1038,100 +1328,59 @@
             `).join('');
         }
 
-        function renderTargets(targets) {
-            document.getElementById('targetTable').innerHTML = targets.slice(0, 3).map((t, i) => {
-                const pct = ((t.achievedBusiness / t.targetBusiness) * 100).toFixed(1);
-                const status = pct >= 80 ? 'on-track' : 'at-risk';
-                return `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td>${t.year}</td>
-                        <td>${t.quarter}</td>
-                        <td>${t.month}</td>
-                        <td>₹${(t.targetBusiness / 100000).toFixed(2)}L</td>
-                        <td>₹${(t.achievedBusiness / 100000).toFixed(2)}L</td>
-                        <td>₹${(t.targetMRR / 1000).toFixed(0)}K</td>
-                        <td>₹${(t.achievedMRR / 1000).toFixed(0)}K</td>
-                        <td>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: ${pct}%;"></div>
-                            </div>
-                            ${pct}%
-                        </td>
-                        <td><span class="status-pill status-${status}">${status === 'on-track' ? 'On Track' : 'At Risk'}</span></td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
         function renderActivity(activities) {
-            const icons = {
-                call: { i: 'bi-telephone', c: '#4285f4' },
-                deal: { i: 'bi-briefcase', c: '#34a853' },
-                email: { i: 'bi-envelope', c: '#fbbc04' },
-                meeting: { i: 'bi-calendar', c: '#ea4335' },
-                note: { i: 'bi-pencil', c: '#9c27b0' }
+            const timeline = document.getElementById('activityTimeline');
+            const iconMap = {
+                call: { icon: 'bi-telephone-fill', bg: '#DBEAFE', color: '#1E40AF' },
+                email: { icon: 'bi-envelope-fill', bg: '#FEF3C7', color: '#92400E' },
+                meeting: { icon: 'bi-calendar-event-fill', bg: '#D1FAE5', color: '#065F46' },
+                deal: { icon: 'bi-trophy-fill', bg: '#FEE2E2', color: '#991B1B' }
             };
 
-            document.getElementById('activityList').innerHTML = activities.slice(0, 4).map(a => {
-                const icon = icons[a.type] || icons.note;
+            timeline.innerHTML = activities.map(activity => {
+                const iconData = iconMap[activity.type] || iconMap.call;
                 return `
                     <div class="activity-item">
-                        <div class="activity-icon" style="background: ${icon.c};">
-                            <i class="${icon.i}"></i>
+                        <div class="activity-icon" style="background: ${iconData.bg}; color: ${iconData.color};">
+                            <i class="${iconData.icon}"></i>
                         </div>
-                        <div>
-                            <div class="activity-text">${a.description}</div>
-                            <div class="activity-time">${a.timestamp}</div>
+                        <div class="activity-content">
+                            <p><strong>${activity.user}</strong> ${activity.description}</p>
+                            <small>${activity.details}</small>
                         </div>
+                        <div class="activity-time">${activity.time}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        function renderCharts() {
-            new Chart(document.getElementById('targetChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Missing', 'Overdue', 'Good', 'Email', 'Security'],
-                    datasets: [{ data: [20, 15, 35, 20, 10], backgroundColor: ['#ea4335', '#fbbc04', '#34a853', '#4285f4', '#9c27b0'] }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
-                }
-            });
-
-            new Chart(document.getElementById('journeyChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Target Value', 'Total No Of Leads', 'Converted Leads'],
-                    datasets: [{ data: [45, 30, 25], backgroundColor: ['#ff6b35', '#34a853', '#4285f4'] }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
-                }
-            });
+        function renderTargetsTable(targets) {
+            const tbody = document.querySelector('#targetsTable tbody');
+            tbody.innerHTML = targets.map((target, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${target.rep}</td>
+                    <td>${target.quarter}</td>
+                    <td>${target.month}</td>
+                    <td>${target.targetBusiness}</td>
+                    <td>${target.achievedRevenue}</td>
+                    <td>${target.targetMRR}</td>
+                    <td>${target.achievedMRR}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="progress-bar-custom">
+                                <div class="progress-fill" style="width: ${target.achievement};"></div>
+                            </div>
+                            <span>${target.achievement}</span>
+                        </div>
+                    </td>
+                    <td><span class="badge ${target.status === 'On Track' ? 'done' : 'contacted'}">${target.status}</span></td>
+                </tr>
+            `).join('');
         }
 
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-            });
-        });
-
-        document.querySelectorAll('.chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-            });
-        });
-
-        loadData();
+        // Load dashboard on page load
+        document.addEventListener('DOMContentLoaded', loadDashboard);
     </script>
 </body>
 </html>
