@@ -3,190 +3,1422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales & Leads Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Sales & Leads Dashboard - CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; }
-        .sidebar { width: 240px; background: #1a1a1a; color: white; min-height: 100vh; position: fixed; }
-        .main-content { margin-left: 240px; background: #f8f9fa; min-height: 100vh; }
-        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .stat-card { text-align: center; }
-        .stat-value { font-size: 32px; font-weight: bold; color: #1a1a1a; }
-        .stat-label { font-size: 14px; color: #666; margin-top: 8px; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; }
-        .badge-success { background: #d4edda; color: #155724; }
-        .badge-warning { background: #fff3cd; color: #856404; }
-        .badge-danger { background: #f8d7da; color: #721c24; }
-        .badge-info { background: #d1ecf1; color: #0c5460; }
-        .nav-link { padding: 12px 20px; display: block; color: #ccc; text-decoration: none; transition: all 0.2s; }
-        .nav-link:hover, .nav-link.active { background: #2a2a2a; color: white; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-        th { background: #f8f9fa; font-weight: 600; font-size: 14px; }
-        .header { background: white; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; }
-        .filter-bar { background: white; padding: 16px 24px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; flex-wrap: wrap; }
-        select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; }
+        :root {
+            --primary-color: #0066cc;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --sidebar-width: 260px;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .page-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-title h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            color: #333;
+        }
+
+        .page-title small {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .header-center {
+            flex: 2;
+            max-width: 600px;
+        }
+
+        .global-search {
+            width: 100%;
+            padding: 10px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .add-btn-dropdown .btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .notification-bell {
+            position: relative;
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger-color);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+        }
+
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-info strong {
+            font-size: 13px;
+            color: #333;
+        }
+
+        .user-info small {
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 999;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .sidebar-menu a:hover {
+            background: #f0f7ff;
+            color: var(--primary-color);
+        }
+
+        .sidebar-menu a.active {
+            background: #e6f2ff;
+            color: var(--primary-color);
+            font-weight: 600;
+            border-right: 3px solid var(--primary-color);
+        }
+
+        .sidebar-menu i {
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 24px;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            margin: 0;
+        }
+
+        .filter-group select {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .date-chips {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chip {
+            padding: 6px 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .chip:hover, .chip.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* KPI Cards */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .kpi-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .kpi-icon.primary { background: #e6f2ff; color: var(--primary-color); }
+        .kpi-icon.success { background: #e6f9f0; color: var(--success-color); }
+        .kpi-icon.warning { background: #fff8e6; color: var(--warning-color); }
+        .kpi-icon.danger { background: #ffe6e6; color: var(--danger-color); }
+        .kpi-icon.info { background: #e6f7f9; color: var(--info-color); }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .kpi-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .kpi-trend.up {
+            background: #e6f9f0;
+            color: var(--success-color);
+        }
+
+        .kpi-trend.down {
+            background: #ffe6e6;
+            color: var(--danger-color);
+        }
+
+        /* Chart Section */
+        .chart-section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .chart-toggle {
+            display: flex;
+            gap: 8px;
+        }
+
+        .toggle-btn {
+            padding: 6px 16px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .summary-bar {
+            display: flex;
+            gap: 32px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .summary-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Follow-ups Section */
+        .followup-section {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .followup-tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 20px;
+        }
+
+        .followup-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .followup-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .followup-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .task-table {
+            width: 100%;
+        }
+
+        .task-table thead th {
+            background: #f8f9fa;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .task-table tbody td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .task-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .priority-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .priority-high { background: #ffe6e6; color: var(--danger-color); }
+        .priority-medium { background: #fff8e6; color: var(--warning-color); }
+        .priority-low { background: #e6f2ff; color: var(--primary-color); }
+
+        .action-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-icon {
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .action-icon:hover {
+            color: var(--primary-color);
+        }
+
+        /* Lead Status Grid */
+        .lead-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .lead-tile {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .lead-tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .lead-tile-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .lead-tile-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .lead-tile-label {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Pipeline Cards */
+        .pipeline-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .pipeline-column {
+            min-width: 280px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .pipeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .pipeline-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .pipeline-count {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .deal-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .deal-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .deal-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .deal-company {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .deal-amount {
+            font-weight: 600;
+            color: var(--success-color);
+            margin-bottom: 4px;
+        }
+
+        .deal-date {
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* Activity Timeline */
+        .activity-timeline {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-text {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .timeline-meta {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Target Table */
+        .target-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .target-table thead th {
+            background: #f8f9fa;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .target-table tbody td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .progress-bar-container {
+            width: 100px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .status-chip {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-ontrack { background: #e6f9f0; color: var(--success-color); }
+        .status-atrisk { background: #fff8e6; color: var(--warning-color); }
+        .status-behind { background: #ffe6e6; color: var(--danger-color); }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .kpi-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div style="padding: 20px; border-bottom: 1px solid #2a2a2a;">
-            <h2 style="margin: 0; font-size: 20px;">Utho CRM</h2>
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="header-left">
+            <div class="logo">CRM+</div>
+            <div class="page-title">
+                <h1>Sales & Leads Dashboard</h1>
+                <small>Today's snapshot of your pipeline & targets</small>
+            </div>
         </div>
-        <nav>
-            <a href="#" class="nav-link active">📊 Sales Dashboard</a>
-            <a href="static-leads-dashboard.html" class="nav-link">🎯 Leads</a>
-            <a href="static-account-management.html" class="nav-link">👥 Accounts</a>
-            <a href="static-support-dashboard.html" class="nav-link">🎧 Support</a>
-        </nav>
-    </div>
+        <div class="header-center">
+            <input type="text" class="global-search" placeholder="Search leads, contacts, accounts, deals...">
+        </div>
+        <div class="header-right">
+            <div class="dropdown add-btn-dropdown">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-plus-lg"></i> Add
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus"></i> New Lead</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-people"></i> New Contact</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-briefcase"></i> New Deal</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-check-square"></i> New Task</a></li>
+                </ul>
+            </div>
+            <div class="notification-bell">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-avatar">
+                <div class="avatar-circle">LK</div>
+                <div class="user-info">
+                    <strong>Lalit</strong>
+                    <small>Sales Manager</small>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li><a href="#"><i class="bi bi-person-badge"></i> Leads</a></li>
+            <li><a href="#"><i class="bi bi-people"></i> Contacts</a></li>
+            <li><a href="#"><i class="bi bi-building"></i> Accounts</a></li>
+            <li><a href="#"><i class="bi bi-briefcase"></i> Deals</a></li>
+            <li><a href="#"><i class="bi bi-check-square"></i> Tasks & Follow-ups</a></li>
+            <li><a href="#"><i class="bi bi-bar-chart"></i> Reports</a></li>
+            <li><a href="#"><i class="bi bi-gear"></i> Settings</a></li>
+        </ul>
+    </aside>
 
     <!-- Main Content -->
-    <div class="main-content">
-        <!-- Header -->
-        <div class="header">
-            <h1 style="margin: 0; font-size: 24px;">Sales Performance Dashboard</h1>
-            <p style="margin: 4px 0 0 0; color: #666;">Track team performance and pipeline metrics</p>
-        </div>
-
-        <!-- Filters -->
+    <main class="main-content">
+        <!-- Filter Bar -->
         <div class="filter-bar">
-            <select><option>This Month</option><option>This Quarter</option><option>This Year</option></select>
-            <select><option>All Teams</option><option>Team A</option><option>Team B</option></select>
-            <select><option>All Regions</option><option>North</option><option>South</option></select>
+            <div class="filter-group">
+                <label>Team:</label>
+                <select id="teamFilter">
+                    <option>All</option>
+                    <option>My</option>
+                    <option>Lalit</option>
+                    <option>Nikhil</option>
+                    <option>Rohan</option>
+                </select>
+            </div>
+            <div class="date-chips">
+                <div class="chip active" data-period="today">Today</div>
+                <div class="chip" data-period="week">This Week</div>
+                <div class="chip" data-period="month">This Month</div>
+                <div class="chip" data-period="quarter">This Quarter</div>
+                <div class="chip" data-period="custom">Custom</div>
+            </div>
+            <div class="filter-group">
+                <label>Pipeline:</label>
+                <select id="pipelineFilter">
+                    <option>All Pipelines</option>
+                    <option>Inbound</option>
+                    <option>Outbound</option>
+                    <option>Enterprise</option>
+                    <option>SMB</option>
+                </select>
+            </div>
+            <div style="margin-left: auto;">
+                <button class="btn btn-sm btn-primary">Apply</button>
+                <button class="btn btn-sm btn-outline-secondary">Reset</button>
+            </div>
         </div>
 
-        <!-- Content -->
-        <div style="padding: 24px;">
-            <!-- KPI Cards -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 24px;">
-                <div class="card stat-card">
-                    <div class="stat-value">₹12.4M</div>
-                    <div class="stat-label">Total Revenue</div>
-                    <div style="color: #22c55e; font-size: 12px; margin-top: 8px;">↑ 18% vs last month</div>
+        <!-- Section A: KPI Overview -->
+        <div class="kpi-row" id="kpiCards"></div>
+
+        <!-- Section A2: Sales Target vs Achievement -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <div>
+                    <div class="chart-title">Sales Target vs Achieved – Quarter View</div>
                 </div>
-                <div class="card stat-card">
-                    <div class="stat-value">847</div>
-                    <div class="stat-label">Total Deals</div>
-                    <div style="color: #22c55e; font-size: 12px; margin-top: 8px;">↑ 12%</div>
-                </div>
-                <div class="card stat-card">
-                    <div class="stat-value">324</div>
-                    <div class="stat-label">Deals Won</div>
-                    <div style="color: #22c55e; font-size: 12px; margin-top: 8px;">↑ 8%</div>
-                </div>
-                <div class="card stat-card">
-                    <div class="stat-value">38.3%</div>
-                    <div class="stat-label">Win Rate</div>
-                    <div style="color: #ef4444; font-size: 12px; margin-top: 8px;">↓ 2%</div>
-                </div>
-                <div class="card stat-card">
-                    <div class="stat-value">28 days</div>
-                    <div class="stat-label">Avg Sales Cycle</div>
-                    <div style="color: #22c55e; font-size: 12px; margin-top: 8px;">↓ 3 days</div>
+                <div class="chart-toggle">
+                    <button class="toggle-btn active" data-metric="revenue">Revenue</button>
+                    <button class="toggle-btn" data-metric="mrr">MRR</button>
                 </div>
             </div>
+            <div class="summary-bar" id="summaryBar"></div>
+            <canvas id="targetChart" height="80"></canvas>
+        </div>
 
-            <!-- Charts Row -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 24px;">
-                <div class="card">
-                    <h3 style="margin: 0 0 16px 0; font-size: 18px;">Revenue Trend</h3>
-                    <canvas id="revenueChart"></canvas>
-                </div>
-                <div class="card">
-                    <h3 style="margin: 0 0 16px 0; font-size: 18px;">Pipeline by Stage</h3>
-                    <canvas id="pipelineChart"></canvas>
+        <!-- Section B: Follow-ups & Tasks -->
+        <div class="followup-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="chart-title">Follow-ups & Tasks</h3>
+                <div>
+                    <select class="form-select form-select-sm" style="width: auto; display: inline-block;">
+                        <option>My Tasks</option>
+                        <option>Team Tasks</option>
+                        <option>All Tasks</option>
+                    </select>
                 </div>
             </div>
-
-            <!-- Team Performance Table -->
-            <div class="card">
-                <h3 style="margin: 0 0 16px 0; font-size: 18px;">Team Performance</h3>
-                <table>
+            <div class="followup-tabs">
+                <div class="followup-tab active" data-tab="today">Today (12)</div>
+                <div class="followup-tab" data-tab="overdue">Overdue (8)</div>
+                <div class="followup-tab" data-tab="next7">Next 7 Days (24)</div>
+                <div class="followup-tab" data-tab="next30">Next 30 Days (67)</div>
+            </div>
+            <div class="table-responsive">
+                <table class="task-table">
                     <thead>
                         <tr>
-                            <th>Agent</th>
-                            <th>Deals</th>
-                            <th>Won</th>
-                            <th>Revenue</th>
-                            <th>Win Rate</th>
-                            <th>Avg Deal Size</th>
+                            <th width="40"><input type="checkbox"></th>
+                            <th>Priority</th>
+                            <th>Contact/Lead</th>
+                            <th>Company</th>
+                            <th>Activity Type</th>
+                            <th>Due Date & Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="teamTable"></tbody>
+                    <tbody id="taskTableBody"></tbody>
                 </table>
             </div>
         </div>
-    </div>
 
+        <!-- Section C: Lead & Contact Status -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="chart-section">
+                    <h3 class="chart-title mb-4">Lead Status Overview</h3>
+                    <div class="lead-grid" id="leadStatusGrid"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chart-section">
+                    <h3 class="chart-title mb-3">Lead Source & Stage Distribution</h3>
+                    <div class="mb-4">
+                        <h6 style="font-size: 14px; color: #666; margin-bottom: 12px;">Lead Source</h6>
+                        <canvas id="leadSourceChart" height="200"></canvas>
+                    </div>
+                    <div>
+                        <h6 style="font-size: 14px; color: #666; margin-bottom: 12px;">Lead Stage</h6>
+                        <canvas id="leadStageChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section D: Pipeline Snapshot -->
+        <div class="chart-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="chart-title">Pipeline Snapshot</h3>
+                <a href="#" class="btn btn-sm btn-outline-primary">View Full Pipeline</a>
+            </div>
+            <div class="pipeline-scroll" id="pipelineKanban"></div>
+        </div>
+
+        <!-- Section E: Recent Activity Timeline -->
+        <div class="chart-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="chart-title">Recent Activity</h3>
+                <div>
+                    <select class="form-select form-select-sm" style="width: auto; display: inline-block;">
+                        <option>My Activity</option>
+                        <option>Team Activity</option>
+                    </select>
+                </div>
+            </div>
+            <div class="activity-timeline" id="activityTimeline"></div>
+        </div>
+
+        <!-- Section F: Sales Target Management -->
+        <div class="chart-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="chart-title">Manage Sales Targets</h3>
+                <div class="d-flex gap-2">
+                    <select class="form-select form-select-sm" style="width: auto;">
+                        <option>2025</option>
+                        <option>2024</option>
+                    </select>
+                    <select class="form-select form-select-sm" style="width: auto;">
+                        <option>Q1</option>
+                        <option>Q2</option>
+                        <option>Q3</option>
+                        <option>Q4</option>
+                    </select>
+                    <button class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i> Add Target</button>
+                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-download"></i> Export</button>
+                </div>
+            </div>
+
+            <!-- Target Metrics Groups -->
+            <div class="row mb-4">
+                <div class="col-12 mb-3"><h6 style="color: #666; font-size: 13px; font-weight: 600;">Revenue Metrics</h6></div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Total Business</div>
+                        <div class="kpi-value">₹68,019</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <div class="kpi-label">New Business</div>
+                        <div class="kpi-value">₹45,220</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Exclude Business</div>
+                        <div class="kpi-value">₹8,500</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Active MRR</div>
+                        <div class="kpi-value">₹22,850</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12 mb-3"><h6 style="color: #666; font-size: 13px; font-weight: 600;">Lead Metrics</h6></div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Total Leads</div>
+                        <div class="kpi-value">1,248</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <div class="kpi-label">New Leads</div>
+                        <div class="kpi-value">342</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Converted Leads</div>
+                        <div class="kpi-value">186</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Funnel Size</div>
+                        <div class="kpi-value">₹3.8L</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Target Table -->
+            <div class="table-responsive">
+                <table class="target-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Year</th>
+                            <th>Quarter</th>
+                            <th>Month</th>
+                            <th>Target Business (₹)</th>
+                            <th>Achieved Business (₹)</th>
+                            <th>Target MRR (₹)</th>
+                            <th>Achieved MRR (₹)</th>
+                            <th>Achievement %</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="targetTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Mock data
-        const teamData = [
-            { name: 'Rajesh Kumar', deals: 45, won: 18, revenue: 2840000, winRate: 40 },
-            { name: 'Priya Singh', deals: 52, won: 22, revenue: 3120000, winRate: 42 },
-            { name: 'Amit Patel', deals: 38, won: 15, revenue: 2250000, winRate: 39 },
-            { name: 'Sneha Sharma', deals: 41, won: 19, revenue: 2890000, winRate: 46 }
-        ];
+        // API Base URL
+        const API_URL = 'sales-api.php';
 
-        // Populate team table
-        const tableBody = document.getElementById('teamTable');
-        teamData.forEach(agent => {
-            const avgDeal = (agent.revenue / agent.won).toFixed(0);
-            tableBody.innerHTML += `
-                <tr>
-                    <td><strong>${agent.name}</strong></td>
-                    <td>${agent.deals}</td>
-                    <td>${agent.won}</td>
-                    <td>₹${(agent.revenue / 1000000).toFixed(2)}M</td>
-                    <td><span class="badge badge-success">${agent.winRate}%</span></td>
-                    <td>₹${(avgDeal / 1000).toFixed(0)}K</td>
-                </tr>
+        // Global data storage
+        let dashboardData = null;
+
+        // Initialize dashboard
+        async function initDashboard() {
+            try {
+                const response = await fetch(API_URL);
+                dashboardData = await response.json();
+                
+                renderKPICards();
+                renderTargetChart();
+                renderFollowupTasks();
+                renderLeadStatusGrid();
+                renderLeadCharts();
+                renderPipelineKanban();
+                renderActivityTimeline();
+                renderTargetTable();
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Render KPI Cards
+        function renderKPICards() {
+            const container = document.getElementById('kpiCards');
+            const kpis = dashboardData.kpis;
+            
+            const kpiHTML = `
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon primary"><i class="bi bi-currency-rupee"></i></div>
+                    </div>
+                    <div class="kpi-value">₹${kpis.totalBusiness.toLocaleString()}</div>
+                    <div class="kpi-label">Total Business (This Quarter)</div>
+                    <span class="kpi-trend up"><i class="bi bi-arrow-up"></i> 12% vs last Q</span>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon success"><i class="bi bi-arrow-repeat"></i></div>
+                    </div>
+                    <div class="kpi-value">₹${kpis.activeMRR.toLocaleString()}</div>
+                    <div class="kpi-label">Active MRR</div>
+                    <span class="kpi-trend up"><i class="bi bi-arrow-up"></i> 8% vs last month</span>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon info"><i class="bi bi-star"></i></div>
+                    </div>
+                    <div class="kpi-value">₹${kpis.newBusiness.toLocaleString()}</div>
+                    <div class="kpi-label">New Business</div>
+                    <span class="kpi-trend up"><i class="bi bi-arrow-up"></i> 15% vs last month</span>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon warning"><i class="bi bi-funnel"></i></div>
+                    </div>
+                    <div class="kpi-value">₹${kpis.funnelSize.toLocaleString()}</div>
+                    <div class="kpi-label">Funnel Size</div>
+                    <span class="kpi-trend up"><i class="bi bi-arrow-up"></i> 5% vs last week</span>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon primary"><i class="bi bi-people"></i></div>
+                    </div>
+                    <div class="kpi-value">${kpis.totalLeads}</div>
+                    <div class="kpi-label">Total Leads</div>
+                    <span class="kpi-trend up"><i class="bi bi-arrow-up"></i> 18 new today</span>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon success"><i class="bi bi-check-circle"></i></div>
+                    </div>
+                    <div class="kpi-value">${kpis.convertedLeads}</div>
+                    <div class="kpi-label">Converted Leads</div>
+                    <span class="kpi-trend up"><i class="bi bi-arrow-up"></i> ${kpis.conversionRate}% rate</span>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon info"><i class="bi bi-person-check"></i></div>
+                    </div>
+                    <div class="kpi-value">${kpis.activeContacts}</div>
+                    <div class="kpi-label">Active Contacts</div>
+                    <span class="kpi-trend up"><i class="bi bi-arrow-up"></i> 6% vs last week</span>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon danger"><i class="bi bi-exclamation-triangle"></i></div>
+                    </div>
+                    <div class="kpi-value">${kpis.urgentContacts}</div>
+                    <div class="kpi-label">Urgent Contacts</div>
+                    <span class="kpi-trend down"><i class="bi bi-arrow-down"></i> Need attention</span>
+                </div>
             `;
+            
+            container.innerHTML = kpiHTML;
+        }
+
+        // Render Target Chart
+        function renderTargetChart() {
+            const summaryBar = document.getElementById('summaryBar');
+            const target = dashboardData.quarterTarget;
+            
+            summaryBar.innerHTML = `
+                <div class="summary-item">
+                    <span class="summary-label">Quarter Target</span>
+                    <span class="summary-value">₹${target.target.toLocaleString()}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Achieved</span>
+                    <span class="summary-value">₹${target.achieved.toLocaleString()}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Achievement</span>
+                    <span class="summary-value" style="color: ${target.achievementPercent >= 80 ? 'var(--success-color)' : 'var(--warning-color)'}">
+                        ${target.achievementPercent}%
+                    </span>
+                </div>
+            `;
+
+            const ctx = document.getElementById('targetChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dashboardData.monthlyPerformance.map(m => m.month),
+                    datasets: [
+                        {
+                            label: 'Target',
+                            data: dashboardData.monthlyPerformance.map(m => m.target),
+                            type: 'line',
+                            borderColor: '#0066cc',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Achieved',
+                            data: dashboardData.monthlyPerformance.map(m => m.achieved),
+                            backgroundColor: '#28a745',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ₹' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + (value/1000) + 'K';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render Follow-up Tasks
+        function renderFollowupTasks() {
+            const tbody = document.getElementById('taskTableBody');
+            const tasks = dashboardData.followUpTasks.today;
+            
+            const tasksHTML = tasks.map(task => `
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td><span class="priority-badge priority-${task.priority.toLowerCase()}">${task.priority}</span></td>
+                    <td><strong>${task.contact}</strong></td>
+                    <td>${task.company}</td>
+                    <td><i class="bi bi-${task.activityType === 'Call' ? 'telephone' : task.activityType === 'Email' ? 'envelope' : 'calendar'}"></i> ${task.activityType}</td>
+                    <td>${task.dueDateTime}</td>
+                    <td><span class="badge bg-secondary">${task.status}</span></td>
+                    <td>
+                        <div class="action-icons">
+                            <i class="bi bi-telephone action-icon" title="Call"></i>
+                            <i class="bi bi-envelope action-icon" title="Email"></i>
+                            <i class="bi bi-whatsapp action-icon" title="WhatsApp"></i>
+                            <i class="bi bi-check-circle action-icon" title="Mark Done"></i>
+                            <i class="bi bi-three-dots-vertical action-icon" title="More"></i>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            tbody.innerHTML = tasksHTML;
+        }
+
+        // Render Lead Status Grid
+        function renderLeadStatusGrid() {
+            const container = document.getElementById('leadStatusGrid');
+            const statuses = dashboardData.leadStatus;
+            
+            const gridHTML = Object.entries(statuses).map(([key, value]) => {
+                const icons = {
+                    newLeads: 'person-plus',
+                    activeContacts: 'person-check',
+                    notContacted: 'person-x',
+                    contacted: 'telephone',
+                    urgentContacts: 'exclamation-circle',
+                    retargetingContacts: 'arrow-repeat',
+                    junkLeads: 'trash',
+                    lostCustomers: 'x-circle'
+                };
+                
+                const labels = {
+                    newLeads: 'New Leads',
+                    activeContacts: 'Active Contacts',
+                    notContacted: 'Not Contacted',
+                    contacted: 'Contacted',
+                    urgentContacts: 'Urgent',
+                    retargetingContacts: 'Retargeting',
+                    junkLeads: 'Junk Leads',
+                    lostCustomers: 'Lost'
+                };
+                
+                return `
+                    <div class="lead-tile">
+                        <div class="lead-tile-icon" style="color: var(--primary-color)">
+                            <i class="bi bi-${icons[key]}"></i>
+                        </div>
+                        <div class="lead-tile-value">${value}</div>
+                        <div class="lead-tile-label">${labels[key]}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = gridHTML;
+        }
+
+        // Render Lead Charts
+        function renderLeadCharts() {
+            // Lead Source Chart
+            const sourceCtx = document.getElementById('leadSourceChart').getContext('2d');
+            new Chart(sourceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(dashboardData.leadSource),
+                    datasets: [{
+                        data: Object.values(dashboardData.leadSource),
+                        backgroundColor: ['#0066cc', '#28a745', '#ffc107', '#17a2b8', '#dc3545', '#6c757d']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+
+            // Lead Stage Chart
+            const stageCtx = document.getElementById('leadStageChart').getContext('2d');
+            new Chart(stageCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(dashboardData.leadStages),
+                    datasets: [{
+                        label: 'Leads',
+                        data: Object.values(dashboardData.leadStages),
+                        backgroundColor: '#0066cc',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Render Pipeline Kanban
+        function renderPipelineKanban() {
+            const container = document.getElementById('pipelineKanban');
+            const pipeline = dashboardData.pipeline;
+            
+            const kanbanHTML = Object.entries(pipeline).map(([stage, deals]) => {
+                const totalValue = deals.reduce((sum, deal) => sum + deal.amount, 0);
+                
+                return `
+                    <div class="pipeline-column">
+                        <div class="pipeline-header">
+                            <div class="pipeline-title">${stage}</div>
+                            <div class="pipeline-count">${deals.length} | ₹${(totalValue/1000).toFixed(1)}K</div>
+                        </div>
+                        ${deals.slice(0, 3).map(deal => `
+                            <div class="deal-card">
+                                <div class="deal-name">${deal.name}</div>
+                                <div class="deal-company">${deal.company}</div>
+                                <div class="deal-amount">₹${deal.amount.toLocaleString()}</div>
+                                <div class="deal-date">Close: ${deal.expectedClose}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = kanbanHTML;
+        }
+
+        // Render Activity Timeline
+        function renderActivityTimeline() {
+            const container = document.getElementById('activityTimeline');
+            const activities = dashboardData.recentActivity;
+            
+            const timelineHTML = activities.map(activity => {
+                const iconColors = {
+                    call: '#0066cc',
+                    email: '#28a745',
+                    meeting: '#ffc107',
+                    deal: '#17a2b8',
+                    note: '#6c757d'
+                };
+                
+                const iconNames = {
+                    call: 'telephone',
+                    email: 'envelope',
+                    meeting: 'calendar-event',
+                    deal: 'briefcase',
+                    note: 'pencil-square'
+                };
+                
+                return `
+                    <div class="timeline-item">
+                        <div class="timeline-icon" style="background: ${iconColors[activity.type]}20; color: ${iconColors[activity.type]}">
+                            <i class="bi bi-${iconNames[activity.type]}"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-text">${activity.description}</div>
+                            <div class="timeline-meta">${activity.timestamp} • ${activity.owner}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = timelineHTML;
+        }
+
+        // Render Target Table
+        function renderTargetTable() {
+            const tbody = document.getElementById('targetTableBody');
+            const targets = dashboardData.monthlyTargets;
+            
+            const tableHTML = targets.map((row, index) => {
+                const achievementPercent = ((row.achievedBusiness / row.targetBusiness) * 100).toFixed(1);
+                const status = achievementPercent >= 80 ? 'ontrack' : achievementPercent >= 60 ? 'atrisk' : 'behind';
+                const statusLabels = { ontrack: 'On Track', atrisk: 'At Risk', behind: 'Behind' };
+                
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${row.year}</td>
+                        <td>${row.quarter}</td>
+                        <td>${row.month}</td>
+                        <td>₹${row.targetBusiness.toLocaleString()}</td>
+                        <td>₹${row.achievedBusiness.toLocaleString()}</td>
+                        <td>₹${row.targetMRR.toLocaleString()}</td>
+                        <td>₹${row.achievedMRR.toLocaleString()}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" style="width: ${achievementPercent}%; background: ${status === 'ontrack' ? 'var(--success-color)' : status === 'atrisk' ? 'var(--warning-color)' : 'var(--danger-color)'}"></div>
+                                </div>
+                                <span>${achievementPercent}%</span>
+                            </div>
+                        </td>
+                        <td><span class="status-chip status-${status}">${statusLabels[status]}</span></td>
+                    </tr>
+                `;
+            }).join('');
+            
+            tbody.innerHTML = tableHTML;
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
 
-        // Revenue Chart
-        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(revenueCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Revenue (₹M)',
-                    data: [8.2, 9.1, 10.5, 11.2, 11.8, 12.4],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
-            }
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
 
-        // Pipeline Chart
-        const pipelineCtx = document.getElementById('pipelineChart').getContext('2d');
-        new Chart(pipelineCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Prospecting', 'Qualification', 'Proposal', 'Negotiation', 'Won', 'Lost'],
-                datasets: [{
-                    data: [120, 95, 68, 45, 324, 195],
-                    backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#22c55e', '#ef4444']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: { legend: { position: 'bottom' } }
-            }
+        document.querySelectorAll('.followup-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.followup-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
 </html>
