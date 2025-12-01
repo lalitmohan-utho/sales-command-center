@@ -8,35 +8,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        :root {
-            --primary: 221.2 83.2% 53.3%;
-            --destructive: 0 84.2% 60.2%;
-            --success: 142 76% 36%;
-            --warning: 38 92% 50%;
-            --info: 199 89% 48%;
-            --muted: 220 14.3% 95.9%;
-            --muted-foreground: 220 8.9% 46.1%;
-            --border: 220 13% 91%;
-            --card: 0 0% 100%;
-            --foreground: 222.2 84% 4.9%;
-            --background: 0 0% 100%;
-        }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: hsl(var(--muted));
-            color: hsl(var(--foreground));
+            background-color: #f8f9fa;
+            color: #1e293b;
         }
 
         .sidebar {
             width: 250px;
-            background: hsl(var(--card));
+            background: white;
             min-height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
-            border-right: 1px solid hsl(var(--border));
+            border-right: 1px solid #e2e8f0;
             padding: 1.5rem 0;
+            z-index: 1000;
         }
 
         .main-content {
@@ -44,11 +31,64 @@
             padding: 2rem;
         }
 
-        .stat-card {
-            background: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
-            border-radius: 0.75rem;
+        .nav-link {
+            color: #64748b;
+            padding: 0.75rem 1.5rem;
+            display: block;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .nav-link.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-left-color: #2563eb;
+        }
+
+        .header-section {
+            background: white;
             padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-section h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section .subtitle {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .filter-bar {
+            background: white;
+            padding: 1.25rem 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            height: 100%;
             transition: box-shadow 0.2s;
         }
 
@@ -56,129 +96,255 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: hsl(var(--foreground));
-        }
-
         .stat-label {
-            font-size: 0.875rem;
-            color: hsl(var(--muted-foreground));
+            font-size: 0.8125rem;
+            color: #64748b;
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
 
-        .badge-success {
-            background-color: hsl(var(--success) / 0.1);
-            color: hsl(var(--success));
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
         }
 
-        .badge-warning {
-            background-color: hsl(var(--warning) / 0.1);
-            color: hsl(var(--warning));
+        .stat-subtitle {
+            font-size: 0.75rem;
+            color: #94a3b8;
         }
 
-        .badge-danger {
-            background-color: hsl(var(--destructive) / 0.1);
-            color: hsl(var(--destructive));
-        }
-
-        .badge-info {
-            background-color: hsl(var(--info) / 0.1);
-            color: hsl(var(--info));
-        }
-
-        .chart-container {
-            background: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
+        .chart-card {
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 0.75rem;
             padding: 1.5rem;
+            height: 100%;
+        }
+
+        .chart-card h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
         }
 
         .table-card {
-            background: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 0.75rem;
             overflow: hidden;
         }
 
-        .alert-card {
-            background: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
-            border-radius: 0.75rem;
-            padding: 1.25rem;
-            transition: box-shadow 0.2s;
+        .table-card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .alert-card:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        .table-card-header h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0;
+            color: #1e293b;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table tbody td {
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            color: #1e293b;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+        }
+
+        .badge-registered {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-unregistered {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-overseas {
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge-unpaid {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-partial {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-paid {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-overdue {
+            background-color: #fecaca;
+            color: #b91c1c;
+        }
+
+        .badge-healthy {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-risk {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-high-risk {
+            background-color: #fee2e2;
+            color: #991b1b;
         }
 
         .health-score {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
             font-weight: 700;
+            font-size: 1rem;
         }
 
         .health-score-high {
-            background-color: hsl(var(--success) / 0.1);
-            color: hsl(var(--success));
+            background-color: #d1fae5;
+            color: #065f46;
         }
 
         .health-score-medium {
-            background-color: hsl(var(--warning) / 0.1);
-            color: hsl(var(--warning));
+            background-color: #fef3c7;
+            color: #92400e;
         }
 
         .health-score-low {
-            background-color: hsl(var(--destructive) / 0.1);
-            color: hsl(var(--destructive));
+            background-color: #fee2e2;
+            color: #991b1b;
         }
 
-        .filter-card {
-            background: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
+        .alert-card {
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 0.75rem;
-            padding: 1.5rem;
+            padding: 1.25rem;
+            height: 100%;
+        }
+
+        .alert-card.alert-high {
+            border-left: 4px solid #dc2626;
+        }
+
+        .alert-card.alert-medium {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-card.alert-low {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+
+        .alert-description {
+            font-size: 0.8125rem;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-sm {
+            font-size: 0.8125rem;
+            padding: 0.375rem 0.875rem;
         }
 
         .text-success {
-            color: hsl(var(--success));
-        }
-
-        .text-warning {
-            color: hsl(var(--warning));
+            color: #059669 !important;
         }
 
         .text-danger {
-            color: hsl(var(--destructive));
+            color: #dc2626 !important;
         }
 
-        .text-info {
-            color: hsl(var(--info));
+        .text-warning {
+            color: #f59e0b !important;
         }
 
-        .nav-link {
-            color: hsl(var(--muted-foreground));
-            padding: 0.75rem 1.5rem;
-            display: block;
-            text-decoration: none;
-            transition: all 0.2s;
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e293b;
         }
 
-        .nav-link:hover {
-            background-color: hsl(var(--muted));
-            color: hsl(var(--foreground));
+        .gst-summary-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            height: 100%;
         }
 
-        .nav-link.active {
-            background-color: hsl(var(--primary) / 0.1);
-            color: hsl(var(--primary));
+        .high-risk-alert {
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .high-risk-alert h6 {
+            color: #991b1b;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .risk-customer-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
         }
     </style>
 </head>
@@ -195,7 +361,7 @@
             <a href="static-leads-dashboard.html" class="nav-link">
                 <i class="bi bi-funnel me-2"></i> Leads
             </a>
-            <a href="static-account-management.html" class="nav-link">
+            <a href="static-account-management-dashboard.html" class="nav-link">
                 <i class="bi bi-people me-2"></i> Account Management
             </a>
             <a href="static-support-dashboard.html" class="nav-link">
@@ -210,193 +376,141 @@
     <!-- Main Content -->
     <div class="main-content">
         <!-- Header -->
-        <div class="mb-4">
-            <h2 class="fw-bold mb-1">Billing & Collections Dashboard</h2>
-            <p class="text-muted">From revenue to refunds, one view of your cash flow & compliance</p>
-        </div>
-
-        <!-- Filters -->
-        <div class="filter-card mb-4">
-            <div class="d-flex align-items-center mb-3">
-                <i class="bi bi-funnel me-2"></i>
-                <h5 class="mb-0 fw-semibold">Filters</h5>
+        <div class="header-section d-flex justify-content-between align-items-start">
+            <div>
+                <h2>Billing & Collections Dashboard</h2>
+                <p class="subtitle mb-0">₹175M invoiced • ₹165M collected • 94.5% collection rate</p>
             </div>
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Time Range</label>
-                    <select class="form-select" id="timeRange">
-                        <option value="today">Today</option>
-                        <option value="week">This Week</option>
-                        <option value="month" selected>This Month</option>
-                        <option value="quarter">This Quarter</option>
-                        <option value="year">This Year</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Customer Type</label>
-                    <select class="form-select">
-                        <option>All</option>
-                        <option>GST Registered</option>
-                        <option>Unregistered</option>
-                        <option>Overseas</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Billing Type</label>
-                    <select class="form-select">
-                        <option>All</option>
-                        <option>Prepaid</option>
-                        <option>Postpaid</option>
-                        <option>Enterprise</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Status</label>
-                    <select class="form-select">
-                        <option>All</option>
-                        <option>Paid</option>
-                        <option>Partially Paid</option>
-                        <option>Unpaid</option>
-                        <option>Overdue</option>
-                    </select>
-                </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                <span class="badge bg-secondary">5 filters active</span>
-                <div>
-                    <button class="btn btn-outline-secondary btn-sm me-2">Reset Filters</button>
-                    <button class="btn btn-primary btn-sm">Apply Filters</button>
-                </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-download me-1"></i> Export
+                </button>
+                <button class="btn btn-primary btn-sm">
+                    <i class="bi bi-eye me-1"></i> View All
+                </button>
             </div>
         </div>
 
-        <!-- Global KPI Row -->
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="badge bg-primary">7 days</span>
+                <span class="badge bg-light text-dark">15 days</span>
+                <span class="badge bg-light text-dark">30 days</span>
+                <span class="badge bg-light text-dark">90 days</span>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
         <div class="row g-3 mb-4">
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-label">Total Invoiced</div>
                     <div class="stat-value">₹52.8L</div>
-                    <div class="small text-success mt-2">
-                        <i class="bi bi-arrow-up"></i> 12.5% vs last month
-                    </div>
+                    <div class="stat-subtitle">+12.5% vs last month</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-label">Total Collected</div>
                     <div class="stat-value">₹48.9L</div>
-                    <div class="small text-muted mt-2">Collection Rate: 92.6%</div>
+                    <div class="stat-subtitle">92.6% collection rate</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-label">Pending Receivables</div>
                     <div class="stat-value">₹8.2L</div>
-                    <div class="small text-muted mt-2">42 customers</div>
+                    <div class="stat-subtitle">42 customers</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-label">Overdue Amount</div>
                     <div class="stat-value text-danger">₹4.0L</div>
-                    <div class="small text-muted mt-2">Avg 45 days overdue</div>
+                    <div class="stat-subtitle">Avg 45 days overdue</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-label">Refunds & Credits</div>
                     <div class="stat-value">₹2.1L</div>
-                    <div class="small text-muted mt-2">Refund Rate: 4.3%</div>
+                    <div class="stat-subtitle">4.3% refund rate</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-label">Net Realized Revenue</div>
                     <div class="stat-value text-success">₹46.8L</div>
-                    <div class="small text-success mt-2">
-                        <i class="bi bi-arrow-up"></i> 10.2% vs last month
-                    </div>
+                    <div class="stat-subtitle">After refunds</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
                     <div class="stat-label">GST Collected</div>
                     <div class="stat-value">₹9.5L</div>
-                    <div class="small text-muted mt-2">18% of invoiced</div>
+                    <div class="stat-subtitle">18% of invoiced</div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="stat-card">
-                    <div class="stat-label">Bad Debts Written Off</div>
+                    <div class="stat-label">Bad Debts</div>
                     <div class="stat-value">₹0.5L</div>
-                    <div class="small text-muted mt-2">1.1% of invoiced</div>
+                    <div class="stat-subtitle">1.1% write-off</div>
                 </div>
             </div>
         </div>
 
-        <!-- Sales vs Collections Chart -->
-        <div class="chart-container mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-semibold mb-0">Sales vs Collections</h5>
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-secondary active">Monthly</button>
-                    <button class="btn btn-outline-secondary">Quarterly</button>
-                    <button class="btn btn-outline-secondary">Yearly</button>
-                </div>
-            </div>
+        <!-- Sales vs Collections -->
+        <div class="chart-card mb-4">
+            <h5>Sales vs Collections</h5>
             <canvas id="salesCollectionsChart" height="80"></canvas>
         </div>
 
-        <!-- Overdue & Aging -->
+        <!-- Overdue & Pending Receivables -->
+        <h5 class="section-title">Overdue & Pending Receivables</h5>
         <div class="row g-4 mb-4">
             <div class="col-lg-5">
-                <div class="chart-container">
-                    <h5 class="fw-semibold mb-3">Overdue Aging Buckets</h5>
-                    <canvas id="agingChart" height="150"></canvas>
-                    <div class="row g-2 mt-3 text-center small">
-                        <div class="col">
-                            <div class="fw-semibold">Not Due</div>
-                            <div class="text-muted">45 customers</div>
-                            <div class="text-muted">68 invoices</div>
-                        </div>
-                        <div class="col">
-                            <div class="fw-semibold">0-30 days</div>
-                            <div class="text-muted">18 customers</div>
-                            <div class="text-muted">32 invoices</div>
-                        </div>
-                        <div class="col">
-                            <div class="fw-semibold">31-60 days</div>
-                            <div class="text-muted">12 customers</div>
-                            <div class="text-muted">21 invoices</div>
-                        </div>
-                        <div class="col">
-                            <div class="fw-semibold">61-90 days</div>
-                            <div class="text-muted">8 customers</div>
-                            <div class="text-muted">15 invoices</div>
-                        </div>
-                        <div class="col">
-                            <div class="fw-semibold">>90 days</div>
-                            <div class="text-muted">14 customers</div>
-                            <div class="text-muted">28 invoices</div>
-                        </div>
-                    </div>
+                <div class="chart-card">
+                    <h5>Aging Buckets</h5>
+                    <canvas id="agingChart" height="200"></canvas>
                 </div>
             </div>
             <div class="col-lg-7">
-                <div class="chart-container">
-                    <h5 class="fw-semibold mb-3">Product-wise Revenue</h5>
-                    <canvas id="productRevenueChart" height="150"></canvas>
+                <div class="chart-card">
+                    <h5>Collection Efficiency</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-4">
+                            <div class="text-center">
+                                <div class="stat-value text-success">94.5%</div>
+                                <div class="stat-label">Collection Rate</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-center">
+                                <div class="stat-value">23 days</div>
+                                <div class="stat-label">Avg Collection Period</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-center">
+                                <div class="stat-value">₹4.0L</div>
+                                <div class="stat-label">Total Overdue</div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="collectionTrendChart" height="120"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Overdue Detail Table -->
+        <!-- Overdue Invoice Details -->
         <div class="table-card mb-4">
-            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="fw-semibold mb-0">Overdue Invoice Details</h5>
-                <div>
-                    <button class="btn btn-outline-secondary btn-sm me-2">
-                        <i class="bi bi-envelope me-1"></i> Send Reminders
+            <div class="table-card-header">
+                <h5>Overdue Invoice Details</h5>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-filter me-1"></i> Filter
                     </button>
                     <button class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-download me-1"></i> Export
@@ -404,22 +518,19 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th><input type="checkbox" class="form-check-input"></th>
-                            <th>Customer</th>
-                            <th>Type</th>
-                            <th>Country</th>
-                            <th>Invoice No.</th>
                             <th>Invoice Date</th>
+                            <th>Customer Name</th>
+                            <th>Type</th>
+                            <th>Invoice No.</th>
                             <th>Due Date</th>
                             <th class="text-end">Amount</th>
                             <th class="text-end">Paid</th>
                             <th class="text-end">Outstanding</th>
-                            <th class="text-end">Days Overdue</th>
+                            <th>Days</th>
                             <th>Status</th>
-                            <th>Owner</th>
                         </tr>
                     </thead>
                     <tbody id="overdueTableBody">
@@ -429,170 +540,229 @@
             </div>
         </div>
 
-        <!-- Refund Analytics -->
+        <!-- Refunds & Credit Activity -->
+        <h5 class="section-title">Refunds & Credit Activity</h5>
         <div class="row g-4 mb-4">
-            <div class="col-lg-7">
-                <div class="chart-container">
-                    <h5 class="fw-semibold mb-3">Refund Trends & Analysis</h5>
-                    <canvas id="refundChart" height="100"></canvas>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <div class="chart-container">
-                    <h5 class="fw-semibold mb-3">Refund Reasons Breakdown</h5>
-                    <canvas id="refundReasonsChart" height="100"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- GST Treatment View -->
-        <div class="mb-4">
-            <h5 class="fw-semibold mb-3">GST & Tax Treatment</h5>
-            <div class="row g-3 mb-3">
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="stat-label">GST Registered (B2B)</div>
-                        <div class="stat-value">₹32.5L</div>
-                        <div class="small text-muted mt-2">156 invoices • GST: ₹5.85L</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="stat-label">Unregistered (B2C)</div>
-                        <div class="stat-value">₹12.8L</div>
-                        <div class="small text-muted mt-2">89 invoices • GST: ₹2.3L</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="stat-label">Overseas (Export)</div>
-                        <div class="stat-value">₹7.5L</div>
-                        <div class="small text-muted mt-2">34 invoices • GST: ₹0</div>
-                    </div>
-                </div>
-            </div>
-            <div class="table-card">
-                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h6 class="fw-semibold mb-0">GST Breakdown by Invoice</h6>
-                    <button class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-download me-1"></i> Export GSTR Report
-                    </button>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-sm mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Invoice No.</th>
-                                <th>Customer</th>
-                                <th>Type</th>
-                                <th>Place of Supply</th>
-                                <th class="text-end">Taxable Value</th>
-                                <th class="text-end">CGST</th>
-                                <th class="text-end">SGST</th>
-                                <th class="text-end">IGST</th>
-                                <th>Category</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gstTableBody">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Customer Billing Health -->
-        <div class="mb-4">
-            <h5 class="fw-semibold mb-3">Customer Billing Health & Risk</h5>
-            
-            <!-- High Risk Alert -->
-            <div class="alert alert-danger d-flex align-items-start mb-3">
-                <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
-                <div class="flex-grow-1">
-                    <h6 class="fw-semibold mb-2">High Risk Customers (2)</h6>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="bg-white p-3 rounded">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <div class="fw-semibold">StartupHub</div>
-                                        <div class="small text-muted">5 overdues • 4 refund requests</div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="small text-muted">Avg Delay</div>
-                                        <div class="fw-bold text-danger">52 days</div>
-                                    </div>
-                                </div>
-                                <button class="btn btn-outline-primary btn-sm mt-2 w-100">Review</button>
-                            </div>
+            <div class="col-lg-4">
+                <div class="chart-card">
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="stat-label">Total Refunds</div>
+                            <div class="stat-value">₹2.1L</div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="bg-white p-3 rounded">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <div class="fw-semibold">InnovateTech Ltd</div>
-                                        <div class="small text-muted">6 overdues • 3 refund requests</div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="small text-muted">Avg Delay</div>
-                                        <div class="fw-bold text-danger">67 days</div>
-                                    </div>
-                                </div>
-                                <button class="btn btn-outline-primary btn-sm mt-2 w-100">Review</button>
-                            </div>
+                        <div class="col-6">
+                            <div class="stat-label">Refund Count</div>
+                            <div class="stat-value">27</div>
                         </div>
                     </div>
+                    <div class="stat-label mb-2">Refund Rate</div>
+                    <div class="progress" style="height: 24px;">
+                        <div class="progress-bar bg-warning" style="width: 4.3%">4.3%</div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Health Scorecard Table -->
-            <div class="table-card">
-                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h6 class="fw-semibold mb-0">Customer Billing Health Scorecard</h6>
-                    <button class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-download me-1"></i> Export
-                    </button>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Customer</th>
-                                <th class="text-end">MRR / Avg Invoice</th>
-                                <th class="text-center">Health Score</th>
-                                <th class="text-end">Avg Payment Delay</th>
-                                <th class="text-center">Total Overdues</th>
-                                <th class="text-center">Refund Count</th>
-                                <th>Risk Level</th>
-                            </tr>
-                        </thead>
-                        <tbody id="healthTableBody">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
+            <div class="col-lg-8">
+                <div class="chart-card">
+                    <h5>Refund Amount by Reason</h5>
+                    <canvas id="refundReasonsChart" height="150"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Team Performance -->
+        <!-- Shares, Refunds & Credits Table -->
         <div class="table-card mb-4">
-            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="fw-semibold mb-0">Team Performance & Accountability</h5>
+            <div class="table-card-header">
+                <h5>Shares, Refunds & Credits</h5>
                 <button class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-download me-1"></i> Export
                 </button>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Invoice No.</th>
+                            <th>Refund ID</th>
+                            <th class="text-end">Amount</th>
+                            <th>Reason</th>
+                            <th>Processed By</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="refundTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- GST & Tax Treatment -->
+        <h5 class="section-title">GST & Tax Treatment</h5>
+        <div class="row g-3 mb-3">
+            <div class="col-lg-4">
+                <div class="gst-summary-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-building text-primary fs-3 me-3"></i>
+                        <div>
+                            <div class="stat-label">GST Registered (B2B)</div>
+                            <div class="stat-value">₹32.5L</div>
+                        </div>
+                    </div>
+                    <div class="small text-muted">156 invoices • GST: ₹5.85L</div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="gst-summary-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-person text-warning fs-3 me-3"></i>
+                        <div>
+                            <div class="stat-label">Unregistered (B2C)</div>
+                            <div class="stat-value">₹14.8L</div>
+                        </div>
+                    </div>
+                    <div class="small text-muted">89 invoices • GST: ₹2.66L</div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="gst-summary-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-globe text-info fs-3 me-3"></i>
+                        <div>
+                            <div class="stat-label">Overseas (Export)</div>
+                            <div class="stat-value">₹5.5L</div>
+                        </div>
+                    </div>
+                    <div class="small text-muted">34 invoices • GST: ₹0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GST Breakdown Table -->
+        <div class="table-card mb-4">
+            <div class="table-card-header">
+                <h5>GST Breakdown by Invoice</h5>
+                <button class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-download me-1"></i> Export GSTR Report
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Invoice No.</th>
+                            <th>Customer</th>
+                            <th>Type</th>
+                            <th>Place of Supply</th>
+                            <th class="text-end">Taxable Value</th>
+                            <th class="text-end">CGST</th>
+                            <th class="text-end">SGST</th>
+                            <th class="text-end">IGST</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gstTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Customer Billing Health & Risk -->
+        <h5 class="section-title">Customer Billing Health & Risk</h5>
+        
+        <!-- High Risk Alert -->
+        <div class="high-risk-alert">
+            <h6><i class="bi bi-exclamation-triangle-fill me-2"></i>High Risk Customers (2)</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="risk-customer-card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="fw-semibold">StartupHub</div>
+                                <div class="small text-muted">5 overdues • 4 refund requests</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="small text-muted">Avg Delay</div>
+                                <div class="fw-bold text-danger">52 days</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm w-100">Review</button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="risk-customer-card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="fw-semibold">InnovateTech Ltd</div>
+                                <div class="small text-muted">6 overdues • 3 refund requests</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="small text-muted">Avg Delay</div>
+                                <div class="fw-bold text-danger">67 days</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm w-100">Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Billing Health Scorecard -->
+        <div class="table-card mb-4">
+            <div class="table-card-header">
+                <h5>Customer Billing Health Scorecard</h5>
+                <button class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-download me-1"></i> Export
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th class="text-end">MRR / Avg Invoice</th>
+                            <th class="text-center">Health Score</th>
+                            <th class="text-end">Avg Payment Delay</th>
+                            <th class="text-center">Total Overdues</th>
+                            <th class="text-center">Refund Count</th>
+                            <th>Risk Level</th>
+                        </tr>
+                    </thead>
+                    <tbody id="healthTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Product-wise Revenue Breakdown -->
+        <div class="chart-card mb-4">
+            <h5>Product-wise Revenue Breakdown</h5>
+            <canvas id="productRevenueChart" height="80"></canvas>
+        </div>
+
+        <!-- Billing Operations & Ownership -->
+        <h5 class="section-title">Billing Operations & Ownership</h5>
+        <div class="table-card mb-4">
+            <div class="table-card-header">
+                <h5>Team Performance & Accountability</h5>
+                <button class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-download me-1"></i> Export
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
                             <th>Team Member</th>
-                            <th class="text-center">Invoices Generated</th>
+                            <th class="text-center">Invoices</th>
                             <th class="text-end">Invoice Amount</th>
                             <th class="text-end">Collections</th>
-                            <th class="text-center">Reminders Sent</th>
-                            <th class="text-center">Refunds Processed</th>
-                            <th class="text-center">Error Incidents</th>
+                            <th class="text-center">Reminders</th>
+                            <th class="text-center">Refunds</th>
+                            <th class="text-center">Errors</th>
                             <th class="text-end">Avg Invoice Time</th>
                             <th class="text-end">Avg Payment Time</th>
                         </tr>
@@ -604,379 +774,317 @@
             </div>
         </div>
 
-        <!-- Alerts & Exceptions -->
-        <div class="mb-4">
-            <h5 class="fw-semibold mb-3">Alerts & Exception Watchlist</h5>
-            <div class="row g-3" id="alertsContainer">
-                <!-- Populated by JS -->
-            </div>
+        <!-- Alerts & Exception Watchlist -->
+        <h5 class="section-title">Alerts & Exception Watchlist</h5>
+        <div class="row g-3 mb-4" id="alertsContainer">
+            <!-- Populated by JS -->
         </div>
     </div>
 
     <script>
-        // Mock Data
-        const overdueData = [
-            { customer: "TechCorp Solutions", type: "GST Registered", country: "India", invoice: "INV-2024-1234", invoiceDate: "2024-09-15", dueDate: "2024-10-15", amount: 285000, paid: 0, outstanding: 285000, daysOverdue: 77, status: "Not Paid", owner: "Rahul Sharma" },
-            { customer: "CloudStart Inc", type: "Overseas", country: "USA", invoice: "INV-2024-1156", invoiceDate: "2024-10-01", dueDate: "2024-11-01", amount: 156000, paid: 50000, outstanding: 106000, daysOverdue: 61, status: "Part Paid", owner: "Priya Patel" },
-            { customer: "DataHub Systems", type: "GST Registered", country: "India", invoice: "INV-2024-1267", invoiceDate: "2024-10-10", dueDate: "2024-11-10", amount: 325000, paid: 0, outstanding: 325000, daysOverdue: 52, status: "In Collection", owner: "Amit Kumar" },
-            { customer: "WebScale Ltd", type: "Unregistered", country: "India", invoice: "INV-2024-1289", invoiceDate: "2024-10-20", dueDate: "2024-11-20", amount: 89000, paid: 0, outstanding: 89000, daysOverdue: 42, status: "Not Paid", owner: "Neha Singh" },
-            { customer: "InnovateTech", type: "GST Registered", country: "India", invoice: "INV-2024-1301", invoiceDate: "2024-11-01", dueDate: "2024-12-01", amount: 412000, paid: 200000, outstanding: 212000, daysOverdue: 31, status: "Part Paid", owner: "Vikram Reddy" }
-        ];
+        // Fetch data from API
+        fetch('billing-api.php')
+            .then(response => response.json())
+            .then(data => {
+                populateOverdueTable(data.overdueDetails);
+                populateRefundTable(data.refundDetails);
+                populateGstTable(data.gstDetails);
+                populateHealthTable(data.customerHealth);
+                populateTeamTable(data.teamPerformance);
+                populateAlerts(data.alerts);
+                initCharts(data);
+            });
 
-        const gstData = [
-            { invoice: "INV-2024-1234", customer: "TechCorp Solutions", type: "GST Registered", place: "Maharashtra", taxable: 241525, cgst: 21737, sgst: 21737, igst: 0, category: "B2B" },
-            { invoice: "INV-2024-1156", customer: "CloudStart Inc", type: "Overseas", place: "USA", taxable: 156000, cgst: 0, sgst: 0, igst: 0, category: "Export" },
-            { invoice: "INV-2024-1267", customer: "DataHub Systems", type: "GST Registered", place: "Karnataka", taxable: 275424, cgst: 0, sgst: 0, igst: 49576, category: "B2B" },
-            { invoice: "INV-2024-1289", customer: "WebScale Ltd", type: "Unregistered", place: "Delhi", taxable: 75424, cgst: 6788, sgst: 6788, igst: 0, category: "B2C" }
-        ];
-
-        const healthData = [
-            { name: "TechVision Pvt Ltd", mrr: 95000, healthScore: 92, avgDelay: 3, overdues: 0, refunds: 0, risk: "Low" },
-            { name: "CloudWorks Solutions", mrr: 125000, healthScore: 88, avgDelay: 7, overdues: 1, refunds: 1, risk: "Low" },
-            { name: "DataCore Systems", mrr: 85000, healthScore: 65, avgDelay: 28, overdues: 3, refunds: 2, risk: "Medium" },
-            { name: "StartupHub", mrr: 35000, healthScore: 45, avgDelay: 52, overdues: 5, refunds: 4, risk: "High" },
-            { name: "WebScale Pro", mrr: 65000, healthScore: 78, avgDelay: 12, overdues: 2, refunds: 1, risk: "Low" },
-            { name: "InnovateTech Ltd", mrr: 145000, healthScore: 38, avgDelay: 67, overdues: 6, refunds: 3, risk: "High" }
-        ];
-
-        const teamData = [
-            { name: "Anita Desai", invoices: 142, amount: 12500000, collections: 11200000, reminders: 245, refunds: 12, errors: 2, invoiceTime: 1.2, paymentTime: 2.8 },
-            { name: "Rahul Verma", invoices: 128, amount: 10800000, collections: 9500000, reminders: 198, refunds: 8, errors: 1, invoiceTime: 1.5, paymentTime: 3.2 },
-            { name: "Priya Gupta", invoices: 156, amount: 14200000, collections: 12800000, reminders: 287, refunds: 15, errors: 3, invoiceTime: 1.1, paymentTime: 2.5 },
-            { name: "Amit Shah", invoices: 134, amount: 11600000, collections: 10200000, reminders: 223, refunds: 10, errors: 2, invoiceTime: 1.4, paymentTime: 3.0 }
-        ];
-
-        const alerts = [
-            { severity: "High", title: "Large Overdue Amount - InnovateTech Ltd", description: "Outstanding amount of ₹4.12L overdue by 67 days. Customer has repeated payment delays.", action: "Escalate to Sales", icon: "exclamation-circle" },
-            { severity: "High", title: "Very Old Outstanding - TechCorp Solutions", description: "Invoice INV-2024-1234 is 90+ days overdue. Amount: ₹2.85L", action: "Contact CA / Legal", icon: "exclamation-circle" },
-            { severity: "Medium", title: "High Refund Account - DataCore Systems", description: "Customer has requested 4 refunds in the last 3 months totaling ₹1.2L.", action: "Flag to Support", icon: "exclamation-triangle" },
-            { severity: "Medium", title: "GST GSTIN Missing - WebScale Pro", description: "Account marked as GST Registered but GSTIN details not on file.", action: "Request GSTIN", icon: "exclamation-triangle" },
-            { severity: "Low", title: "Negative Balance - CloudStart Inc", description: "Customer account shows negative balance of ₹15K due to double payment.", action: "Process Refund", icon: "info-circle" },
-            { severity: "High", title: "Collection Issue - Multiple Accounts", description: "8 invoices from different customers have crossed 60-day overdue mark this week.", action: "Bulk Follow-up", icon: "exclamation-circle" }
-        ];
-
-        // Format currency
-        function formatCurrency(value) {
-            if (value >= 100000) {
-                return '₹' + (value / 100000).toFixed(1) + 'L';
-            } else if (value >= 1000) {
-                return '₹' + (value / 1000).toFixed(0) + 'K';
-            }
-            return '₹' + value;
+        function populateOverdueTable(data) {
+            const tbody = document.getElementById('overdueTableBody');
+            tbody.innerHTML = data.map(item => `
+                <tr>
+                    <td>${item.invoiceDate}</td>
+                    <td class="fw-medium">${item.customer}</td>
+                    <td><span class="badge badge-${item.typeClass}">${item.type}</span></td>
+                    <td><code class="small">${item.invoiceNo}</code></td>
+                    <td>${item.dueDate}</td>
+                    <td class="text-end">₹${item.amount}</td>
+                    <td class="text-end text-success">₹${item.paid || '0'}</td>
+                    <td class="text-end fw-semibold">₹${item.outstanding}</td>
+                    <td class="text-danger fw-bold">${item.daysOverdue}</td>
+                    <td><span class="badge badge-${item.statusClass}">${item.status}</span></td>
+                </tr>
+            `).join('');
         }
 
-        // Populate Overdue Table
-        const overdueTableBody = document.getElementById('overdueTableBody');
-        overdueData.forEach(item => {
-            const statusClass = item.status === "Not Paid" ? "danger" : item.status === "Part Paid" ? "warning" : "secondary";
-            const daysClass = item.daysOverdue > 60 ? "text-danger" : item.daysOverdue > 30 ? "text-warning" : "";
-            
-            overdueTableBody.innerHTML += `
+        function populateRefundTable(data) {
+            const tbody = document.getElementById('refundTableBody');
+            tbody.innerHTML = data.map(item => `
                 <tr>
-                    <td><input type="checkbox" class="form-check-input"></td>
+                    <td>${item.date}</td>
                     <td class="fw-medium">${item.customer}</td>
-                    <td><span class="badge bg-light text-dark border">${item.type}</span></td>
-                    <td>${item.country}</td>
-                    <td><code class="small">${item.invoice}</code></td>
-                    <td>${item.invoiceDate}</td>
-                    <td>${item.dueDate}</td>
-                    <td class="text-end fw-medium">${formatCurrency(item.amount)}</td>
-                    <td class="text-end text-success">${formatCurrency(item.paid)}</td>
-                    <td class="text-end fw-semibold">${formatCurrency(item.outstanding)}</td>
-                    <td class="text-end fw-bold ${daysClass}">${item.daysOverdue}</td>
-                    <td><span class="badge badge-${statusClass}">${item.status}</span></td>
-                    <td class="small text-muted">${item.owner}</td>
+                    <td><code class="small">${item.invoiceNo}</code></td>
+                    <td><code class="small">${item.refundId}</code></td>
+                    <td class="text-end">₹${item.amount}</td>
+                    <td>${item.reason}</td>
+                    <td class="small text-muted">${item.processedBy}</td>
+                    <td><span class="badge badge-${item.statusClass}">${item.status}</span></td>
                 </tr>
-            `;
-        });
+            `).join('');
+        }
 
-        // Populate GST Table
-        const gstTableBody = document.getElementById('gstTableBody');
-        gstData.forEach(item => {
-            gstTableBody.innerHTML += `
+        function populateGstTable(data) {
+            const tbody = document.getElementById('gstTableBody');
+            tbody.innerHTML = data.map(item => `
                 <tr>
-                    <td><code class="small">${item.invoice}</code></td>
+                    <td><code class="small">${item.invoiceNo}</code></td>
                     <td>${item.customer}</td>
-                    <td><span class="badge bg-light text-dark border">${item.type}</span></td>
-                    <td>${item.place}</td>
-                    <td class="text-end">${formatCurrency(item.taxable)}</td>
-                    <td class="text-end">${item.cgst > 0 ? formatCurrency(item.cgst) : '-'}</td>
-                    <td class="text-end">${item.sgst > 0 ? formatCurrency(item.sgst) : '-'}</td>
-                    <td class="text-end">${item.igst > 0 ? formatCurrency(item.igst) : '-'}</td>
-                    <td><span class="badge bg-primary">${item.category}</span></td>
+                    <td><span class="badge badge-${item.typeClass}">${item.type}</span></td>
+                    <td>${item.placeOfSupply}</td>
+                    <td class="text-end">₹${item.taxableValue}</td>
+                    <td class="text-end">${item.cgst !== '0' ? '₹' + item.cgst : '-'}</td>
+                    <td class="text-end">${item.sgst !== '0' ? '₹' + item.sgst : '-'}</td>
+                    <td class="text-end">${item.igst !== '0' ? '₹' + item.igst : '-'}</td>
+                    <td><span class="badge bg-primary text-white">${item.category}</span></td>
                 </tr>
-            `;
-        });
+            `).join('');
+        }
 
-        // Populate Health Table
-        const healthTableBody = document.getElementById('healthTableBody');
-        healthData.forEach(item => {
-            const scoreClass = item.healthScore >= 80 ? "high" : item.healthScore >= 60 ? "medium" : "low";
-            const delayClass = item.avgDelay > 30 ? "text-danger" : item.avgDelay > 14 ? "text-warning" : "";
-            const riskBadge = item.risk === "Low" ? "badge-success" : item.risk === "Medium" ? "badge-warning" : "badge-danger";
-            
-            healthTableBody.innerHTML += `
-                <tr>
-                    <td class="fw-medium">${item.name}</td>
-                    <td class="text-end fw-semibold">${formatCurrency(item.mrr)}</td>
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center">
-                            <div class="health-score health-score-${scoreClass}">${item.healthScore}</div>
-                        </div>
-                    </td>
-                    <td class="text-end ${delayClass} fw-semibold">${item.avgDelay} days</td>
-                    <td class="text-center">
-                        <span class="badge ${item.overdues > 3 ? 'badge-danger' : 'bg-secondary'}">${item.overdues}</span>
-                    </td>
-                    <td class="text-center">
-                        <span class="badge ${item.refunds > 2 ? 'badge-danger' : 'bg-secondary'}">${item.refunds}</span>
-                    </td>
-                    <td><span class="badge ${riskBadge}">${item.risk}</span></td>
-                </tr>
-            `;
-        });
+        function populateHealthTable(data) {
+            const tbody = document.getElementById('healthTableBody');
+            tbody.innerHTML = data.map(item => {
+                const scoreClass = item.healthScore >= 80 ? 'high' : item.healthScore >= 60 ? 'medium' : 'low';
+                return `
+                    <tr>
+                        <td class="fw-medium">${item.name}</td>
+                        <td class="text-end">₹${item.mrr}</td>
+                        <td class="text-center">
+                            <span class="health-score health-score-${scoreClass}">${item.healthScore}</span>
+                        </td>
+                        <td class="text-end">${item.avgDelay} days</td>
+                        <td class="text-center">₹${item.totalOverdues}</td>
+                        <td class="text-center"><span class="badge bg-secondary">${item.refundCount}</span></td>
+                        <td><span class="badge badge-${item.riskClass}">${item.riskLevel}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
 
-        // Populate Team Table
-        const teamTableBody = document.getElementById('teamTableBody');
-        teamData.forEach(item => {
-            const errorBadge = item.errors > 2 ? "badge-danger" : "bg-secondary";
-            const invoiceTimeClass = item.invoiceTime > 1.5 ? "text-warning" : "";
-            const paymentTimeClass = item.paymentTime > 3 ? "text-warning" : "";
-            
-            teamTableBody.innerHTML += `
+        function populateTeamTable(data) {
+            const tbody = document.getElementById('teamTableBody');
+            tbody.innerHTML = data.map(item => `
                 <tr>
                     <td class="fw-medium">${item.name}</td>
                     <td class="text-center"><span class="badge bg-secondary">${item.invoices}</span></td>
-                    <td class="text-end fw-semibold">${formatCurrency(item.amount)}</td>
-                    <td class="text-end fw-semibold text-success">${formatCurrency(item.collections)}</td>
-                    <td class="text-center text-muted">${item.reminders}</td>
-                    <td class="text-center"><span class="badge bg-light text-dark border">${item.refunds}</span></td>
-                    <td class="text-center"><span class="badge ${errorBadge}">${item.errors}</span></td>
-                    <td class="text-end ${invoiceTimeClass}">${item.invoiceTime} days</td>
-                    <td class="text-end ${paymentTimeClass}">${item.paymentTime} days</td>
+                    <td class="text-end">₹${item.amount}</td>
+                    <td class="text-end text-success">₹${item.collections}</td>
+                    <td class="text-center">${item.reminders}</td>
+                    <td class="text-center"><span class="badge bg-light text-dark">${item.refunds}</span></td>
+                    <td class="text-center"><span class="badge ${item.errors > 2 ? 'bg-danger' : 'bg-secondary'}">${item.errors}</span></td>
+                    <td class="text-end">${item.invoiceTime} days</td>
+                    <td class="text-end">${item.paymentTime} days</td>
                 </tr>
-            `;
-        });
+            `).join('');
+        }
 
-        // Populate Alerts
-        const alertsContainer = document.getElementById('alertsContainer');
-        alerts.forEach(alert => {
-            const severityColor = alert.severity === "High" ? "danger" : alert.severity === "Medium" ? "warning" : "info";
-            const iconColor = alert.severity === "High" ? "text-danger" : alert.severity === "Medium" ? "text-warning" : "text-info";
-            
-            alertsContainer.innerHTML += `
+        function populateAlerts(data) {
+            const container = document.getElementById('alertsContainer');
+            container.innerHTML = data.map(alert => `
                 <div class="col-lg-6">
-                    <div class="alert-card">
-                        <div class="d-flex align-items-start gap-3">
-                            <i class="bi bi-${alert.icon} fs-5 ${iconColor}"></i>
-                            <div class="flex-grow-1">
-                                <span class="badge badge-${severityColor} mb-2">${alert.severity}</span>
-                                <h6 class="fw-semibold mb-2">${alert.title}</h6>
-                                <p class="text-muted small mb-3">${alert.description}</p>
-                                <div class="d-flex gap-2">
-                                    <button class="btn btn-${alert.severity === 'High' ? 'primary' : 'outline-primary'} btn-sm">
-                                        ${alert.action}
-                                    </button>
-                                    <button class="btn btn-outline-secondary btn-sm">Dismiss</button>
-                                </div>
+                    <div class="alert-card alert-${alert.severity.toLowerCase()}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="alert-title">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                ${alert.title}
                             </div>
+                            <span class="badge ${alert.severity === 'High' ? 'bg-danger' : alert.severity === 'Medium' ? 'bg-warning' : 'bg-info'}">${alert.severity}</span>
+                        </div>
+                        <div class="alert-description">${alert.description}</div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary btn-sm">${alert.action}</button>
+                            <button class="btn btn-outline-secondary btn-sm">Dismiss</button>
                         </div>
                     </div>
                 </div>
-            `;
-        });
+            `).join('');
+        }
 
-        // Sales vs Collections Chart
-        const salesCollectionsCtx = document.getElementById('salesCollectionsChart').getContext('2d');
-        new Chart(salesCollectionsCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [
-                    {
-                        label: 'Invoiced Amount',
-                        data: [38, 42, 39, 45, 41, 48, 43, 46, 44, 47, 45, 45.2],
-                        borderColor: 'rgb(59, 130, 246)',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'Collected Amount',
-                        data: [34, 39, 35, 41, 37, 43, 38, 42, 40, 43, 41, 38.9],
-                        borderColor: 'rgb(34, 197, 94)',
-                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'Pending',
-                        data: [4, 3, 4, 4, 4, 5, 5, 4, 4, 4, 4, 6.3],
-                        borderColor: 'rgb(251, 146, 60)',
-                        backgroundColor: 'rgba(251, 146, 60, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value + 'L';
-                            }
+        function initCharts(data) {
+            // Sales vs Collections Chart
+            new Chart(document.getElementById('salesCollectionsChart'), {
+                type: 'line',
+                data: {
+                    labels: data.salesVsCollection.labels,
+                    datasets: [
+                        {
+                            label: 'Invoiced',
+                            data: data.salesVsCollection.invoiced,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Collected',
+                            data: data.salesVsCollection.collected,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Pending',
+                            data: data.salesVsCollection.pending,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: true,
+                            tension: 0.4
                         }
-                    }
-                }
-            }
-        });
-
-        // Aging Chart
-        const agingCtx = document.getElementById('agingChart').getContext('2d');
-        new Chart(agingCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Not Due', '0-30 days', '31-60 days', '61-90 days', '>90 days'],
-                datasets: [{
-                    label: 'Amount',
-                    data: [12, 8, 6, 4, 10],
-                    backgroundColor: [
-                        'rgba(34, 197, 94, 0.8)',
-                        'rgba(59, 130, 246, 0.8)',
-                        'rgba(251, 146, 60, 0.8)',
-                        'rgba(239, 68, 68, 0.8)',
-                        'rgba(239, 68, 68, 0.8)'
-                    ],
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value + 'L';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Product Revenue Chart
-        const productRevenueCtx = document.getElementById('productRevenueChart').getContext('2d');
-        new Chart(productRevenueCtx, {
-            type: 'bar',
-            data: {
-                labels: ['VMs', 'Kubernetes', 'Object Storage', 'Databases', 'Load Balancers', 'DR/Backup'],
-                datasets: [{
-                    label: 'Revenue',
-                    data: [18.5, 12.3, 8.7, 6.4, 4.2, 2.7],
-                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value + 'L';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Refund Chart
-        const refundCtx = document.getElementById('refundChart').getContext('2d');
-        new Chart(refundCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Refund Amount',
-                    data: [1.2, 0.8, 1.5, 2.1, 1.8, 2.4, 1.9, 2.2, 1.6, 2.0, 1.7, 2.1],
-                    borderColor: 'rgb(239, 68, 68)',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₹' + value + 'L';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Refund Reasons Chart
-        const refundReasonsCtx = document.getElementById('refundReasonsChart').getContext('2d');
-        new Chart(refundReasonsCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Overbilling', 'Service Issues', 'Trial Cancellation', 'Double Payment', 'Other'],
-                datasets: [{
-                    data: [35, 28, 18, 12, 7],
-                    backgroundColor: [
-                        'rgba(239, 68, 68, 0.8)',
-                        'rgba(251, 146, 60, 0.8)',
-                        'rgba(59, 130, 246, 0.8)',
-                        'rgba(168, 85, 247, 0.8)',
-                        'rgba(156, 163, 175, 0.8)'
                     ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => '₹' + value + 'L'
+                            }
+                        }
                     }
                 }
-            }
-        });
+            });
+
+            // Aging Buckets Chart
+            new Chart(document.getElementById('agingChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.agingBuckets.map(b => b.label),
+                    datasets: [{
+                        label: 'Amount',
+                        data: data.agingBuckets.map(b => parseFloat(b.amount)),
+                        backgroundColor: data.agingBuckets.map(b => b.color)
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => '₹' + value + 'L'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Collection Trend Chart
+            new Chart(document.getElementById('collectionTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        label: 'Collection %',
+                        data: [92, 94, 91, 95],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 85,
+                            max: 100,
+                            ticks: {
+                                callback: value => value + '%'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Refund Reasons Chart
+            new Chart(document.getElementById('refundReasonsChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.refundMetrics.reasons.labels,
+                    datasets: [{
+                        axis: 'y',
+                        label: 'Count',
+                        data: data.refundMetrics.reasons.values,
+                        backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Product Revenue Chart
+            new Chart(document.getElementById('productRevenueChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.productRevenue.labels,
+                    datasets: [
+                        {
+                            label: 'Invoiced',
+                            data: data.productRevenue.invoiced,
+                            backgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: 'Collected',
+                            data: data.productRevenue.collected,
+                            backgroundColor: '#10b981'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => '₹' + value + 'L'
+                            }
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
