@@ -9,6 +9,8 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8f9fa; }
+        
+        /* Sidebar */
         .sidebar { position: fixed; left: 0; top: 0; width: 240px; height: 100vh; background: #1a1d29; color: white; overflow-y: auto; z-index: 1000; }
         .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .sidebar-header h2 { font-size: 20px; font-weight: 700; margin: 0; }
@@ -16,67 +18,1266 @@
         .nav-link:hover { background: rgba(255,255,255,0.05); color: white; }
         .nav-link.active { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-left: 3px solid #3b82f6; }
         .nav-icon { margin-right: 12px; font-size: 18px; }
+        
+        /* Main Content */
         .main-content { margin-left: 240px; min-height: 100vh; }
-        .top-header { background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 32px; position: sticky; top: 0; z-index: 100; }
+        
+        /* Header */
+        .top-header { background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 32px; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .header-title { font-size: 24px; font-weight: 700; color: #1f2937; margin: 0; }
-        .header-subtitle { font-size: 14px; color: #6b7280; margin-top: 4px; }
-        .kpi-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .kpi-value { font-size: 28px; font-weight: 700; color: #1f2937; }
-        .kpi-label { font-size: 13px; color: #6b7280; margin-top: 4px; }
+        .header-subtitle { font-size: 13px; color: #6b7280; margin-top: 4px; }
+        
+        /* Filter Bar */
+        .filter-bar { background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 32px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+        .filter-bar select, .filter-bar input { padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+        
+        /* KPI Cards */
+        .kpi-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.3s; height: 100%; }
+        .kpi-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); transform: translateY(-2px); }
+        .kpi-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px; }
+        .kpi-icon.blue { background: #dbeafe; color: #1e40af; }
+        .kpi-icon.green { background: #dcfce7; color: #15803d; }
+        .kpi-icon.orange { background: #fed7aa; color: #c2410c; }
+        .kpi-icon.red { background: #fee2e2; color: #dc2626; }
+        .kpi-icon.purple { background: #e9d5ff; color: #7e22ce; }
+        .kpi-icon.yellow { background: #fef3c7; color: #92400e; }
+        .kpi-value { font-size: 28px; font-weight: 700; color: #1f2937; margin-bottom: 4px; }
+        .kpi-label { font-size: 13px; color: #6b7280; font-weight: 500; }
+        .kpi-trend { display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; margin-top: 8px; padding: 4px 8px; border-radius: 12px; }
+        .trend-up { background: #dcfce7; color: #15803d; }
+        .trend-down { background: #fee2e2; color: #dc2626; }
+        
+        /* Section Cards */
         .section-card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
-        .team-section { border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
-        .team-section.inbound { border-color: #3b82f6; background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-title { font-size: 18px; font-weight: 700; color: #1f2937; margin: 0; }
+        
+        /* Team Sections */
+        .team-section { border: 2px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 24px; position: relative; }
+        .team-section.inbound { border-color: #3b82f6; background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); }
         .team-section.outbound { border-color: #10b981; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); }
-        .status-chip { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #4b5563; background: #f9fafb; border-bottom: 2px solid #e5e7eb; }
-        .data-table td { padding: 12px; font-size: 14px; color: #1f2937; border-bottom: 1px solid #f3f4f6; }
-        .btn-primary { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .team-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #e5e7eb; }
+        .team-badge { padding: 8px 20px; border-radius: 20px; font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; }
+        .team-badge.inbound { background: #3b82f6; color: white; }
+        .team-badge.outbound { background: #10b981; color: white; }
+        .team-subtitle { font-size: 13px; color: #6b7280; margin-left: 12px; }
+        
+        /* Lead Status Chips - Exact colors from screenshot */
+        .status-chip { display: inline-block; padding: 5px 12px; border-radius: 14px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .status-not-called { background: #e5e7eb; color: #374151; }
+        .status-invalid { background: #fee2e2; color: #991b1b; }
+        .status-no-answer { background: #fef3c7; color: #92400e; }
+        .status-not-interested { background: #fecaca; color: #991b1b; }
+        .status-meeting { background: #d1fae5; color: #065f46; }
+        .status-followup { background: #dbeafe; color: #1e40af; }
+        .status-dnc { background: #1f2937; color: white; }
+        .status-callback { background: #e0e7ff; color: #3730a3; }
+        .status-no-longer { background: #fed7aa; color: #9a3412; }
+        .status-sent-info { background: #fef3c7; color: #854d0e; }
+        .status-lock-in { background: #dcfce7; color: #14532d; }
+        .status-wrong { background: #fecaca; color: #7f1d1d; }
+        .status-disconnect { background: #fee2e2; color: #991b1b; }
+        
+        /* Tables */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .data-table thead { background: #f9fafb; position: sticky; top: 0; z-index: 10; }
+        .data-table th { padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #4b5563; border-bottom: 2px solid #e5e7eb; }
+        .data-table td { padding: 12px; color: #1f2937; border-bottom: 1px solid #f3f4f6; }
+        .data-table tbody tr:hover { background: #f9fafb; }
+        
+        /* Badges */
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge-success { background: #dcfce7; color: #15803d; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-danger { background: #fee2e2; color: #dc2626; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .badge-secondary { background: #f3f4f6; color: #4b5563; }
+        
+        /* Quality Score */
+        .quality-score { display: inline-flex; align-items: center; gap: 8px; }
+        .score-bar { width: 70px; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+        .score-fill { height: 100%; transition: width 0.3s; }
+        .score-excellent { background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%); }
+        .score-good { background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); }
+        .score-fair { background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%); }
+        .score-poor { background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%); }
+        
+        /* Tabs */
+        .tab-nav { display: flex; gap: 4px; border-bottom: 2px solid #e5e7eb; margin-bottom: 20px; overflow-x: auto; }
+        .tab-button { padding: 12px 20px; background: none; border: none; font-size: 14px; font-weight: 600; color: #6b7280; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; white-space: nowrap; }
+        .tab-button:hover { color: #3b82f6; background: #f9fafb; }
+        .tab-button.active { color: #3b82f6; border-bottom-color: #3b82f6; background: #eff6ff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Buttons */
+        .btn-primary { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .btn-secondary { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary:hover { background: #e5e7eb; }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        
+        /* Mini Stats */
+        .mini-stat { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; text-align: center; }
+        .mini-stat-value { font-size: 24px; font-weight: 700; color: #1f2937; }
+        .mini-stat-label { font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500; }
+        .mini-stat-trend { font-size: 11px; margin-top: 6px; }
+        
+        /* Action Icons */
+        .action-icon { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; background: #f3f4f6; color: #6b7280; cursor: pointer; transition: all 0.2s; text-decoration: none; margin: 0 2px; font-size: 14px; }
+        .action-icon:hover { background: #e5e7eb; color: #1f2937; transform: scale(1.1); }
+        
+        /* Status Grid */
+        .status-grid-card { padding: 16px; border-radius: 8px; border-left: 4px solid; transition: all 0.2s; }
+        .status-grid-card:hover { transform: translateX(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        
+        /* Funnel Steps */
+        .funnel-container { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding: 20px 0; }
+        .funnel-step { flex: 1; min-width: 120px; background: white; border: 2px solid #e5e7eb; border-radius: 8px; padding: 16px; text-align: center; position: relative; }
+        .funnel-step::after { content: '→'; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); font-size: 24px; color: #9ca3af; }
+        .funnel-step:last-child::after { display: none; }
+        .funnel-step-value { font-size: 24px; font-weight: 700; color: #1f2937; }
+        .funnel-step-label { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        .funnel-step-rate { font-size: 11px; color: #10b981; margin-top: 4px; font-weight: 600; }
+        
+        /* Loading */
+        .loading { text-align: center; padding: 40px; color: #9ca3af; }
+        
+        /* Search Box */
+        .search-box { max-width: 400px; }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-header"><h2>Utho CRM</h2></div>
+        <div class="sidebar-header">
+            <h2>🎯 Lead Center</h2>
+        </div>
         <nav>
-            <a href="static-sales-dashboard.html" class="nav-link"><span class="nav-icon">📊</span>Sales</a>
-            <a href="static-leads-dashboard.html" class="nav-link active"><span class="nav-icon">🎯</span>Leads</a>
-            <a href="static-account-management-dashboard.html" class="nav-link"><span class="nav-icon">👥</span>Accounts</a>
-            <a href="static-support-dashboard.html" class="nav-link"><span class="nav-icon">🎧</span>Support</a>
-            <a href="static-billing-dashboard.html" class="nav-link"><span class="nav-icon">💰</span>Billing</a>
+            <a href="static-sales-dashboard.html" class="nav-link">
+                <span class="nav-icon">📊</span>
+                <span>Sales Dashboard</span>
+            </a>
+            <a href="static-leads-dashboard.html" class="nav-link active">
+                <span class="nav-icon">🎯</span>
+                <span>Leads</span>
+            </a>
+            <a href="static-account-management-dashboard.html" class="nav-link">
+                <span class="nav-icon">👥</span>
+                <span>Account Management</span>
+            </a>
+            <a href="static-support-dashboard.html" class="nav-link">
+                <span class="nav-icon">🎧</span>
+                <span>Support</span>
+            </a>
+            <a href="static-billing-dashboard.html" class="nav-link">
+                <span class="nav-icon">💰</span>
+                <span>Billing & Finance</span>
+            </a>
         </nav>
     </div>
+
+    <!-- Main Content -->
     <div class="main-content">
+        <!-- Top Header -->
         <div class="top-header">
-            <h1 class="header-title">Lead Generation Dashboard</h1>
-            <p class="header-subtitle">Inbound & Outbound lead pipeline</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="header-title">Lead Generation Dashboard</h1>
+                    <p class="header-subtitle">Inbound + Outbound performance and pipeline visibility</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <input type="search" class="form-control search-box" placeholder="Search leads, numbers, emails...">
+                    <button class="btn-primary">+ Add Lead</button>
+                    <button class="btn-primary">+ Add Task</button>
+                    <div style="position: relative;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; cursor: pointer;">🔔</div>
+                        <span style="position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;">3</span>
+                    </div>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; cursor: pointer;">LG</div>
+                </div>
+            </div>
         </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <label style="font-size: 14px; font-weight: 600; color: #4b5563;">Filters:</label>
+            <select id="leadTypeFilter">
+                <option value="all">All Leads</option>
+                <option value="inbound">Inbound Only</option>
+                <option value="outbound">Outbound Only</option>
+            </select>
+            <select id="dateRangeFilter">
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="quarter">This Quarter</option>
+                <option value="custom">Custom Range</option>
+            </select>
+            <select id="sourceFilter">
+                <option value="all">All Sources</option>
+                <option value="website">Website</option>
+                <option value="signup">Signup Form</option>
+                <option value="cold-email">Cold Email</option>
+                <option value="cold-call">Cold Call</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="referral">Referral</option>
+                <option value="events">Events</option>
+            </select>
+            <select id="ownerFilter">
+                <option value="all">All Owners</option>
+                <option value="my">My Leads</option>
+                <option value="team">Team Leads</option>
+            </select>
+            <select id="statusFilter" multiple style="min-width: 150px;">
+                <option value="all" selected>All Status</option>
+                <option value="not-called">Not Called</option>
+                <option value="meeting">Meeting Scheduled</option>
+                <option value="followup">Follow-up Required</option>
+            </select>
+            <button class="btn-primary btn-sm">Apply Filters</button>
+            <button class="btn-secondary btn-sm">Reset</button>
+        </div>
+
+        <!-- Content Area -->
         <div style="padding: 32px;">
+            
+            <!-- PART 4: Global KPI Cards -->
             <div class="row g-3 mb-4">
-                <div class="col-md-3"><div class="kpi-card"><div class="kpi-value">2,847</div><div class="kpi-label">Total Leads</div></div></div>
-                <div class="col-md-3"><div class="kpi-card"><div class="kpi-value">487</div><div class="kpi-label">Qualified Leads</div></div></div>
-                <div class="col-md-3"><div class="kpi-card"><div class="kpi-value">124</div><div class="kpi-label">Meetings Scheduled</div></div></div>
-                <div class="col-md-3"><div class="kpi-card"><div class="kpi-value">17.1%</div><div class="kpi-label">Conversion Rate</div></div></div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon blue">📊</div>
+                        <div class="kpi-value">2,847</div>
+                        <div class="kpi-label">Total Leads</div>
+                        <span class="kpi-trend trend-up">↑ 18% vs last month</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon green">📞</div>
+                        <div class="kpi-value">2,048</div>
+                        <div class="kpi-label">Total Called Leads</div>
+                        <span class="kpi-trend trend-up">↑ 12%</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon purple">✓</div>
+                        <div class="kpi-value">1,476</div>
+                        <div class="kpi-label">Total Connected</div>
+                        <span class="kpi-trend trend-up">↑ 15%</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon green">📅</div>
+                        <div class="kpi-value">124</div>
+                        <div class="kpi-label">Meetings Scheduled</div>
+                        <span class="kpi-trend trend-up">↑ 22%</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon blue">🤝</div>
+                        <div class="kpi-value">98</div>
+                        <div class="kpi-label">Meetings Attended</div>
+                        <span class="kpi-trend trend-up">↑ 19%</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon green">⭐</div>
+                        <div class="kpi-value">487</div>
+                        <div class="kpi-label">Qualified Leads</div>
+                        <span class="kpi-trend trend-up">↑ 12%</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon red">❌</div>
+                        <div class="kpi-value">682</div>
+                        <div class="kpi-label">Disqualified / Junk</div>
+                        <span class="kpi-trend trend-down">↓ 8%</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon yellow">📝</div>
+                        <div class="kpi-value">267</div>
+                        <div class="kpi-label">Follow-up Required</div>
+                        <span class="kpi-trend trend-up">↑ 5%</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon red">🚨</div>
+                        <div class="kpi-value">87</div>
+                        <div class="kpi-label">Urgent Calls (>48hrs)</div>
+                    </div>
+                </div>
             </div>
+
+            <!-- PART 5: INBOUND LEAD SECTION -->
             <div class="team-section inbound">
-                <h3>📥 INBOUND TEAM</h3>
-                <canvas id="inboundChart"></canvas>
+                <div class="team-header">
+                    <span class="team-badge inbound">📥 INBOUND LEADS</span>
+                    <span class="team-subtitle">Website signups & demo requests</span>
+                </div>
+
+                <!-- Inbound KPIs -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="mini-stat" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+                            <div class="mini-stat-value" style="color: #1e40af;">1,247</div>
+                            <div class="mini-stat-label">Total Signups</div>
+                            <div class="mini-stat-trend trend-up">↑ 24% vs last month</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);">
+                            <div class="mini-stat-value" style="color: #15803d;">1,087</div>
+                            <div class="mini-stat-label">Verified Leads</div>
+                            <div class="mini-stat-trend trend-up">↑ 18%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                            <div class="mini-stat-value" style="color: #92400e;">892</div>
+                            <div class="mini-stat-label">Reached by Phone</div>
+                            <div class="mini-stat-trend trend-up">↑ 15%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat" style="background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);">
+                            <div class="mini-stat-value" style="color: #7e22ce;">1,024</div>
+                            <div class="mini-stat-label">Reached by Email</div>
+                            <div class="mini-stat-trend trend-up">↑ 22%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">78</div>
+                            <div class="mini-stat-label">Meeting Scheduled</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">42</div>
+                            <div class="mini-stat-label">Trial Started</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">28</div>
+                            <div class="mini-stat-label">Converted to Customer</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">2.1 hrs</div>
+                            <div class="mini-stat-label">Avg Time to 1st Contact</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inbound Funnel -->
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Inbound Lead Funnel</h5>
+                <div class="funnel-container mb-4">
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);">
+                        <div class="funnel-step-value">1,247</div>
+                        <div class="funnel-step-label">Signup</div>
+                        <div class="funnel-step-rate">100%</div>
+                    </div>
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);">
+                        <div class="funnel-step-value">1,087</div>
+                        <div class="funnel-step-label">Contacted</div>
+                        <div class="funnel-step-rate">87%</div>
+                    </div>
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);">
+                        <div class="funnel-step-value">892</div>
+                        <div class="funnel-step-label">Connected</div>
+                        <div class="funnel-step-rate">72%</div>
+                    </div>
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);">
+                        <div class="funnel-step-value">287</div>
+                        <div class="funnel-step-label">Meeting Scheduled</div>
+                        <div class="funnel-step-rate">23%</div>
+                    </div>
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                        <div class="funnel-step-value">246</div>
+                        <div class="funnel-step-label">Meeting Attended</div>
+                        <div class="funnel-step-rate">20%</div>
+                    </div>
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);">
+                        <div class="funnel-step-value">187</div>
+                        <div class="funnel-step-label">Requirement Clear</div>
+                        <div class="funnel-step-rate">15%</div>
+                    </div>
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);">
+                        <div class="funnel-step-value">124</div>
+                        <div class="funnel-step-label">Trial Activated</div>
+                        <div class="funnel-step-rate">10%</div>
+                    </div>
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #dcfce7 0%, #22c55e 100%);">
+                        <div class="funnel-step-value">68</div>
+                        <div class="funnel-step-label">Qualified</div>
+                        <div class="funnel-step-rate">5.5%</div>
+                    </div>
+                    <div class="funnel-step" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+                        <div class="funnel-step-value">28</div>
+                        <div class="funnel-step-label">Converted</div>
+                        <div class="funnel-step-rate">2.2%</div>
+                    </div>
+                </div>
+
+                <!-- Inbound Charts -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="section-card">
+                            <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Inbound Status Distribution</h5>
+                            <canvas id="inboundStatusChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="section-card">
+                            <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Inbound Conversion Trend</h5>
+                            <canvas id="inboundConversionChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- PART 6: OUTBOUND LEAD SECTION -->
             <div class="team-section outbound">
-                <h3>📤 OUTBOUND TEAM</h3>
-                <canvas id="outboundChart"></canvas>
+                <div class="team-header">
+                    <span class="team-badge outbound">📤 OUTBOUND LEADS</span>
+                    <span class="team-subtitle">Cold calling, emails, WhatsApp & Apollo data</span>
+                </div>
+
+                <!-- Outbound KPIs -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="mini-stat" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);">
+                            <div class="mini-stat-value" style="color: #15803d;">1,600</div>
+                            <div class="mini-stat-label">Total Data Assigned</div>
+                            <div class="mini-stat-trend trend-up">↑ 14% vs last month</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+                            <div class="mini-stat-value" style="color: #1e40af;">1,156</div>
+                            <div class="mini-stat-label">Total Cold Calls</div>
+                            <div class="mini-stat-trend trend-up">↑ 18%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                            <div class="mini-stat-value" style="color: #92400e;">1,284</div>
+                            <div class="mini-stat-label">Total Emails Sent</div>
+                            <div class="mini-stat-trend trend-up">↑ 22%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat" style="background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);">
+                            <div class="mini-stat-value" style="color: #7e22ce;">876</div>
+                            <div class="mini-stat-label">WhatsApp Sent</div>
+                            <div class="mini-stat-trend trend-up">↑ 28%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">584</div>
+                            <div class="mini-stat-label">First Contact Made</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">342</div>
+                            <div class="mini-stat-label">Conversation Started</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">46</div>
+                            <div class="mini-stat-label">Meeting Scheduled</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">200</div>
+                            <div class="mini-stat-label">Qualified Prospects</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">594</div>
+                            <div class="mini-stat-label">Not Interested</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">178</div>
+                            <div class="mini-stat-label">Warm Leads</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mini-stat">
+                            <div class="mini-stat-value">142</div>
+                            <div class="mini-stat-label">Callback Requested</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outbound Charts -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="section-card">
+                            <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Daily Calling Volume</h5>
+                            <canvas id="outboundCallingChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="section-card">
+                            <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Daily Email & WhatsApp Volume</h5>
+                            <canvas id="outboundEmailChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="section-card">
+                            <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Connection Rate Trend</h5>
+                            <canvas id="outboundConnectionChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="section-card">
+                            <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Meeting Conversion Rate</h5>
+                            <canvas id="outboundMeetingChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- PART 7: UNIFIED LEAD STATUS SECTION -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">📊 Unified Lead Status Overview</h3>
+                    <select class="form-select" style="width: auto;">
+                        <option value="all">All Teams</option>
+                        <option value="inbound">Inbound Only</option>
+                        <option value="outbound">Outbound Only</option>
+                    </select>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #f9fafb; border-color: #6b7280;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-not-called">Not Called</span>
+                                <strong style="font-size: 24px; color: #1f2937;">482</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">16.9% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↓ 8% vs last week</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #fef2f2; border-color: #dc2626;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-invalid">Invalid Number</span>
+                                <strong style="font-size: 24px; color: #1f2937;">128</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">4.5% of total</div>
+                            <div style="font-size: 11px; color: #ef4444; margin-top: 4px;">↑ 3%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #fffbeb; border-color: #f59e0b;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-no-answer">No Answer</span>
+                                <strong style="font-size: 24px; color: #1f2937;">356</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">12.5% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↓ 5%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #fef2f2; border-color: #ef4444;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-not-interested">Not Interested</span>
+                                <strong style="font-size: 24px; color: #1f2937;">594</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">20.9% of total</div>
+                            <div style="font-size: 11px; color: #ef4444; margin-top: 4px;">↑ 7%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #f0fdf4; border-color: #22c55e;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-meeting">Meeting Scheduled</span>
+                                <strong style="font-size: 24px; color: #1f2937;">124</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">4.4% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↑ 22%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #eff6ff; border-color: #3b82f6;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-followup">Follow-up Required</span>
+                                <strong style="font-size: 24px; color: #1f2937;">267</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">9.4% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↑ 5%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #f9fafb; border-color: #1f2937;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-dnc">Do Not Call</span>
+                                <strong style="font-size: 24px; color: #1f2937;">87</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">3.1% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↓ 2%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #eef2ff; border-color: #6366f1;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-callback">Callback Requested</span>
+                                <strong style="font-size: 24px; color: #1f2937;">142</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">5.0% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↑ 12%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #fff7ed; border-color: #ea580c;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-no-longer">No Longer at Company</span>
+                                <strong style="font-size: 24px; color: #1f2937;">94</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">3.3% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↓ 4%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #fffbeb; border-color: #d97706;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-sent-info">Sent Info - Awaiting</span>
+                                <strong style="font-size: 24px; color: #1f2937;">178</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">6.3% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↑ 18%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #f0fdf4; border-color: #16a34a;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-lock-in">In Lock-In</span>
+                                <strong style="font-size: 24px; color: #1f2937;">62</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">2.2% of total</div>
+                            <div style="font-size: 11px; color: #ef4444; margin-top: 4px;">↑ 28%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #fef2f2; border-color: #dc2626;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-wrong">Wrong Details</span>
+                                <strong style="font-size: 24px; color: #1f2937;">156</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">5.5% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↓ 6%</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="status-grid-card" style="background: #fef2f2; border-color: #b91c1c;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="status-chip status-disconnect">Disconnect</span>
+                                <strong style="font-size: 24px; color: #1f2937;">177</strong>
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280;">6.2% of total</div>
+                            <div style="font-size: 11px; color: #10b981; margin-top: 4px;">↓ 7%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PART 8: TEAM PERFORMANCE -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">👥 Team Performance</h3>
+                    <div class="d-flex gap-2">
+                        <select class="form-select" style="width: auto;">
+                            <option value="all">All Teams</option>
+                            <option value="inbound">Inbound Team</option>
+                            <option value="outbound">Outbound Team</option>
+                        </select>
+                        <button class="btn-secondary">Export CSV</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Agent Name</th>
+                                <th>Team</th>
+                                <th>Leads Assigned</th>
+                                <th>Calls Made</th>
+                                <th>Connected</th>
+                                <th>Meetings Booked</th>
+                                <th>Meetings Attended</th>
+                                <th>Qualified Leads</th>
+                                <th>Avg Call Attempts</th>
+                                <th>Follow-ups Today</th>
+                                <th>Follow-ups Overdue</th>
+                                <th>Conversion %</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamPerformanceTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PART 9: FOLLOW-UP MANAGEMENT -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">📅 Follow-up Management</h3>
+                    <div class="d-flex gap-2">
+                        <button class="btn-primary">+ Add Follow-up</button>
+                        <select class="form-select" style="width: auto;">
+                            <option value="all">All Priorities</option>
+                            <option value="high">High Priority</option>
+                            <option value="urgent">Urgent Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="tab-nav">
+                    <button class="tab-button active" onclick="switchFollowupTab('today')">Today's Follow-ups (18)</button>
+                    <button class="tab-button" onclick="switchFollowupTab('overdue')">Overdue (7)</button>
+                    <button class="tab-button" onclick="switchFollowupTab('week')">Next 7 Days (42)</button>
+                    <button class="tab-button" onclick="switchFollowupTab('month')">Next 30 Days (124)</button>
+                    <button class="tab-button" onclick="switchFollowupTab('high')">High Priority (23)</button>
+                </div>
+
+                <div id="todayTab" class="tab-content active">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Lead Name</th>
+                                    <th>Company</th>
+                                    <th>Status</th>
+                                    <th>Owner</th>
+                                    <th>Contact</th>
+                                    <th>Last Contact</th>
+                                    <th>Next Action</th>
+                                    <th>Due Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="todayFollowupsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="overdueTab" class="tab-content">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Lead Name</th>
+                                    <th>Company</th>
+                                    <th>Status</th>
+                                    <th>Owner</th>
+                                    <th>Contact</th>
+                                    <th>Last Contact</th>
+                                    <th>Next Action</th>
+                                    <th>Days Overdue</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="overdueFollowupsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="weekTab" class="tab-content">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Lead Name</th>
+                                    <th>Company</th>
+                                    <th>Status</th>
+                                    <th>Owner</th>
+                                    <th>Contact</th>
+                                    <th>Last Contact</th>
+                                    <th>Next Action</th>
+                                    <th>Due Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weekFollowupsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="monthTab" class="tab-content">
+                    <div class="loading">Loading monthly follow-ups...</div>
+                </div>
+
+                <div id="highTab" class="tab-content">
+                    <div class="loading">Loading high priority leads...</div>
+                </div>
+            </div>
+
+            <!-- PART 10: LEAD QUALITY ANALYTICS -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">⭐ Lead Quality Analytics (Cloud Industry)</h3>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Lead Quality by Use Case</h5>
+                        <canvas id="qualityUseCaseChart" style="max-height: 300px;"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Lead Quality by Budget Band</h5>
+                        <canvas id="qualityBudgetChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+
+                <h5 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Top Quality Leads (Cloud Readiness Scores)</h5>
+                <div class="table-responsive mb-4">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Lead Name</th>
+                                <th>Company</th>
+                                <th>Tech Stack Match</th>
+                                <th>Budget Fit</th>
+                                <th>Cloud Readiness</th>
+                                <th>Project Urgency</th>
+                                <th>Use Case Type</th>
+                                <th>Monthly Spend Potential</th>
+                                <th>Overall Quality</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leadQualityTable"></tbody>
+                    </table>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div style="padding: 24px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 12px; text-align: center; border: 2px solid #22c55e;">
+                            <div style="font-size: 36px; font-weight: 700; color: #15803d;">182</div>
+                            <div style="font-size: 15px; color: #166534; margin-top: 8px; font-weight: 600;">High Quality Leads</div>
+                            <div style="font-size: 12px; color: #16a34a; margin-top: 6px;">Score 80-100 | Cloud Ready</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="padding: 24px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; text-align: center; border: 2px solid #f59e0b;">
+                            <div style="font-size: 36px; font-weight: 700; color: #92400e;">305</div>
+                            <div style="font-size: 15px; color: #854d0e; margin-top: 8px; font-weight: 600;">Medium Quality Leads</div>
+                            <div style="font-size: 12px; color: #a16207; margin-top: 6px;">Score 50-79 | Potential</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="padding: 24px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 12px; text-align: center; border: 2px solid #ef4444;">
+                            <div style="font-size: 36px; font-weight: 700; color: #dc2626;">128</div>
+                            <div style="font-size: 15px; color: #991b1b; margin-top: 8px; font-weight: 600;">Low Quality Leads</div>
+                            <div style="font-size: 12px; color: #b91c1c; margin-top: 6px;">Score <50 | Nurture</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PART 11: FULL LEAD DATABASE -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">📋 Complete Lead Database</h3>
+                    <div class="d-flex gap-2">
+                        <input type="search" class="form-control" style="max-width: 300px;" placeholder="Search leads...">
+                        <button class="btn-secondary">Export All</button>
+                        <button class="btn-secondary">Column Settings</button>
+                        <button class="btn-primary">+ Add Lead</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                    <table class="data-table">
+                        <thead style="position: sticky; top: 0; background: #f9fafb; z-index: 10;">
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>Source</th>
+                                <th>Status</th>
+                                <th>Lead Name</th>
+                                <th>Company</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Industry</th>
+                                <th>Owner</th>
+                                <th>Date Added</th>
+                                <th>Last Contact</th>
+                                <th>Next Follow-up</th>
+                                <th>Call Attempts</th>
+                                <th>Meeting Status</th>
+                                <th>Quality Score</th>
+                                <th>Potential Spend</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leadDatabaseTable"></tbody>
+                    </table>
+                </div>
+
+                <div class="text-center mt-3">
+                    <button class="btn-secondary">Load More Leads (Showing 50 of 2,847)</button>
+                </div>
+            </div>
+
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        new Chart(document.getElementById('inboundChart'), {
-            type: 'bar',
-            data: { labels: ['Received', 'Contacted', 'Qualified', 'Meeting'], datasets: [{ data: [1247, 1087, 287, 78], backgroundColor: '#3b82f6' }] }
+        // ===== MOCK DATA =====
+
+        const teamPerformanceData = [
+            { name: "Priya Singh", team: "Inbound", assigned: 287, calls: 312, connected: 252, meetings: 24, attended: 21, qualified: 68, avgAttempts: 2.8, todayFollowup: 8, overdueFollowup: 2, conversion: 8.4, score: 94 },
+            { name: "Amit Patel", team: "Outbound", assigned: 420, calls: 687, connected: 245, meetings: 12, attended: 10, qualified: 38, avgAttempts: 4.2, todayFollowup: 12, overdueFollowup: 5, conversion: 2.9, score: 78 },
+            { name: "Sneha Sharma", team: "Inbound", assigned: 312, calls: 348, connected: 276, meetings: 28, attended: 24, qualified: 72, avgAttempts: 2.6, todayFollowup: 6, overdueFollowup: 1, conversion: 9.0, score: 96 },
+            { name: "Rajesh Kumar", team: "Outbound", assigned: 385, calls: 624, connected: 218, meetings: 14, attended: 12, qualified: 42, avgAttempts: 4.5, todayFollowup: 10, overdueFollowup: 3, conversion: 3.6, score: 82 },
+            { name: "Neha Kapoor", team: "Inbound", assigned: 298, calls: 325, connected: 264, meetings: 22, attended: 19, qualified: 64, avgAttempts: 2.7, todayFollowup: 7, overdueFollowup: 0, conversion: 7.4, score: 91 },
+            { name: "Vikram Shah", team: "Outbound", assigned: 395, calls: 658, connected: 234, meetings: 16, attended: 14, qualified: 48, avgAttempts: 4.3, todayFollowup: 11, overdueFollowup: 4, conversion: 4.1, score: 85 },
+            { name: "Anjali Desai", team: "Inbound", assigned: 268, calls: 298, connected: 238, meetings: 18, attended: 16, qualified: 58, avgAttempts: 2.9, todayFollowup: 5, overdueFollowup: 1, conversion: 6.7, score: 88 },
+            { name: "Karan Malhotra", team: "Outbound", assigned: 400, calls: 692, connected: 256, meetings: 20, attended: 18, qualified: 72, avgAttempts: 4.1, todayFollowup: 9, overdueFollowup: 2, conversion: 5.0, score: 89 }
+        ];
+
+        const todayFollowupsData = [
+            { name: "Rahul Mehta", company: "TechCorp Solutions", status: "Meeting Scheduled", owner: "Priya Singh", contact: "+91 98765 43210", lastContact: "Yesterday", action: "Demo Call", time: "11:00 AM" },
+            { name: "Pooja Reddy", company: "DataFlow Inc", status: "Follow-up Required", owner: "Amit Patel", contact: "+91 98765 43211", lastContact: "2 days ago", action: "Send Proposal", time: "2:00 PM" },
+            { name: "Arjun Nair", company: "CloudNine Systems", status: "Sent Info - Awaiting", owner: "Sneha Sharma", contact: "+91 98765 43212", lastContact: "3 days ago", action: "Follow-up Call", time: "4:30 PM" }
+        ];
+
+        const overdueFollowupsData = [
+            { name: "Maya Iyer", company: "StartupXYZ", status: "Callback Requested", owner: "Rajesh Kumar", contact: "+91 98765 43213", lastContact: "5 days ago", action: "Call Back", overdue: 3 },
+            { name: "Simran Kaur", company: "Innovation Labs", status: "Follow-up Required", owner: "Neha Kapoor", contact: "+91 98765 43214", lastContact: "7 days ago", action: "Email Follow-up", overdue: 5 }
+        ];
+
+        const weekFollowupsData = [
+            { name: "Ravi Kumar", company: "Enterprise Cloud", status: "Qualified", owner: "Vikram Shah", contact: "+91 98765 43215", lastContact: "Today", action: "Schedule Meeting", date: "Jan 24" },
+            { name: "Divya Patel", company: "GlobalTech Inc", status: "Meeting Scheduled", owner: "Anjali Desai", contact: "+91 98765 43216", lastContact: "Yesterday", action: "Pre-meeting Prep", date: "Jan 25" },
+            { name: "Aditya Sharma", company: "HyperScale Tech", status: "Follow-up Required", owner: "Karan Malhotra", contact: "+91 98765 43217", lastContact: "2 days ago", action: "Technical Discussion", date: "Jan 26" }
+        ];
+
+        const leadQualityData = [
+            { name: "Rahul Mehta", company: "TechCorp Solutions", techMatch: 92, budgetFit: 88, cloudReadiness: 95, urgency: "High", useCase: "Kubernetes", spend: "₹2-5L", quality: "Excellent" },
+            { name: "Pooja Reddy", company: "DataFlow Inc", techMatch: 78, budgetFit: 72, cloudReadiness: 82, urgency: "Medium", useCase: "VMs", spend: "₹50k-1L", quality: "Good" },
+            { name: "Arjun Nair", company: "CloudNine Systems", techMatch: 85, budgetFit: 90, cloudReadiness: 88, urgency: "High", useCase: "Storage", spend: "₹1-2L", quality: "Excellent" },
+            { name: "Maya Iyer", company: "StartupXYZ", techMatch: 62, budgetFit: 58, cloudReadiness: 65, urgency: "Low", useCase: "Databases", spend: "₹10-50k", quality: "Fair" },
+            { name: "Simran Kaur", company: "Innovation Labs", techMatch: 94, budgetFit: 96, cloudReadiness: 92, urgency: "Urgent", useCase: "Kubernetes", spend: "₹5L+", quality: "Excellent" }
+        ];
+
+        const leadDatabaseData = [
+            { source: "Inbound", status: "Meeting Scheduled", name: "Rahul Mehta", company: "TechCorp Solutions", phone: "+91 98765 43210", email: "rahul@techcorp.com", industry: "IT Services", owner: "Priya Singh", dateAdded: "Jan 15, 2025", lastContact: "Yesterday", nextFollowup: "Today, 11AM", attempts: 3, meetingStatus: "Confirmed", quality: 92, spend: "₹2-5L" },
+            { source: "Outbound", status: "Follow-up Required", name: "Pooja Reddy", company: "DataFlow Inc", phone: "+91 98765 43211", email: "pooja@dataflow.com", industry: "SaaS", owner: "Amit Patel", dateAdded: "Jan 14, 2025", lastContact: "2 days ago", nextFollowup: "Today, 2PM", attempts: 5, meetingStatus: "Pending", quality: 78, spend: "₹50k-1L" },
+            { source: "Inbound", status: "Qualified", name: "Arjun Nair", company: "CloudNine Systems", phone: "+91 98765 43212", email: "arjun@cloudnine.com", industry: "FinTech", owner: "Sneha Sharma", dateAdded: "Jan 16, 2025", lastContact: "Today", nextFollowup: "Jan 23", attempts: 2, meetingStatus: "To Schedule", quality: 85, spend: "₹1-2L" },
+            { source: "Outbound", status: "Callback Requested", name: "Maya Iyer", company: "StartupXYZ", phone: "+91 98765 43213", email: "maya@startupxyz.com", industry: "E-commerce", owner: "Rajesh Kumar", dateAdded: "Jan 12, 2025", lastContact: "5 days ago", nextFollowup: "Overdue", attempts: 7, meetingStatus: "Not Set", quality: 62, spend: "₹10-50k" },
+            { source: "Inbound", status: "Meeting Scheduled", name: "Simran Kaur", company: "Innovation Labs", phone: "+91 98765 43214", email: "simran@innovationlabs.com", industry: "AI/ML", owner: "Neha Kapoor", dateAdded: "Jan 17, 2025", lastContact: "Yesterday", nextFollowup: "Jan 24", attempts: 2, meetingStatus: "Confirmed", quality: 94, spend: "₹5L+" }
+        ];
+
+        // ===== RENDER FUNCTIONS =====
+
+        function renderTeamPerformanceTable() {
+            const tbody = document.getElementById('teamPerformanceTable');
+            tbody.innerHTML = teamPerformanceData.map(member => {
+                const teamBadge = member.team === 'Inbound' ? 'badge-info' : 'badge-success';
+                const scoreBadge = member.score >= 90 ? 'badge-success' : member.score >= 80 ? 'badge-info' : 'badge-warning';
+                
+                return `
+                    <tr>
+                        <td><strong>${member.name}</strong></td>
+                        <td><span class="badge ${teamBadge}">${member.team}</span></td>
+                        <td>${member.assigned}</td>
+                        <td>${member.calls}</td>
+                        <td><strong>${member.connected}</strong></td>
+                        <td><strong style="color: #22c55e;">${member.meetings}</strong></td>
+                        <td>${member.attended}</td>
+                        <td><strong style="color: #3b82f6;">${member.qualified}</strong></td>
+                        <td>${member.avgAttempts}</td>
+                        <td>${member.todayFollowup}</td>
+                        <td>${member.overdueFollowup > 0 ? `<span class="badge badge-danger">${member.overdueFollowup}</span>` : '0'}</td>
+                        <td><strong>${member.conversion}%</strong></td>
+                        <td><span class="badge ${scoreBadge}">${member.score}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderFollowupsTable(data, tableId, showOverdue = false) {
+            const tbody = document.getElementById(tableId);
+            tbody.innerHTML = data.map(followup => {
+                let statusClass = 'status-followup';
+                if (followup.status.includes('Meeting')) statusClass = 'status-meeting';
+                if (followup.status.includes('Callback')) statusClass = 'status-callback';
+                if (followup.status.includes('Sent Info')) statusClass = 'status-sent-info';
+                if (followup.status.includes('Qualified')) statusClass = 'status-meeting';
+
+                const timeOrOverdue = showOverdue 
+                    ? `<td><span class="badge badge-danger">${followup.overdue} days</span></td>`
+                    : `<td><strong>${followup.time || followup.date}</strong></td>`;
+
+                return `
+                    <tr>
+                        <td><strong>${followup.name}</strong></td>
+                        <td>${followup.company}</td>
+                        <td><span class="status-chip ${statusClass}">${followup.status}</span></td>
+                        <td>${followup.owner}</td>
+                        <td>${followup.contact}</td>
+                        <td>${followup.lastContact}</td>
+                        <td>${followup.action}</td>
+                        ${timeOrOverdue}
+                        <td>
+                            <a href="#" class="action-icon" title="Call">📞</a>
+                            <a href="#" class="action-icon" title="WhatsApp">💬</a>
+                            <a href="#" class="action-icon" title="Email">📧</a>
+                            <a href="#" class="action-icon" title="Notes">📝</a>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderLeadQualityTable() {
+            const tbody = document.getElementById('leadQualityTable');
+            tbody.innerHTML = leadQualityData.map(lead => {
+                const getScoreClass = (score) => {
+                    if (score >= 85) return 'score-excellent';
+                    if (score >= 70) return 'score-good';
+                    if (score >= 50) return 'score-fair';
+                    return 'score-poor';
+                };
+
+                const urgencyBadge = lead.urgency === 'Urgent' ? 'badge-danger' : lead.urgency === 'High' ? 'badge-warning' : 'badge-info';
+                const qualityBadge = lead.quality === 'Excellent' ? 'badge-success' : lead.quality === 'Good' ? 'badge-info' : 'badge-warning';
+
+                return `
+                    <tr>
+                        <td><strong>${lead.name}</strong></td>
+                        <td>${lead.company}</td>
+                        <td>
+                            <div class="quality-score">
+                                <div class="score-bar">
+                                    <div class="score-fill ${getScoreClass(lead.techMatch)}" style="width: ${lead.techMatch}%;"></div>
+                                </div>
+                                <span style="font-size: 13px; font-weight: 600;">${lead.techMatch}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="quality-score">
+                                <div class="score-bar">
+                                    <div class="score-fill ${getScoreClass(lead.budgetFit)}" style="width: ${lead.budgetFit}%;"></div>
+                                </div>
+                                <span style="font-size: 13px; font-weight: 600;">${lead.budgetFit}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="quality-score">
+                                <div class="score-bar">
+                                    <div class="score-fill ${getScoreClass(lead.cloudReadiness)}" style="width: ${lead.cloudReadiness}%;"></div>
+                                </div>
+                                <span style="font-size: 13px; font-weight: 600;">${lead.cloudReadiness}%</span>
+                            </div>
+                        </td>
+                        <td><span class="badge ${urgencyBadge}">${lead.urgency}</span></td>
+                        <td><span class="badge badge-info">${lead.useCase}</span></td>
+                        <td><strong>${lead.spend}</strong></td>
+                        <td><span class="badge ${qualityBadge}">${lead.quality}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderLeadDatabaseTable() {
+            const tbody = document.getElementById('leadDatabaseTable');
+            tbody.innerHTML = leadDatabaseData.map(lead => {
+                let statusClass = 'status-followup';
+                if (lead.status.includes('Meeting')) statusClass = 'status-meeting';
+                if (lead.status.includes('Callback')) statusClass = 'status-callback';
+                if (lead.status.includes('Qualified')) statusClass = 'status-meeting';
+
+                const sourceBadge = lead.source === 'Inbound' ? 'badge-info' : 'badge-success';
+                const qualityBadge = lead.quality >= 85 ? 'badge-success' : lead.quality >= 70 ? 'badge-info' : 'badge-warning';
+
+                return `
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td><span class="badge ${sourceBadge}">${lead.source}</span></td>
+                        <td><span class="status-chip ${statusClass}">${lead.status}</span></td>
+                        <td><strong>${lead.name}</strong></td>
+                        <td>${lead.company}</td>
+                        <td>${lead.phone}</td>
+                        <td>${lead.email}</td>
+                        <td>${lead.industry}</td>
+                        <td>${lead.owner}</td>
+                        <td>${lead.dateAdded}</td>
+                        <td>${lead.lastContact}</td>
+                        <td>${lead.nextFollowup}</td>
+                        <td><span class="badge badge-secondary">${lead.attempts}</span></td>
+                        <td>${lead.meetingStatus}</td>
+                        <td><span class="badge ${qualityBadge}">${lead.quality}</span></td>
+                        <td><strong>${lead.spend}</strong></td>
+                        <td>
+                            <a href="#" class="action-icon" title="View">👁️</a>
+                            <a href="#" class="action-icon" title="Edit">✏️</a>
+                            <a href="#" class="action-icon" title="Call">📞</a>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ===== TAB SWITCHING =====
+        function switchFollowupTab(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tab}Tab`).classList.add('active');
+        }
+
+        // ===== CHARTS =====
+
+        // Inbound Status Chart
+        new Chart(document.getElementById('inboundStatusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Meeting Scheduled', 'Follow-up', 'Qualified', 'Not Interested', 'Others'],
+                datasets: [{
+                    data: [78, 142, 287, 248, 492],
+                    backgroundColor: ['#22c55e', '#3b82f6', '#a855f7', '#ef4444', '#94a3b8']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
         });
-        new Chart(document.getElementById('outboundChart'), {
-            type: 'bar',
-            data: { labels: ['Outreach', 'Contacted', 'Qualified', 'Meeting'], datasets: [{ data: [1600, 245, 200, 46], backgroundColor: '#10b981' }] }
+
+        // Inbound Conversion Chart
+        new Chart(document.getElementById('inboundConversionChart'), {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Conversion Rate (%)',
+                    data: [5.2, 5.8, 6.1, 6.3],
+                    borderColor: '#22c55e',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
         });
+
+        // Outbound Calling Chart
+        new Chart(document.getElementById('outboundCallingChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                datasets: [{
+                    label: 'Calls Made',
+                    data: [234, 268, 285, 256, 241],
+                    backgroundColor: '#10b981'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+        });
+
+        // Outbound Email Chart
+        new Chart(document.getElementById('outboundEmailChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                datasets: [
+                    { label: 'Emails', data: [256, 289, 312, 294, 278], backgroundColor: '#3b82f6' },
+                    { label: 'WhatsApp', data: [168, 182, 195, 187, 176], backgroundColor: '#22c55e' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Outbound Connection Chart
+        new Chart(document.getElementById('outboundConnectionChart'), {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Connection Rate (%)',
+                    data: [34, 38, 42, 45],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+
+        // Outbound Meeting Chart
+        new Chart(document.getElementById('outboundMeetingChart'), {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Meeting Conversion (%)',
+                    data: [2.1, 2.5, 2.8, 2.9],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+
+        // Quality Use Case Chart
+        new Chart(document.getElementById('qualityUseCaseChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Kubernetes', 'VMs', 'Storage', 'Databases', 'DR/Backup'],
+                datasets: [{
+                    label: 'High Quality Leads',
+                    data: [124, 187, 95, 68, 42],
+                    backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#a855f7', '#ef4444']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+        });
+
+        // Quality Budget Chart
+        new Chart(document.getElementById('qualityBudgetChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['₹5L+', '₹2-5L', '₹1-2L', '₹50k-1L', '<₹50k'],
+                datasets: [{
+                    data: [42, 87, 124, 156, 78],
+                    backgroundColor: ['#22c55e', '#3b82f6', '#a855f7', '#f59e0b', '#94a3b8']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // ===== INITIALIZE =====
+        renderTeamPerformanceTable();
+        renderFollowupsTable(todayFollowupsData, 'todayFollowupsTable');
+        renderFollowupsTable(overdueFollowupsData, 'overdueFollowupsTable', true);
+        renderFollowupsTable(weekFollowupsData, 'weekFollowupsTable');
+        renderLeadQualityTable();
+        renderLeadDatabaseTable();
     </script>
 </body>
 </html>
