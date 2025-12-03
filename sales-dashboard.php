@@ -665,30 +665,65 @@
             color: #9CA3AF;
         }
 
-        /* Table */
+        /* Table - Enhanced Styling */
         .data-table {
             width: 100%;
             border-collapse: collapse;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .data-table thead th {
             background: #F9FAFB;
-            padding: 12px;
-            font-size: 12px;
+            padding: 14px 16px;
+            font-size: 11px;
             font-weight: 600;
             color: #6B7280;
             text-align: left;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .data-table tbody td {
-            padding: 12px;
+            padding: 14px 16px;
             font-size: 13px;
+            font-weight: 500;
+            color: #374151;
             border-bottom: 1px solid #F3F4F6;
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr {
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
 
         .data-table tbody tr:hover {
-            background: #F9FAFB;
+            background: #EEF2FF;
+            transform: scale(1.002);
+        }
+
+        .data-table tbody tr:active {
+            background: #E0E7FF;
+        }
+
+        /* Responsive table wrapper */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -20px;
+            padding: 0 20px;
+        }
+
+        .data-table tbody td:first-child {
+            font-weight: 600;
+            color: #6B7280;
+        }
+
+        .data-table tbody td:nth-child(2) {
+            font-weight: 600;
+            color: #1F2937;
         }
 
         .progress-bar-custom {
@@ -703,6 +738,66 @@
             height: 100%;
             background: var(--success-color);
             border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Status badges */
+        .badge.on-track {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge.at-risk {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge.behind {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* Calculated fields preview */
+        .calculated-preview {
+            background: #F9FAFB;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .calculated-preview h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin: 0 0 12px 0;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .calc-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 6px 0;
+            border-bottom: 1px dashed #E5E7EB;
+        }
+
+        .calc-item:last-child {
+            border-bottom: none;
+        }
+
+        .calc-label {
+            color: #6B7280;
+        }
+
+        .calc-value {
+            font-weight: 600;
+            color: #1F2937;
         }
 
         /* Period Dropdown */
@@ -1168,25 +1263,27 @@
                     </div>
                 </div>
             </div>
-            <table class="data-table" id="targetsTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>REP</th>
-                        <th>QUARTER</th>
-                        <th>MONTH</th>
-                        <th>TARGET BUSINESS</th>
-                        <th>ACHIEVED REVENUE</th>
-                        <th>TARGET MRR</th>
-                        <th>ACHIEVED MRR</th>
-                        <th>ACHIEVEMENT</th>
-                        <th>STATUS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Table rows will be populated here -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="data-table" id="targetsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>REP</th>
+                            <th>QUARTER</th>
+                            <th>MONTH</th>
+                            <th>TARGET WHOLE</th>
+                            <th>TARGET MRR</th>
+                            <th>ACHIEVED WHOLE</th>
+                            <th>ACHIEVED MRR</th>
+                            <th>ACHIEVEMENT</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     </div>
@@ -1207,73 +1304,72 @@
                         <input type="text" class="form-control" id="targetRep" name="rep" placeholder="e.g., TRM, PRS, AKM" required>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Quarter <span>*</span></label>
-                            <select class="form-control" id="targetQuarter" name="quarter" required>
-                                <option value="">Select Quarter</option>
-                                <option value="Q1">Q1</option>
-                                <option value="Q2">Q2</option>
-                                <option value="Q3">Q3</option>
-                                <option value="Q4">Q4</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Month <span>*</span></label>
-                            <select class="form-control" id="targetMonth" name="month" required>
-                                <option value="">Select Month</option>
-                                <option value="January">January</option>
-                                <option value="February">February</option>
-                                <option value="March">March</option>
-                                <option value="April">April</option>
-                                <option value="May">May</option>
-                                <option value="June">June</option>
-                                <option value="July">July</option>
-                                <option value="August">August</option>
-                                <option value="September">September</option>
-                                <option value="October">October</option>
-                                <option value="November">November</option>
-                                <option value="December">December</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Target Business (₹) <span>*</span></label>
-                            <input type="number" class="form-control" id="targetBusiness" name="targetBusiness" placeholder="e.g., 716000" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Achieved Revenue (₹) <span>*</span></label>
-                            <input type="number" class="form-control" id="achievedRevenue" name="achievedRevenue" placeholder="e.g., 623000" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Target MRR (₹) <span>*</span></label>
-                            <input type="number" class="form-control" id="targetMRR" name="targetMRR" placeholder="e.g., 44000" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Achieved MRR (₹) <span>*</span></label>
-                            <input type="number" class="form-control" id="achievedMRR" name="achievedMRR" placeholder="e.g., 35300" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Quarter <span>*</span></label>
+                        <select class="form-control" id="targetQuarter" name="quarter" required onchange="updateCalculatedFields()">
+                            <option value="">Select Quarter</option>
+                            <option value="Q1">Q1 (Jan-Mar)</option>
+                            <option value="Q2">Q2 (Apr-Jun)</option>
+                            <option value="Q3">Q3 (Jul-Sep)</option>
+                            <option value="Q4">Q4 (Oct-Dec)</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
-                        <label>Status <span>*</span></label>
-                        <select class="form-control" id="targetStatus" name="status" required>
-                            <option value="">Select Status</option>
-                            <option value="On Track">On Track</option>
-                            <option value="At Risk">At Risk</option>
-                            <option value="Behind">Behind</option>
-                        </select>
+                        <label>Whole Total Target (MRR + WHOLE) ₹ <span>*</span></label>
+                        <input type="number" class="form-control" id="wholeTotalTarget" name="wholeTotalTarget" placeholder="e.g., 1000000" required oninput="updateCalculatedFields()">
+                        <small style="color: #6B7280; font-size: 11px; margin-top: 4px; display: block;">Enter the combined target for MRR and WHOLE business</small>
+                    </div>
+
+                    <!-- Auto-calculated fields preview -->
+                    <div class="calculated-preview" id="calculatedPreview" style="display: none;">
+                        <h4><i class="bi bi-calculator"></i> Auto-Calculated Breakdown</h4>
+                        <div class="calc-grid">
+                            <div>
+                                <strong style="font-size: 12px; color: #374151;">MRR (33% of Total)</strong>
+                                <div class="calc-item">
+                                    <span class="calc-label">Month 1 (30%)</span>
+                                    <span class="calc-value" id="mrrMonth1">₹0</span>
+                                </div>
+                                <div class="calc-item">
+                                    <span class="calc-label">Month 2 (40%)</span>
+                                    <span class="calc-value" id="mrrMonth2">₹0</span>
+                                </div>
+                                <div class="calc-item">
+                                    <span class="calc-label">Month 3 (30%)</span>
+                                    <span class="calc-value" id="mrrMonth3">₹0</span>
+                                </div>
+                                <div class="calc-item" style="border-top: 1px solid #E5E7EB; margin-top: 8px; padding-top: 8px;">
+                                    <span class="calc-label"><strong>Total MRR</strong></span>
+                                    <span class="calc-value" id="totalMRR" style="color: var(--primary-color);">₹0</span>
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="font-size: 12px; color: #374151;">WHOLE (67% of Total)</strong>
+                                <div class="calc-item">
+                                    <span class="calc-label">Month 1 (30%)</span>
+                                    <span class="calc-value" id="wholeMonth1">₹0</span>
+                                </div>
+                                <div class="calc-item">
+                                    <span class="calc-label">Month 2 (40%)</span>
+                                    <span class="calc-value" id="wholeMonth2">₹0</span>
+                                </div>
+                                <div class="calc-item">
+                                    <span class="calc-label">Month 3 (30%)</span>
+                                    <span class="calc-value" id="wholeMonth3">₹0</span>
+                                </div>
+                                <div class="calc-item" style="border-top: 1px solid #E5E7EB; margin-top: 8px; padding-top: 8px;">
+                                    <span class="calc-label"><strong>Total WHOLE</strong></span>
+                                    <span class="calc-value" id="totalWHOLE" style="color: var(--success-color);">₹0</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
-                <button class="btn-save" onclick="saveTarget()">Save Changes</button>
+                <button class="btn-save" onclick="saveTarget()">Save Target</button>
             </div>
         </div>
     </div>
@@ -1641,6 +1737,15 @@ console.log(firstStats);
             }).join('');
         }
 
+        function getStatusClass(status) {
+            switch(status) {
+                case 'On Track': return 'on-track';
+                case 'Behind': return 'behind';
+                case 'At Risk': return 'at-risk';
+                default: return 'at-risk';
+            }
+        }
+
         function renderTargetsTable(targets) {
             const tbody = document.querySelector('#targetsTable tbody');
             tbody.innerHTML = targets.map((target, index) => `
@@ -1649,19 +1754,19 @@ console.log(firstStats);
                     <td>${target.rep}</td>
                     <td>${target.quarter}</td>
                     <td>${target.month}</td>
-                    <td>${target.targetBusiness}</td>
-                    <td>${target.achievedRevenue}</td>
+                    <td>${target.targetWhole || target.targetBusiness}</td>
                     <td>${target.targetMRR}</td>
+                    <td>${target.achievedWhole || target.achievedRevenue}</td>
                     <td>${target.achievedMRR}</td>
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <div class="progress-bar-custom">
                                 <div class="progress-fill" style="width: ${target.achievement};"></div>
                             </div>
-                            <span>${target.achievement}</span>
+                            <span style="font-weight: 600;">${target.achievement}</span>
                         </div>
                     </td>
-                    <td><span class="badge ${target.status === 'On Track' ? 'done' : 'contacted'}">${target.status}</span></td>
+                    <td><span class="badge ${getStatusClass(target.status)}">${target.status}</span></td>
                 </tr>
             `).join('');
         }
@@ -1669,6 +1774,59 @@ console.log(firstStats);
         // ============ MODAL FUNCTIONS ============
         let currentTargetData = null;
         let allTargetsData = [];
+
+        function formatCurrency(amount) {
+            if (amount >= 100000) {
+                return '₹' + (amount / 100000).toFixed(2) + 'L';
+            } else if (amount >= 1000) {
+                return '₹' + (amount / 1000).toFixed(2) + 'K';
+            }
+            return '₹' + amount.toFixed(0);
+        }
+
+        function updateCalculatedFields() {
+            const wholeTotalTarget = parseFloat(document.getElementById('wholeTotalTarget').value) || 0;
+            const preview = document.getElementById('calculatedPreview');
+            
+            if (wholeTotalTarget > 0) {
+                preview.style.display = 'block';
+                
+                // MRR = 33% of total
+                const mrrTotal = wholeTotalTarget * 0.33;
+                const mrrMonth1 = mrrTotal * 0.30;
+                const mrrMonth2 = mrrTotal * 0.40;
+                const mrrMonth3 = mrrTotal * 0.30;
+                
+                // WHOLE = 67% of total
+                const wholeTotal = wholeTotalTarget * 0.67;
+                const wholeMonth1 = wholeTotal * 0.30;
+                const wholeMonth2 = wholeTotal * 0.40;
+                const wholeMonth3 = wholeTotal * 0.30;
+                
+                document.getElementById('mrrMonth1').textContent = formatCurrency(mrrMonth1);
+                document.getElementById('mrrMonth2').textContent = formatCurrency(mrrMonth2);
+                document.getElementById('mrrMonth3').textContent = formatCurrency(mrrMonth3);
+                document.getElementById('totalMRR').textContent = formatCurrency(mrrTotal);
+                
+                document.getElementById('wholeMonth1').textContent = formatCurrency(wholeMonth1);
+                document.getElementById('wholeMonth2').textContent = formatCurrency(wholeMonth2);
+                document.getElementById('wholeMonth3').textContent = formatCurrency(wholeMonth3);
+                document.getElementById('totalWHOLE').textContent = formatCurrency(wholeTotal);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        function calculateStatus(achievementPercent) {
+            // 50-70% = On Track, <40% = Behind, rest = At Risk
+            if (achievementPercent >= 50 && achievementPercent <= 70) {
+                return 'On Track';
+            } else if (achievementPercent < 40) {
+                return 'Behind';
+            } else {
+                return 'At Risk';
+            }
+        }
 
         function openEditModal(target = null) {
             const modal = document.getElementById('editTargetModal');
@@ -1680,16 +1838,17 @@ console.log(firstStats);
                 document.getElementById('targetId').value = target.id || '';
                 document.getElementById('targetRep').value = target.rep || '';
                 document.getElementById('targetQuarter').value = target.quarter || '';
-                document.getElementById('targetMonth').value = target.month || '';
-                document.getElementById('targetBusiness').value = parseAmount(target.targetBusiness);
-                document.getElementById('achievedRevenue').value = parseAmount(target.achievedRevenue);
-                document.getElementById('targetMRR').value = parseAmount(target.targetMRR);
-                document.getElementById('achievedMRR').value = parseAmount(target.achievedMRR);
-                document.getElementById('targetStatus').value = target.status || '';
+                // Calculate whole total from existing data
+                const targetMRR = parseAmount(target.targetMRR);
+                const targetWhole = parseAmount(target.targetWhole || target.targetBusiness);
+                const wholeTotalTarget = targetMRR + targetWhole;
+                document.getElementById('wholeTotalTarget').value = wholeTotalTarget || '';
+                updateCalculatedFields();
             } else {
                 // New target - clear form
                 currentTargetData = null;
                 document.getElementById('editTargetForm').reset();
+                document.getElementById('calculatedPreview').style.display = 'none';
             }
         }
 
@@ -1697,6 +1856,7 @@ console.log(firstStats);
             const modal = document.getElementById('editTargetModal');
             modal.classList.remove('show');
             currentTargetData = null;
+            document.getElementById('calculatedPreview').style.display = 'none';
         }
 
         function parseAmount(amountStr) {
@@ -1713,6 +1873,16 @@ console.log(firstStats);
             return parseFloat(cleaned) || 0;
         }
 
+        function getQuarterMonths(quarter) {
+            const monthMap = {
+                'Q1': ['January', 'February', 'March'],
+                'Q2': ['April', 'May', 'June'],
+                'Q3': ['July', 'August', 'September'],
+                'Q4': ['October', 'November', 'December']
+            };
+            return monthMap[quarter] || [];
+        }
+
         function editTarget(target) {
             openEditModal(target);
         }
@@ -1725,16 +1895,29 @@ console.log(firstStats);
                 return;
             }
             
+            const wholeTotalTarget = parseFloat(document.getElementById('wholeTotalTarget').value);
+            const quarter = document.getElementById('targetQuarter').value;
+            const months = getQuarterMonths(quarter);
+            
+            // Calculate breakdown
+            const mrrTotal = wholeTotalTarget * 0.33;
+            const wholeTotal = wholeTotalTarget * 0.67;
+            
+            // Month distribution: 30%, 40%, 30%
+            const monthDistribution = [0.30, 0.40, 0.30];
+            
             const formData = {
                 id: document.getElementById('targetId').value || null,
                 rep: document.getElementById('targetRep').value,
-                quarter: document.getElementById('targetQuarter').value,
-                month: document.getElementById('targetMonth').value,
-                targetBusiness: parseFloat(document.getElementById('targetBusiness').value),
-                achievedRevenue: parseFloat(document.getElementById('achievedRevenue').value),
-                targetMRR: parseFloat(document.getElementById('targetMRR').value),
-                achievedMRR: parseFloat(document.getElementById('achievedMRR').value),
-                status: document.getElementById('targetStatus').value
+                quarter: quarter,
+                wholeTotalTarget: wholeTotalTarget,
+                targetMRR: mrrTotal,
+                targetWhole: wholeTotal,
+                monthBreakdown: months.map((month, i) => ({
+                    month: month,
+                    targetMRR: mrrTotal * monthDistribution[i],
+                    targetWhole: wholeTotal * monthDistribution[i]
+                }))
             };
 
             try {
