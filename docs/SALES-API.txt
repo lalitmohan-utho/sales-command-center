@@ -6,19 +6,21 @@ ENDPOINT
 --------
 URL:        sales-api.php
 Method:     GET
-Parameters: None required
+Parameters:
+  - period (optional): "today", "week", "month", "quarter", "year", "custom"
+  - status (optional): Filter by status
 
 ================================================================================
 REQUEST
 ================================================================================
 
-GET /sales-api.php HTTP/1.1
+GET /sales-api.php?period=today HTTP/1.1
 Host: your-domain.com
 Content-Type: application/json
 
 JavaScript Example:
 -------------------
-fetch('sales-api.php')
+fetch('sales-api.php?period=today')
   .then(response => response.json())
   .then(data => console.log(data));
 
@@ -29,51 +31,72 @@ RESPONSE PAYLOAD
 {
   "followUpTasks": [
     {
-      "name": "string",           // Contact person name
-      "company": "string",        // Company name
-      "task": "string",           // Task description
-      "type": "string",           // Task type: "Call", "Meeting", "Email"
-      "time": "string",           // Scheduled time
-      "status": "string"          // Status: "Done", "Contacted", "Pending"
+      "name": "string",
+      "company": "string",
+      "task": "string",
+      "type": "string",
+      "time": "string",
+      "status": "string"
     }
   ],
 
   "kpis": {
-    "totalAllocated": "string",   // Total allocated value (e.g., "₹ 68.02L")
-    "contactedHot": "string",     // Hot leads contacted value
-    "dealsInPipe": "string",      // Total deals in pipeline value
-    "expectedValue": "string",    // Expected revenue value
-    "newMeetings": "string",      // Number of new meetings
-    "leadQualified": "string",    // Number of qualified leads
-    "newLeads": "string",         // Number of new leads
-    "coldCalling": "string",      // Cold calling count
-    "followUp": "string",         // Follow-up count
-    "proposalsSent": "string",    // Proposals sent count
-    "dealsLost": "string",        // Deals lost count
-    "dealsWon": "string"          // Deals won count
+    "total_business": "string",
+    "active_mrr": "string",
+    "new_business": "string",
+    "funnel_size": "string",
+    "total_leads": "string",
+    "converted_leads": "string",
+    "newMeetings": "string",
+    "newLeads": "string",
+    "leadQualified": "string",
+    "followUp": "string",
+    "proposalsSent": "string",
+    "dealsLost": "string",
+    "dealsWon": "string"
   },
 
-  "leadStatus": {
-    "newLeads": number,           // Count of new leads
-    "hotLeads": number,           // Count of hot leads
-    "activeDeals": number,        // Count of active deals
-    "lostDeals": number,          // Count of lost deals
-    "qualified": number,          // Count of qualified leads
-    "unresponsive": number        // Count of unresponsive leads
+  "charts": {
+    "quarterTarget": {
+      "achievementPercent": "string",
+      "targetAchieved": "string",
+      "remainingTarget": "string",
+      "chartData": {
+        "labels": ["string"],
+        "data": [number],
+        "colors": ["string"]
+      }
+    },
+    "leadSource": {
+      "labels": ["string"],
+      "data": [number],
+      "colors": ["string"]
+    },
+    "leadStages": {
+      "labels": ["string"],
+      "data": [number]
+    },
+    "salesTarget": {
+      "labels": ["string"],
+      "datasets": {
+        "target": [number],
+        "achieved": [number]
+      }
+    }
   },
 
   "pipeline": {
     "stages": [
       {
-        "name": "string",         // Stage name: "New", "Contacted", "Qualified", etc.
-        "count": number,          // Number of deals in stage
-        "value": "string",        // Total value in stage
+        "name": "string",
+        "count": number,
+        "value": "string",
         "deals": [
           {
-            "name": "string",     // Deal name
-            "company": "string",  // Company name
-            "value": "string",    // Deal value
-            "stage": "string"     // Current stage
+            "name": "string",
+            "company": "string",
+            "value": "string",
+            "stage": "string"
           }
         ]
       }
@@ -82,25 +105,25 @@ RESPONSE PAYLOAD
 
   "recentActivity": [
     {
-      "user": "string",           // User who performed action
-      "description": "string",    // Activity description
-      "details": "string",        // Additional details
-      "time": "string",           // Time of activity
-      "type": "string"            // Type: "deal", "meeting", "email", "call"
+      "user": "string",
+      "description": "string",
+      "details": "string",
+      "time": "string",
+      "type": "string"
     }
   ],
 
   "salesTargets": [
     {
-      "rep": "string",            // Sales rep identifier
-      "quarter": "string",        // Quarter (e.g., "Q4")
-      "month": "string",          // Month name
-      "targetBusiness": "string", // Target business value
-      "achievedRevenue": "string",// Achieved revenue
-      "targetMRR": "string",      // Target MRR
-      "achievedMRR": "string",    // Achieved MRR
-      "achievement": "string",    // Achievement percentage
-      "status": "string"          // Status: "On Track", "At Risk"
+      "rep": "string",
+      "quarter": "string",
+      "month": "string",
+      "targetBusiness": "string",
+      "achievedRevenue": "string",
+      "targetMRR": "string",
+      "achievedMRR": "string",
+      "achievement": "string",
+      "status": "string"
     }
   ]
 }
@@ -126,83 +149,320 @@ SAMPLE RESPONSE
       "type": "Meeting",
       "time": "3:45 PM",
       "status": "Done"
+    },
+    {
+      "name": "Amit Kumar",
+      "company": "DataFirst Solutions",
+      "task": "Follow up on proposal",
+      "type": "Email",
+      "time": "4:30 PM",
+      "status": "Contacted"
     }
   ],
+
   "kpis": {
-    "totalAllocated": "₹ 68.02L",
-    "contactedHot": "₹ 45.3K",
-    "dealsInPipe": "₹ 32.5L",
-    "expectedValue": "₹ 125.8L",
-    "newMeetings": "1,247",
-    "leadQualified": "342",
-    "newLeads": "89",
-    "coldCalling": "523",
-    "followUp": "156",
-    "proposalsSent": "78",
-    "dealsLost": "23",
-    "dealsWon": "45"
+    "total_business": "₹68.02L",
+    "active_mrr": "₹45.3K",
+    "new_business": "₹32.5L",
+    "funnel_size": "₹125.8L",
+    "total_leads": "1,247",
+    "converted_leads": "342",
+    "newMeetings": "89",
+    "newLeads": "523",
+    "leadQualified": "156",
+    "followUp": "78",
+    "proposalsSent": "23",
+    "dealsLost": "45",
+    "dealsWon": "67"
   },
-  "leadStatus": {
-    "newLeads": 89,
-    "hotLeads": 523,
-    "activeDeals": 234,
-    "lostDeals": 83,
-    "qualified": 234,
-    "unresponsive": 156
+
+  "charts": {
+    "quarterTarget": {
+      "achievementPercent": "86.1%",
+      "targetAchieved": "₹11.5Lk",
+      "remainingTarget": "₹1.85Lk",
+      "chartData": {
+        "labels": ["Achieved", "Remaining"],
+        "data": [86.1, 13.9],
+        "colors": ["#10B981", "#E5E7EB"]
+      }
+    },
+    "leadSource": {
+      "labels": ["Website", "Referral", "LinkedIn", "Cold Call", "Partner"],
+      "data": [420, 240, 145, 130, 90],
+      "colors": ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"]
+    },
+    "leadStages": {
+      "labels": ["New", "Contacted", "Qualified", "Proposal", "Negotiation", "Closed", "Lost"],
+      "data": [89, 342, 234, 156, 78, 523, 45]
+    },
+    "salesTarget": {
+      "labels": ["Q1", "Q2", "Q3"],
+      "datasets": {
+        "target": [80, 90, 85],
+        "achieved": [75, 92, 88]
+      }
+    }
   },
+
   "pipeline": {
     "stages": [
       {
         "name": "New",
         "count": 7,
-        "value": "₹ 2.8L",
+        "value": "₹2.8L",
         "deals": [
           {
             "name": "Cloud Migration",
             "company": "CloudTechies",
-            "value": "₹ 1.8Lk",
+            "value": "₹1.8Lk",
             "stage": "New"
+          },
+          {
+            "name": "Infrastructure Setup",
+            "company": "StartupXYZ",
+            "value": "₹1.0Lk",
+            "stage": "New"
+          }
+        ]
+      },
+      {
+        "name": "Contacted",
+        "count": 12,
+        "value": "₹5.4L",
+        "deals": [
+          {
+            "name": "Database Hosting",
+            "company": "DataWave Ltd",
+            "value": "₹2.5Lk",
+            "stage": "Contacted"
+          }
+        ]
+      },
+      {
+        "name": "Qualified",
+        "count": 8,
+        "value": "₹8.2L",
+        "deals": [
+          {
+            "name": "Kubernetes Cluster",
+            "company": "TechStart Inc",
+            "value": "₹4.2Lk",
+            "stage": "Qualified"
+          }
+        ]
+      },
+      {
+        "name": "Proposal",
+        "count": 5,
+        "value": "₹12.6L",
+        "deals": [
+          {
+            "name": "Enterprise Cloud",
+            "company": "BigCorp Systems",
+            "value": "₹8.5Lk",
+            "stage": "Proposal"
           }
         ]
       },
       {
         "name": "Negotiation",
         "count": 9,
-        "value": "₹ 18.2L",
+        "value": "₹18.2L",
         "deals": [
           {
             "name": "Cloud Infrastructure",
             "company": "Enterprise Corp",
-            "value": "₹ 10Lk",
+            "value": "₹10Lk",
             "stage": "Negotiation"
+          }
+        ]
+      },
+      {
+        "name": "Closed Won",
+        "count": 15,
+        "value": "₹25.8L",
+        "deals": [
+          {
+            "name": "Full Stack Hosting",
+            "company": "FinTech Solutions",
+            "value": "₹6.8Lk",
+            "stage": "Closed Won"
           }
         ]
       }
     ]
   },
+
   "recentActivity": [
     {
-      "user": "Latif just",
+      "user": "Latif",
       "description": "added EMC Corp",
       "details": "deal worth ₹2.5L to the pipeline from lead source",
       "time": "3 hours ago",
       "type": "deal"
+    },
+    {
+      "user": "Priya",
+      "description": "completed meeting",
+      "details": "with Tech Innovations regarding VDI requirements",
+      "time": "5 hours ago",
+      "type": "meeting"
+    },
+    {
+      "user": "Rohan",
+      "description": "sent proposal",
+      "details": "to Cloud Ventures for cloud migration project",
+      "time": "Yesterday",
+      "type": "email"
+    },
+    {
+      "user": "Amit",
+      "description": "closed deal",
+      "details": "with DataFirst Solutions worth ₹4.2L",
+      "time": "Yesterday",
+      "type": "deal"
+    },
+    {
+      "user": "Neha",
+      "description": "made discovery call",
+      "details": "with StartupXYZ to understand their infrastructure needs",
+      "time": "2 days ago",
+      "type": "call"
     }
   ],
+
   "salesTargets": [
     {
       "rep": "TRM",
       "quarter": "Q4",
       "month": "October",
-      "targetBusiness": "₹ 7,16Lk",
-      "achievedRevenue": "₹ 6.23Lk",
-      "targetMRR": "₹ 4.40K",
-      "achievedMRR": "₹ 3.53K",
+      "targetBusiness": "₹7,16Lk",
+      "achievedRevenue": "₹6.23Lk",
+      "targetMRR": "₹4.40K",
+      "achievedMRR": "₹3.53K",
       "achievement": "88%",
       "status": "On Track"
+    },
+    {
+      "rep": "PRS",
+      "quarter": "Q4",
+      "month": "October",
+      "targetBusiness": "₹5,50Lk",
+      "achievedRevenue": "₹4.85Lk",
+      "targetMRR": "₹3.20K",
+      "achievedMRR": "₹2.95K",
+      "achievement": "92%",
+      "status": "On Track"
+    },
+    {
+      "rep": "AKM",
+      "quarter": "Q4",
+      "month": "November",
+      "targetBusiness": "₹6,80Lk",
+      "achievedRevenue": "₹5.10Lk",
+      "targetMRR": "₹4.00K",
+      "achievedMRR": "₹2.85K",
+      "achievement": "75%",
+      "status": "At Risk"
+    },
+    {
+      "rep": "RSM",
+      "quarter": "Q4",
+      "month": "November",
+      "targetBusiness": "₹8,20Lk",
+      "achievedRevenue": "₹7.95Lk",
+      "targetMRR": "₹5.50K",
+      "achievedMRR": "₹5.25K",
+      "achievement": "97%",
+      "status": "On Track"
+    },
+    {
+      "rep": "NMP",
+      "quarter": "Q4",
+      "month": "December",
+      "targetBusiness": "₹4,90Lk",
+      "achievedRevenue": "₹2.45Lk",
+      "targetMRR": "₹2.80K",
+      "achievedMRR": "₹1.40K",
+      "achievement": "50%",
+      "status": "At Risk"
     }
   ]
 }
+
+================================================================================
+TASK TYPE VALUES
+================================================================================
+
+For followUpTasks type:
+- "Call" - Phone call tasks
+- "Meeting" - Scheduled meetings
+- "Email" - Email follow-ups
+
+================================================================================
+TASK STATUS VALUES
+================================================================================
+
+For followUpTasks status:
+- "Done" - Task completed
+- "Contacted" - Contact made
+- "Pending" - Task pending
+
+================================================================================
+ACTIVITY TYPE VALUES
+================================================================================
+
+For recentActivity type:
+- "deal" - Deal related activity
+- "meeting" - Meeting activity
+- "email" - Email activity
+- "call" - Call activity
+
+================================================================================
+PIPELINE STAGE VALUES
+================================================================================
+
+For pipeline stages:
+- "New"
+- "Contacted"
+- "Qualified"
+- "Proposal"
+- "Negotiation"
+- "Closed Won"
+- "Closed Lost"
+
+================================================================================
+LEAD SOURCE VALUES
+================================================================================
+
+For leadSource chart:
+- "Website"
+- "Referral"
+- "LinkedIn"
+- "Cold Call"
+- "Partner"
+
+================================================================================
+LEAD STAGE VALUES
+================================================================================
+
+For leadStages chart:
+- "New"
+- "Contacted"
+- "Qualified"
+- "Proposal"
+- "Negotiation"
+- "Closed"
+- "Lost"
+
+================================================================================
+TARGET STATUS VALUES
+================================================================================
+
+For salesTargets status:
+- "On Track" - Target likely to be met
+- "At Risk" - Target at risk of not being met
 
 ================================================================================
 ERROR RESPONSE
