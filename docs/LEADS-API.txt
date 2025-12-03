@@ -1,0 +1,271 @@
+================================================================================
+                        LEADS DASHBOARD API DOCUMENTATION
+================================================================================
+
+ENDPOINT
+--------
+URL:        leads-api.php
+Method:     GET
+Parameters: 
+  - period (optional): "today", "week", "month", "quarter"
+  - team (optional): "inbound", "outbound", "all"
+  - source (optional): Filter by lead source
+
+================================================================================
+REQUEST
+================================================================================
+
+GET /leads-api.php?period=month&team=all HTTP/1.1
+Host: your-domain.com
+Content-Type: application/json
+
+JavaScript Example:
+-------------------
+fetch('leads-api.php?period=month&team=all')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+================================================================================
+RESPONSE PAYLOAD
+================================================================================
+
+{
+  "statusDistribution": {
+    "notCalled": {
+      "count": number,
+      "percentage": number
+    },
+    "invalidNumber": {
+      "count": number,
+      "percentage": number
+    },
+    "calledNoAnswer": {
+      "count": number,
+      "percentage": number
+    },
+    "calledNotInterested": {
+      "count": number,
+      "percentage": number
+    },
+    "meetingScheduled": {
+      "count": number,
+      "percentage": number
+    },
+    "followUpRequired": {
+      "count": number,
+      "percentage": number
+    },
+    "doNotCall": {
+      "count": number,
+      "percentage": number
+    },
+    "callbackRequested": {
+      "count": number,
+      "percentage": number
+    },
+    "noLongerAtCompany": {
+      "count": number,
+      "percentage": number
+    },
+    "sentInfoAwaiting": {
+      "count": number,
+      "percentage": number
+    },
+    "inLockIn": {
+      "count": number,
+      "percentage": number
+    },
+    "wrongDetails": {
+      "count": number,
+      "percentage": number
+    },
+    "disconnect": {
+      "count": number,
+      "percentage": number
+    }
+  },
+
+  "teamPerformance": [
+    {
+      "name": "string",           // Team member name
+      "role": "string",           // Role: "Inbound", "Outbound"
+      "leadsAssigned": number,    // Total leads assigned
+      "contacted": number,        // Leads contacted
+      "meetings": number,         // Meetings scheduled
+      "qualified": number,        // Leads qualified
+      "conversionRate": number    // Conversion rate percentage
+    }
+  ],
+
+  "followUpTasks": [
+    {
+      "leadName": "string",       // Lead name
+      "company": "string",        // Company name
+      "phone": "string",          // Phone number
+      "status": "string",         // Current status
+      "scheduledTime": "string",  // Follow-up scheduled time
+      "assignedTo": "string",     // Assigned team member
+      "priority": "string"        // Priority: "High", "Medium", "Low"
+    }
+  ],
+
+  "leadDatabase": [
+    {
+      "id": "string",             // Lead ID
+      "name": "string",           // Lead name
+      "company": "string",        // Company name
+      "email": "string",          // Email address
+      "phone": "string",          // Phone number
+      "source": "string",         // Lead source
+      "status": "string",         // Current status
+      "assignedTo": "string",     // Assigned team member
+      "createdAt": "string",      // Creation timestamp
+      "lastContact": "string"     // Last contact timestamp
+    }
+  ],
+
+  "leadQuality": {
+    "techStackMatch": {
+      "average": number,          // Average tech stack match %
+      "distribution": {
+        "high": number,           // Count of high match (>70%)
+        "medium": number,         // Count of medium match (40-70%)
+        "low": number             // Count of low match (<40%)
+      }
+    },
+    "budgetFit": {
+      "average": number,
+      "distribution": {
+        "high": number,
+        "medium": number,
+        "low": number
+      }
+    },
+    "cloudReadiness": {
+      "average": number,
+      "distribution": {
+        "high": number,
+        "medium": number,
+        "low": number
+      }
+    }
+  },
+
+  "useCaseDistribution": {
+    "kubernetes": number,
+    "vms": number,
+    "storage": number,
+    "databases": number,
+    "drBackup": number
+  },
+
+  "cloudSpendPotential": {
+    "under10k": number,
+    "10kTo50k": number,
+    "50kTo1L": number,
+    "1LTo5L": number,
+    "over5L": number
+  }
+}
+
+================================================================================
+SAMPLE RESPONSE
+================================================================================
+
+{
+  "statusDistribution": {
+    "notCalled": { "count": 145, "percentage": 18.2 },
+    "invalidNumber": { "count": 23, "percentage": 2.9 },
+    "calledNoAnswer": { "count": 89, "percentage": 11.2 },
+    "calledNotInterested": { "count": 67, "percentage": 8.4 },
+    "meetingScheduled": { "count": 156, "percentage": 19.6 },
+    "followUpRequired": { "count": 134, "percentage": 16.8 },
+    "doNotCall": { "count": 12, "percentage": 1.5 },
+    "callbackRequested": { "count": 45, "percentage": 5.7 },
+    "noLongerAtCompany": { "count": 18, "percentage": 2.3 },
+    "sentInfoAwaiting": { "count": 78, "percentage": 9.8 },
+    "inLockIn": { "count": 15, "percentage": 1.9 },
+    "wrongDetails": { "count": 8, "percentage": 1.0 },
+    "disconnect": { "count": 6, "percentage": 0.8 }
+  },
+  "teamPerformance": [
+    {
+      "name": "Rahul Verma",
+      "role": "Inbound",
+      "leadsAssigned": 156,
+      "contacted": 142,
+      "meetings": 34,
+      "qualified": 28,
+      "conversionRate": 17.9
+    }
+  ],
+  "followUpTasks": [
+    {
+      "leadName": "Vikram Singh",
+      "company": "TechStart Inc",
+      "phone": "+91 98765 43210",
+      "status": "Callback Requested",
+      "scheduledTime": "2024-01-15 10:30 AM",
+      "assignedTo": "Priya Sharma",
+      "priority": "High"
+    }
+  ],
+  "leadDatabase": [
+    {
+      "id": "LD-2024-001",
+      "name": "Ankit Mehta",
+      "company": "CloudFirst Solutions",
+      "email": "ankit@cloudfirst.com",
+      "phone": "+91 98123 45678",
+      "source": "Website Signup",
+      "status": "Meeting Scheduled",
+      "assignedTo": "Rahul Verma",
+      "createdAt": "2024-01-10 09:15 AM",
+      "lastContact": "2024-01-14 02:30 PM"
+    }
+  ],
+  "leadQuality": {
+    "techStackMatch": {
+      "average": 68,
+      "distribution": { "high": 234, "medium": 312, "low": 150 }
+    },
+    "budgetFit": {
+      "average": 72,
+      "distribution": { "high": 189, "medium": 356, "low": 151 }
+    },
+    "cloudReadiness": {
+      "average": 65,
+      "distribution": { "high": 167, "medium": 389, "low": 140 }
+    }
+  },
+  "useCaseDistribution": {
+    "kubernetes": 234,
+    "vms": 189,
+    "storage": 156,
+    "databases": 123,
+    "drBackup": 94
+  },
+  "cloudSpendPotential": {
+    "under10k": 89,
+    "10kTo50k": 234,
+    "50kTo1L": 189,
+    "1LTo5L": 145,
+    "over5L": 39
+  }
+}
+
+================================================================================
+ERROR RESPONSE
+================================================================================
+
+{
+  "error": true,
+  "message": "Error description"
+}
+
+HTTP Status Codes:
+- 200: Success
+- 400: Bad Request
+- 500: Internal Server Error
+
+================================================================================

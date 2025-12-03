@@ -1,0 +1,347 @@
+================================================================================
+                    SUPPORT DASHBOARD API DOCUMENTATION
+================================================================================
+
+ENDPOINT
+--------
+URL:        support-api.php
+Method:     GET
+Parameters:
+  - view (optional): "manager" (default), "agent"
+  - agent_id (optional): Filter for specific agent (agent view only)
+  - period (optional): "today", "week", "month"
+
+================================================================================
+REQUEST
+================================================================================
+
+GET /support-api.php?view=manager HTTP/1.1
+Host: your-domain.com
+Content-Type: application/json
+
+JavaScript Examples:
+--------------------
+// Manager View
+fetch('support-api.php?view=manager')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+// Agent View
+fetch('support-api.php?view=agent&agent_id=AGT001')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+================================================================================
+RESPONSE PAYLOAD
+================================================================================
+
+{
+  "kpis": {
+    "totalTickets": number,
+    "openTickets": number,
+    "resolvedToday": number,
+    "avgResolutionTime": "string",
+    "firstResponseTime": "string",
+    "slaCompliance": number,       // Percentage
+    "csat": number,                // 0-5 scale
+    "reopenRate": number           // Percentage
+  },
+
+  "smallKPIs": {
+    "criticalOpen": number,
+    "highPriority": number,
+    "pendingCustomer": number,
+    "escalated": number,
+    "breachedSLA": number,
+    "avgHandleTime": "string"
+  },
+
+  "statusDistribution": {
+    "open": number,
+    "inProgress": number,
+    "pendingCustomer": number,
+    "resolved": number,
+    "closed": number,
+    "reopened": number
+  },
+
+  "slaPerformance": {
+    "firstResponse": {
+      "met": number,
+      "breached": number,
+      "compliance": number
+    },
+    "resolution": {
+      "met": number,
+      "breached": number,
+      "compliance": number
+    },
+    "byPriority": {
+      "critical": { "target": "string", "actual": "string", "compliance": number },
+      "high": { "target": "string", "actual": "string", "compliance": number },
+      "medium": { "target": "string", "actual": "string", "compliance": number },
+      "low": { "target": "string", "actual": "string", "compliance": number }
+    }
+  },
+
+  "agentScorecards": [
+    {
+      "id": "string",
+      "name": "string",
+      "avatar": "string",
+      "score": number,             // 0-100 overall score
+      "metrics": {
+        "ticketsHandled": number,
+        "ticketsResolved": number,
+        "avgResolutionTime": "string",
+        "avgFirstResponse": "string",
+        "reopenRate": number,
+        "csat": number,
+        "slaCompliance": number
+      },
+      "ticketJourney": {
+        "waitingAssignment": "string",
+        "assignedNotResponded": "string",
+        "activeWork": "string",
+        "waitingCustomer": "string",
+        "resolved": "string"
+      },
+      "status": "string",          // "excellent", "good", "needs_attention", "critical"
+      "recommendation": "string"
+    }
+  ],
+
+  "teamPerformance": {
+    "byShift": [
+      {
+        "shift": "string",
+        "agents": number,
+        "ticketsHandled": number,
+        "avgResolution": "string",
+        "slaCompliance": number
+      }
+    ],
+    "comparison": {
+      "labels": ["string"],
+      "scores": [number],
+      "resolutionTimes": [number]
+    }
+  },
+
+  "reopenAnalysis": {
+    "total": number,
+    "rate": number,
+    "byReason": {
+      "incompleteFix": number,
+      "badCommunication": number,
+      "routingError": number,
+      "newIssue": number,
+      "customerMisunderstanding": number
+    },
+    "trend": {
+      "labels": ["string"],
+      "values": [number]
+    }
+  },
+
+  "mostReopened": [
+    {
+      "ticketId": "string",
+      "subject": "string",
+      "reopenCount": number,
+      "lastReopenReason": "string",
+      "assignedTo": "string"
+    }
+  ],
+
+  "resolvedTickets": [
+    {
+      "ticketId": "string",
+      "subject": "string",
+      "priority": "string",
+      "resolutionTime": "string",
+      "csat": number,
+      "agent": "string"
+    }
+  ],
+
+  "trends": {
+    "labels": ["string"],
+    "ticketsCreated": [number],
+    "ticketsResolved": [number],
+    "avgResolutionTime": [number]
+  },
+
+  "handover": {
+    "pendingHandover": [
+      {
+        "ticketId": "string",
+        "subject": "string",
+        "priority": "string",
+        "fromAgent": "string",
+        "toAgent": "string",
+        "notes": "string",
+        "status": "string"
+      }
+    ],
+    "recentHandovers": [
+      {
+        "ticketId": "string",
+        "fromShift": "string",
+        "toShift": "string",
+        "timestamp": "string",
+        "acknowledged": boolean
+      }
+    ]
+  },
+
+  "priorityDistribution": {
+    "critical": number,
+    "high": number,
+    "medium": number,
+    "low": number
+  },
+
+  "criticalTickets": [
+    {
+      "ticketId": "string",
+      "subject": "string",
+      "company": "string",
+      "createdAt": "string",
+      "slaStatus": "string",
+      "assignedTo": "string",
+      "lastUpdate": "string"
+    }
+  ],
+
+  "tickets": [
+    {
+      "id": "string",
+      "ticketId": "string",
+      "subject": "string",
+      "company": "string",
+      "priority": "string",
+      "status": "string",
+      "assignedTo": "string",
+      "createdAt": "string",
+      "updatedAt": "string",
+      "slaStatus": "string",
+      "category": "string",
+      "firstResponseTime": "string",
+      "resolutionTime": "string"
+    }
+  ]
+}
+
+================================================================================
+SAMPLE RESPONSE
+================================================================================
+
+{
+  "kpis": {
+    "totalTickets": 1247,
+    "openTickets": 156,
+    "resolvedToday": 45,
+    "avgResolutionTime": "4h 23m",
+    "firstResponseTime": "12m",
+    "slaCompliance": 94.5,
+    "csat": 4.2,
+    "reopenRate": 8.3
+  },
+  "smallKPIs": {
+    "criticalOpen": 3,
+    "highPriority": 23,
+    "pendingCustomer": 45,
+    "escalated": 7,
+    "breachedSLA": 12,
+    "avgHandleTime": "2h 15m"
+  },
+  "statusDistribution": {
+    "open": 45,
+    "inProgress": 67,
+    "pendingCustomer": 44,
+    "resolved": 89,
+    "closed": 956,
+    "reopened": 46
+  },
+  "slaPerformance": {
+    "firstResponse": { "met": 1156, "breached": 91, "compliance": 92.7 },
+    "resolution": { "met": 1089, "breached": 158, "compliance": 87.3 },
+    "byPriority": {
+      "critical": { "target": "15m", "actual": "12m", "compliance": 96 },
+      "high": { "target": "1h", "actual": "52m", "compliance": 94 },
+      "medium": { "target": "4h", "actual": "3h 45m", "compliance": 91 },
+      "low": { "target": "24h", "actual": "18h", "compliance": 89 }
+    }
+  },
+  "agentScorecards": [
+    {
+      "id": "AGT001",
+      "name": "Rajesh Kumar",
+      "avatar": "RK",
+      "score": 87,
+      "metrics": {
+        "ticketsHandled": 145,
+        "ticketsResolved": 138,
+        "avgResolutionTime": "3h 45m",
+        "avgFirstResponse": "8m",
+        "reopenRate": 5.2,
+        "csat": 4.5,
+        "slaCompliance": 96
+      },
+      "ticketJourney": {
+        "waitingAssignment": "5m",
+        "assignedNotResponded": "8m",
+        "activeWork": "2h 30m",
+        "waitingCustomer": "45m",
+        "resolved": "17m"
+      },
+      "status": "excellent",
+      "recommendation": "Top performer - consider for mentoring role"
+    }
+  ],
+  "reopenAnalysis": {
+    "total": 103,
+    "rate": 8.3,
+    "byReason": {
+      "incompleteFix": 42,
+      "badCommunication": 28,
+      "routingError": 15,
+      "newIssue": 12,
+      "customerMisunderstanding": 6
+    }
+  },
+  "tickets": [
+    {
+      "id": "TKT-2024-1234",
+      "ticketId": "TKT-2024-1234",
+      "subject": "VM not responding after restart",
+      "company": "CloudFirst Inc",
+      "priority": "critical",
+      "status": "in_progress",
+      "assignedTo": "Rajesh Kumar",
+      "createdAt": "2024-01-14 09:15 AM",
+      "updatedAt": "2024-01-14 10:30 AM",
+      "slaStatus": "on_track",
+      "category": "Infrastructure",
+      "firstResponseTime": "8m",
+      "resolutionTime": null
+    }
+  ]
+}
+
+================================================================================
+ERROR RESPONSE
+================================================================================
+
+{
+  "error": true,
+  "message": "Error description"
+}
+
+HTTP Status Codes:
+- 200: Success
+- 400: Bad Request
+- 500: Internal Server Error
+
+================================================================================

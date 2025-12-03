@@ -1,0 +1,221 @@
+================================================================================
+                        SALES DASHBOARD API DOCUMENTATION
+================================================================================
+
+ENDPOINT
+--------
+URL:        sales-api.php
+Method:     GET
+Parameters: None required
+
+================================================================================
+REQUEST
+================================================================================
+
+GET /sales-api.php HTTP/1.1
+Host: your-domain.com
+Content-Type: application/json
+
+JavaScript Example:
+-------------------
+fetch('sales-api.php')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+================================================================================
+RESPONSE PAYLOAD
+================================================================================
+
+{
+  "followUpTasks": [
+    {
+      "name": "string",           // Contact person name
+      "company": "string",        // Company name
+      "task": "string",           // Task description
+      "type": "string",           // Task type: "Call", "Meeting", "Email"
+      "time": "string",           // Scheduled time
+      "status": "string"          // Status: "Done", "Contacted", "Pending"
+    }
+  ],
+
+  "kpis": {
+    "totalAllocated": "string",   // Total allocated value (e.g., "₹ 68.02L")
+    "contactedHot": "string",     // Hot leads contacted value
+    "dealsInPipe": "string",      // Total deals in pipeline value
+    "expectedValue": "string",    // Expected revenue value
+    "newMeetings": "string",      // Number of new meetings
+    "leadQualified": "string",    // Number of qualified leads
+    "newLeads": "string",         // Number of new leads
+    "coldCalling": "string",      // Cold calling count
+    "followUp": "string",         // Follow-up count
+    "proposalsSent": "string",    // Proposals sent count
+    "dealsLost": "string",        // Deals lost count
+    "dealsWon": "string"          // Deals won count
+  },
+
+  "leadStatus": {
+    "newLeads": number,           // Count of new leads
+    "hotLeads": number,           // Count of hot leads
+    "activeDeals": number,        // Count of active deals
+    "lostDeals": number,          // Count of lost deals
+    "qualified": number,          // Count of qualified leads
+    "unresponsive": number        // Count of unresponsive leads
+  },
+
+  "pipeline": {
+    "stages": [
+      {
+        "name": "string",         // Stage name: "New", "Contacted", "Qualified", etc.
+        "count": number,          // Number of deals in stage
+        "value": "string",        // Total value in stage
+        "deals": [
+          {
+            "name": "string",     // Deal name
+            "company": "string",  // Company name
+            "value": "string",    // Deal value
+            "stage": "string"     // Current stage
+          }
+        ]
+      }
+    ]
+  },
+
+  "recentActivity": [
+    {
+      "user": "string",           // User who performed action
+      "description": "string",    // Activity description
+      "details": "string",        // Additional details
+      "time": "string",           // Time of activity
+      "type": "string"            // Type: "deal", "meeting", "email", "call"
+    }
+  ],
+
+  "salesTargets": [
+    {
+      "rep": "string",            // Sales rep identifier
+      "quarter": "string",        // Quarter (e.g., "Q4")
+      "month": "string",          // Month name
+      "targetBusiness": "string", // Target business value
+      "achievedRevenue": "string",// Achieved revenue
+      "targetMRR": "string",      // Target MRR
+      "achievedMRR": "string",    // Achieved MRR
+      "achievement": "string",    // Achievement percentage
+      "status": "string"          // Status: "On Track", "At Risk"
+    }
+  ]
+}
+
+================================================================================
+SAMPLE RESPONSE
+================================================================================
+
+{
+  "followUpTasks": [
+    {
+      "name": "Rohan Sharma",
+      "company": "Cloud Ventures",
+      "task": "Cloud Migration",
+      "type": "Call",
+      "time": "2:45 PM",
+      "status": "Done"
+    },
+    {
+      "name": "Priya Patel",
+      "company": "Tech Innovations",
+      "task": "VDI Requirements Call",
+      "type": "Meeting",
+      "time": "3:45 PM",
+      "status": "Done"
+    }
+  ],
+  "kpis": {
+    "totalAllocated": "₹ 68.02L",
+    "contactedHot": "₹ 45.3K",
+    "dealsInPipe": "₹ 32.5L",
+    "expectedValue": "₹ 125.8L",
+    "newMeetings": "1,247",
+    "leadQualified": "342",
+    "newLeads": "89",
+    "coldCalling": "523",
+    "followUp": "156",
+    "proposalsSent": "78",
+    "dealsLost": "23",
+    "dealsWon": "45"
+  },
+  "leadStatus": {
+    "newLeads": 89,
+    "hotLeads": 523,
+    "activeDeals": 234,
+    "lostDeals": 83,
+    "qualified": 234,
+    "unresponsive": 156
+  },
+  "pipeline": {
+    "stages": [
+      {
+        "name": "New",
+        "count": 7,
+        "value": "₹ 2.8L",
+        "deals": [
+          {
+            "name": "Cloud Migration",
+            "company": "CloudTechies",
+            "value": "₹ 1.8Lk",
+            "stage": "New"
+          }
+        ]
+      },
+      {
+        "name": "Negotiation",
+        "count": 9,
+        "value": "₹ 18.2L",
+        "deals": [
+          {
+            "name": "Cloud Infrastructure",
+            "company": "Enterprise Corp",
+            "value": "₹ 10Lk",
+            "stage": "Negotiation"
+          }
+        ]
+      }
+    ]
+  },
+  "recentActivity": [
+    {
+      "user": "Latif just",
+      "description": "added EMC Corp",
+      "details": "deal worth ₹2.5L to the pipeline from lead source",
+      "time": "3 hours ago",
+      "type": "deal"
+    }
+  ],
+  "salesTargets": [
+    {
+      "rep": "TRM",
+      "quarter": "Q4",
+      "month": "October",
+      "targetBusiness": "₹ 7,16Lk",
+      "achievedRevenue": "₹ 6.23Lk",
+      "targetMRR": "₹ 4.40K",
+      "achievedMRR": "₹ 3.53K",
+      "achievement": "88%",
+      "status": "On Track"
+    }
+  ]
+}
+
+================================================================================
+ERROR RESPONSE
+================================================================================
+
+{
+  "error": true,
+  "message": "Error description"
+}
+
+HTTP Status Codes:
+- 200: Success
+- 400: Bad Request
+- 500: Internal Server Error
+
+================================================================================
