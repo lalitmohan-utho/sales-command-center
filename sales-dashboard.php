@@ -674,15 +674,31 @@
 
         .data-table thead th {
             background: #F9FAFB;
-            padding: 14px 16px;
+            padding: 12px 14px;
             font-size: 11px;
             font-weight: 600;
             color: #6B7280;
             text-align: left;
-            border-bottom: 2px solid var(--border-color);
+            border: 1px solid var(--border-color);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        /* Targets table specific styles */
+        .targets-table {
+            min-width: 1400px;
+        }
+
+        .targets-table thead th {
+            padding: 10px 12px;
+            font-size: 10px;
+        }
+
+        .targets-table tbody td {
+            padding: 12px 14px;
+            font-size: 12px;
         }
 
         .data-table tbody td {
@@ -1264,19 +1280,31 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="data-table" id="targetsTable">
+                <table class="data-table targets-table" id="targetsTable">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>REP</th>
-                            <th>QUARTER</th>
-                            <th>MONTH</th>
-                            <th>TARGET WHOLE</th>
-                            <th>TARGET MRR</th>
-                            <th>ACHIEVED WHOLE</th>
-                            <th>ACHIEVED MRR</th>
-                            <th>ACHIEVEMENT</th>
-                            <th>STATUS</th>
+                            <th rowspan="3">#</th>
+                            <th rowspan="3">REP</th>
+                            <th rowspan="3">QUARTER</th>
+                            <th rowspan="3">WHOLE TOTAL TARGET<br><small style="font-weight: 400; color: #6B7280;">(MRR + WHOLE)</small></th>
+                            <th colspan="6" style="text-align: center; background: #F3F4F6;">MONTH WISE</th>
+                            <th rowspan="3">ACHIEVED<br>REVENUE</th>
+                            <th rowspan="3">TARGET<br>MRR</th>
+                            <th rowspan="3">ACHIEVED<br>MRR</th>
+                            <th rowspan="3">ACHIEVE-<br>MENT</th>
+                            <th rowspan="3">STATUS</th>
+                        </tr>
+                        <tr>
+                            <th colspan="3" style="text-align: center; background: #F9FAFB;">WHOLE</th>
+                            <th colspan="3" style="text-align: center; background: #F9FAFB;">MRR</th>
+                        </tr>
+                        <tr>
+                            <th style="text-align: center;">Month 1</th>
+                            <th style="text-align: center;">Month 2</th>
+                            <th style="text-align: center;">Month 3</th>
+                            <th style="text-align: center;">Month 1</th>
+                            <th style="text-align: center;">Month 2</th>
+                            <th style="text-align: center;">Month 3</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1751,17 +1779,22 @@ console.log(firstStats);
             tbody.innerHTML = targets.map((target, index) => `
                 <tr data-id="${target.id || index}" onclick="editTarget(${JSON.stringify(target).replace(/"/g, '&quot;')})">
                     <td>${index + 1}</td>
-                    <td>${target.rep}</td>
+                    <td style="color: #0066FF; font-weight: 600;">${target.rep}</td>
                     <td>${target.quarter}</td>
-                    <td>${target.month}</td>
-                    <td>${target.targetWhole || target.targetBusiness}</td>
+                    <td>${target.wholeTotalTarget || target.targetBusiness}</td>
+                    <td style="text-align: center;">${target.wholeMonth1 || '-'}</td>
+                    <td style="text-align: center;">${target.wholeMonth2 || '-'}</td>
+                    <td style="text-align: center;">${target.wholeMonth3 || '-'}</td>
+                    <td style="text-align: center;">${target.mrrMonth1 || '-'}</td>
+                    <td style="text-align: center;">${target.mrrMonth2 || '-'}</td>
+                    <td style="text-align: center;">${target.mrrMonth3 || '-'}</td>
+                    <td>${target.achievedRevenue || target.achievedWhole}</td>
                     <td>${target.targetMRR}</td>
-                    <td>${target.achievedWhole || target.achievedRevenue}</td>
                     <td>${target.achievedMRR}</td>
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <div class="progress-bar-custom">
-                                <div class="progress-fill" style="width: ${target.achievement};"></div>
+                                <div class="progress-fill" style="width: ${target.achievement}; background: ${getProgressColor(target.status)};"></div>
                             </div>
                             <span style="font-weight: 600;">${target.achievement}</span>
                         </div>
@@ -1769,6 +1802,15 @@ console.log(firstStats);
                     <td><span class="badge ${getStatusClass(target.status)}">${target.status}</span></td>
                 </tr>
             `).join('');
+        }
+
+        function getProgressColor(status) {
+            switch(status) {
+                case 'On Track': return '#10B981';
+                case 'Behind': return '#EF4444';
+                case 'At Risk': return '#F59E0B';
+                default: return '#10B981';
+            }
         }
 
         // ============ MODAL FUNCTIONS ============
@@ -1838,10 +1880,8 @@ console.log(firstStats);
                 document.getElementById('targetId').value = target.id || '';
                 document.getElementById('targetRep').value = target.rep || '';
                 document.getElementById('targetQuarter').value = target.quarter || '';
-                // Calculate whole total from existing data
-                const targetMRR = parseAmount(target.targetMRR);
-                const targetWhole = parseAmount(target.targetWhole || target.targetBusiness);
-                const wholeTotalTarget = targetMRR + targetWhole;
+                // Parse whole total target from the data
+                const wholeTotalTarget = parseAmount(target.wholeTotalTarget);
                 document.getElementById('wholeTotalTarget').value = wholeTotalTarget || '';
                 updateCalculatedFields();
             } else {
