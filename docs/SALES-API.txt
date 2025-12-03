@@ -465,6 +465,217 @@ For salesTargets status:
 - "At Risk" - Target at risk of not being met
 
 ================================================================================
+POST - CREATE/UPDATE SALES TARGET
+================================================================================
+
+ENDPOINT
+--------
+URL:        sales-api.php?action=targets
+Method:     POST
+Content-Type: application/json
+
+--------------------------------------------------------------------------------
+REQUEST PAYLOAD
+--------------------------------------------------------------------------------
+
+{
+  "id": "string (optional - omit for new target, include for update)",
+  "rep": "string",
+  "quarter": "string",
+  "month": "string",
+  "targetBusiness": number,
+  "achievedRevenue": number,
+  "targetMRR": number,
+  "achievedMRR": number,
+  "status": "string"
+}
+
+JavaScript Example (Create New Target):
+---------------------------------------
+fetch('sales-api.php?action=targets', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    rep: "TRM",
+    quarter: "Q4",
+    month: "October",
+    targetBusiness: 716000,
+    achievedRevenue: 623000,
+    targetMRR: 44000,
+    achievedMRR: 35300,
+    status: "On Track"
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data));
+
+JavaScript Example (Update Existing Target):
+--------------------------------------------
+fetch('sales-api.php?action=targets', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    id: "target-001",
+    rep: "TRM",
+    quarter: "Q4",
+    month: "October",
+    targetBusiness: 750000,
+    achievedRevenue: 650000,
+    targetMRR: 45000,
+    achievedMRR: 38000,
+    status: "On Track"
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data));
+
+--------------------------------------------------------------------------------
+RESPONSE PAYLOAD (Success)
+--------------------------------------------------------------------------------
+
+{
+  "success": true,
+  "message": "Target saved successfully",
+  "data": {
+    "id": "target-001",
+    "rep": "TRM",
+    "quarter": "Q4",
+    "month": "October",
+    "targetBusiness": "₹7.50Lk",
+    "achievedRevenue": "₹6.50Lk",
+    "targetMRR": "₹45.0K",
+    "achievedMRR": "₹38.0K",
+    "achievement": "87%",
+    "status": "On Track"
+  }
+}
+
+================================================================================
+DELETE - REMOVE SALES TARGET
+================================================================================
+
+ENDPOINT
+--------
+URL:        sales-api.php?action=targets&id={target_id}
+Method:     DELETE
+
+JavaScript Example:
+-------------------
+fetch('sales-api.php?action=targets&id=target-001', {
+  method: 'DELETE'
+})
+.then(response => response.json())
+.then(data => console.log(data));
+
+--------------------------------------------------------------------------------
+RESPONSE PAYLOAD (Success)
+--------------------------------------------------------------------------------
+
+{
+  "success": true,
+  "message": "Target deleted successfully"
+}
+
+================================================================================
+GET - FILTER SALES TARGETS BY PERIOD
+================================================================================
+
+ENDPOINT
+--------
+URL:        sales-api.php?action=targets&filter={period}
+Method:     GET
+Parameters:
+  - filter (required): "yearly", "monthly", "Q1", "Q2", "Q3", "Q4"
+
+JavaScript Example:
+-------------------
+fetch('sales-api.php?action=targets&filter=Q4')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+--------------------------------------------------------------------------------
+RESPONSE PAYLOAD
+--------------------------------------------------------------------------------
+
+{
+  "salesTargets": [
+    {
+      "id": "target-001",
+      "rep": "TRM",
+      "quarter": "Q4",
+      "month": "October",
+      "targetBusiness": "₹7,16Lk",
+      "achievedRevenue": "₹6.23Lk",
+      "targetMRR": "₹4.40K",
+      "achievedMRR": "₹3.53K",
+      "achievement": "88%",
+      "status": "On Track"
+    }
+  ],
+  "filter": "Q4"
+}
+
+================================================================================
+FORM FIELDS FOR EDIT TARGET POPUP
+================================================================================
+
+The edit target popup form should contain the following fields:
+
+| Field Name       | Type     | Required | Description                      |
+|------------------|----------|----------|----------------------------------|
+| rep              | text     | Yes      | Sales representative code/name   |
+| quarter          | select   | Yes      | Q1, Q2, Q3, Q4                   |
+| month            | select   | Yes      | January - December               |
+| targetBusiness   | number   | Yes      | Target business amount in INR    |
+| achievedRevenue  | number   | Yes      | Achieved revenue amount in INR   |
+| targetMRR        | number   | Yes      | Target MRR amount in INR         |
+| achievedMRR      | number   | Yes      | Achieved MRR amount in INR       |
+| status           | select   | Yes      | "On Track", "At Risk", "Behind"  |
+
+================================================================================
+FILTER DROPDOWN VALUES
+================================================================================
+
+For period filter dropdown:
+- "yearly"   - Show all targets for current year
+- "monthly"  - Show all targets grouped by month
+- "Q1"       - Show Q1 targets (Jan, Feb, Mar)
+- "Q2"       - Show Q2 targets (Apr, May, Jun)
+- "Q3"       - Show Q3 targets (Jul, Aug, Sep)
+- "Q4"       - Show Q4 targets (Oct, Nov, Dec)
+
+================================================================================
+QUARTER VALUES
+================================================================================
+
+For quarter field:
+- "Q1" - January, February, March
+- "Q2" - April, May, June
+- "Q3" - July, August, September
+- "Q4" - October, November, December
+
+================================================================================
+MONTH VALUES
+================================================================================
+
+For month field:
+- "January", "February", "March", "April", "May", "June"
+- "July", "August", "September", "October", "November", "December"
+
+================================================================================
+TARGET STATUS VALUES (Extended)
+================================================================================
+
+For salesTargets status:
+- "On Track" - Target likely to be met (achievement >= 80%)
+- "At Risk"  - Target at risk of not being met (achievement 50-79%)
+- "Behind"   - Target significantly behind (achievement < 50%)
+
+================================================================================
 ERROR RESPONSE
 ================================================================================
 
@@ -475,7 +686,9 @@ ERROR RESPONSE
 
 HTTP Status Codes:
 - 200: Success
-- 400: Bad Request
+- 201: Created (for new target)
+- 400: Bad Request (validation error)
+- 404: Not Found (target not found for update/delete)
 - 500: Internal Server Error
 
 ================================================================================
