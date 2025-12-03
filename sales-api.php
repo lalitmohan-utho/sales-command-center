@@ -30,10 +30,12 @@ $dashboardData = [
         ]
     ],
     'kpis' => [
-        'totalAllocated' => '₹ 68.02L',
-        'contactedHot' => '₹ 45.3K',
-        'dealsInPipe' => '₹ 32.5L',
-        'expectedValue' => '₹ 125.8L',
+        'total_business' => '₹ 68.02L',
+        'active_mrr' => '₹ 45.3K',
+        'new_business' => '₹ 32.5L',
+        'funnel_size' => '₹ 125.8L',
+        'total_leads' => '₹ 125.8L',
+        'converted_leads' => '₹ 125.8L',
         'newMeetings' => '1,247',
         'leadQualified' => '342',
         'newLeads' => '89',
@@ -196,10 +198,16 @@ $dashboardData = [
     ],
     'salesTargets' => [
         [
+            'id' => 'target-001',
             'rep' => 'TRM',
             'quarter' => 'Q4',
-            'month' => 'October',
-            'targetBusiness' => '₹ 7,16Lk',
+            'wholeTotalTarget' => '₹ 7.16Lk',
+            'wholeMonth1' => '₹ 2.30Lk',
+            'wholeMonth2' => '₹ 2.40Lk',
+            'wholeMonth3' => '₹ 2.46Lk',
+            'mrrMonth1' => '₹ 1.40K',
+            'mrrMonth2' => '₹ 1.50K',
+            'mrrMonth3' => '₹ 1.53K',
             'achievedRevenue' => '₹ 6.23Lk',
             'targetMRR' => '₹ 4.40K',
             'achievedMRR' => '₹ 3.53K',
@@ -207,10 +215,16 @@ $dashboardData = [
             'status' => 'On Track'
         ],
         [
+            'id' => 'target-002',
             'rep' => 'ZRM',
             'quarter' => 'Q4',
-            'month' => 'November',
-            'targetBusiness' => '₹ 8,66Lk',
+            'wholeTotalTarget' => '₹ 8.66Lk',
+            'wholeMonth1' => '₹ 2.80Lk',
+            'wholeMonth2' => '₹ 2.90Lk',
+            'wholeMonth3' => '₹ 2.96Lk',
+            'mrrMonth1' => '₹ 2.40K',
+            'mrrMonth2' => '₹ 2.60K',
+            'mrrMonth3' => '₹ 2.80K',
             'achievedRevenue' => '₹ 8.02Lk',
             'targetMRR' => '₹ 7.80K',
             'achievedMRR' => '₹ 9.3K',
@@ -218,10 +232,16 @@ $dashboardData = [
             'status' => 'On Track'
         ],
         [
+            'id' => 'target-003',
             'rep' => 'ZRM',
             'quarter' => 'Q4',
-            'month' => 'December',
-            'targetBusiness' => '₹ 9,66Lk',
+            'wholeTotalTarget' => '₹ 9.66Lk',
+            'wholeMonth1' => '₹ 3.10Lk',
+            'wholeMonth2' => '₹ 3.20Lk',
+            'wholeMonth3' => '₹ 3.36Lk',
+            'mrrMonth1' => '₹ 3.20K',
+            'mrrMonth2' => '₹ 3.10K',
+            'mrrMonth3' => '₹ 3.30K',
             'achievedRevenue' => '₹ 7.60Lk',
             'targetMRR' => '₹ 9.60K',
             'achievedMRR' => '₹ 4.83K',
@@ -229,6 +249,7 @@ $dashboardData = [
             'status' => 'At Risk'
         ]
     ]
+
 ];
 
 echo json_encode($dashboardData);
