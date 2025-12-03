@@ -1,0 +1,327 @@
+================================================================================
+                    BILLING DASHBOARD API DOCUMENTATION
+================================================================================
+
+ENDPOINT
+--------
+URL:        billing-api.php
+Method:     GET
+Parameters:
+  - period (optional): "month", "quarter", "year"
+  - customer (optional): Filter by customer ID
+
+================================================================================
+REQUEST
+================================================================================
+
+GET /billing-api.php?period=month HTTP/1.1
+Host: your-domain.com
+Content-Type: application/json
+
+JavaScript Example:
+-------------------
+fetch('billing-api.php?period=month')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+================================================================================
+RESPONSE PAYLOAD
+================================================================================
+
+{
+  "salesVsCollection": {
+    "labels": ["string"],         // Month/period labels
+    "invoiced": [number],         // Invoiced amounts
+    "collected": [number],        // Collected amounts
+    "pending": [number]           // Pending amounts
+  },
+
+  "agingBuckets": {
+    "current": {
+      "count": number,
+      "amount": "string"
+    },
+    "days1to30": {
+      "count": number,
+      "amount": "string"
+    },
+    "days31to60": {
+      "count": number,
+      "amount": "string"
+    },
+    "days61to90": {
+      "count": number,
+      "amount": "string"
+    },
+    "over90": {
+      "count": number,
+      "amount": "string"
+    }
+  },
+
+  "overdueDetails": [
+    {
+      "invoiceId": "string",
+      "customer": "string",
+      "customerType": "string",   // "Enterprise", "SMB", "Startup"
+      "amount": "string",
+      "dueDate": "string",
+      "daysOverdue": number,
+      "agingBucket": "string",
+      "lastReminder": "string",
+      "paymentStatus": "string",
+      "accountManager": "string"
+    }
+  ],
+
+  "refundMetrics": {
+    "totalRefunds": "string",
+    "refundCount": number,
+    "avgRefundAmount": "string",
+    "refundRate": "string"        // Percentage
+  },
+
+  "refundDetails": [
+    {
+      "refundId": "string",
+      "invoiceId": "string",
+      "customer": "string",
+      "amount": "string",
+      "reason": "string",
+      "category": "string",       // "Service Issue", "Billing Error", "Cancellation", etc.
+      "status": "string",
+      "processedDate": "string",
+      "approvedBy": "string"
+    }
+  ],
+
+  "gstDetails": {
+    "summary": {
+      "totalGSTCollected": "string",
+      "cgst": "string",
+      "sgst": "string",
+      "igst": "string"
+    },
+    "byTreatment": {
+      "registered": {
+        "count": number,
+        "taxable": "string",
+        "gst": "string"
+      },
+      "unregistered": {
+        "count": number,
+        "taxable": "string",
+        "gst": "string"
+      },
+      "overseas": {
+        "count": number,
+        "taxable": "string",
+        "gst": "string"
+      },
+      "sez": {
+        "count": number,
+        "taxable": "string",
+        "gst": "string"
+      }
+    },
+    "invoices": [
+      {
+        "invoiceId": "string",
+        "customer": "string",
+        "gstin": "string",
+        "placeOfSupply": "string",
+        "taxableAmount": "string",
+        "cgst": "string",
+        "sgst": "string",
+        "igst": "string",
+        "totalAmount": "string",
+        "gstTreatment": "string"
+      }
+    ]
+  },
+
+  "customerHealth": [
+    {
+      "customerId": "string",
+      "company": "string",
+      "healthScore": number,       // 0-100
+      "riskLevel": "string",       // "low", "medium", "high", "critical"
+      "totalOutstanding": "string",
+      "avgPaymentDays": number,
+      "paymentHistory": "string",  // "excellent", "good", "fair", "poor"
+      "lastPayment": "string",
+      "creditLimit": "string",
+      "utilizationPercent": number
+    }
+  ],
+
+  "productRevenue": {
+    "products": [
+      {
+        "name": "string",
+        "revenue": "string",
+        "percentage": number,
+        "growth": number,          // YoY or MoM growth percentage
+        "customers": number
+      }
+    ],
+    "total": "string"
+  },
+
+  "teamPerformance": [
+    {
+      "name": "string",
+      "role": "string",
+      "invoicesProcessed": number,
+      "amountCollected": "string",
+      "collectionRate": number,
+      "avgDaysToCollect": number,
+      "escalations": number
+    }
+  ],
+
+  "alerts": [
+    {
+      "id": "string",
+      "type": "string",            // "overdue", "credit_limit", "gst_anomaly", "high_risk"
+      "severity": "string",        // "critical", "high", "medium", "low"
+      "title": "string",
+      "description": "string",
+      "customer": "string",
+      "amount": "string",
+      "createdAt": "string",
+      "actionRequired": "string"
+    }
+  ]
+}
+
+================================================================================
+SAMPLE RESPONSE
+================================================================================
+
+{
+  "salesVsCollection": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "invoiced": [4500000, 5200000, 4800000, 5600000, 5100000, 5800000],
+    "collected": [4200000, 4900000, 4500000, 5200000, 4800000, 5400000],
+    "pending": [300000, 300000, 300000, 400000, 300000, 400000]
+  },
+  "agingBuckets": {
+    "current": { "count": 234, "amount": "₹ 45.6L" },
+    "days1to30": { "count": 89, "amount": "₹ 18.2L" },
+    "days31to60": { "count": 45, "amount": "₹ 12.5L" },
+    "days61to90": { "count": 23, "amount": "₹ 8.9L" },
+    "over90": { "count": 12, "amount": "₹ 5.6L" }
+  },
+  "overdueDetails": [
+    {
+      "invoiceId": "INV-2024-0123",
+      "customer": "TechStart Solutions",
+      "customerType": "SMB",
+      "amount": "₹ 2.45L",
+      "dueDate": "2024-01-01",
+      "daysOverdue": 14,
+      "agingBucket": "1-30 days",
+      "lastReminder": "2024-01-10",
+      "paymentStatus": "Partial Payment Received",
+      "accountManager": "Priya Sharma"
+    }
+  ],
+  "refundMetrics": {
+    "totalRefunds": "₹ 8.9L",
+    "refundCount": 45,
+    "avgRefundAmount": "₹ 19.8K",
+    "refundRate": "2.3%"
+  },
+  "refundDetails": [
+    {
+      "refundId": "REF-2024-0089",
+      "invoiceId": "INV-2023-4567",
+      "customer": "CloudFirst Inc",
+      "amount": "₹ 45,000",
+      "reason": "Service credit for outage",
+      "category": "Service Issue",
+      "status": "Processed",
+      "processedDate": "2024-01-12",
+      "approvedBy": "Finance Manager"
+    }
+  ],
+  "gstDetails": {
+    "summary": {
+      "totalGSTCollected": "₹ 12.8L",
+      "cgst": "₹ 4.2L",
+      "sgst": "₹ 4.2L",
+      "igst": "₹ 4.4L"
+    },
+    "byTreatment": {
+      "registered": { "count": 189, "taxable": "₹ 45.6L", "gst": "₹ 8.2L" },
+      "unregistered": { "count": 67, "taxable": "₹ 12.3L", "gst": "₹ 2.2L" },
+      "overseas": { "count": 23, "taxable": "₹ 8.9L", "gst": "₹ 0" },
+      "sez": { "count": 12, "taxable": "₹ 5.6L", "gst": "₹ 0" }
+    }
+  },
+  "customerHealth": [
+    {
+      "customerId": "CUST-001",
+      "company": "Enterprise Corp",
+      "healthScore": 92,
+      "riskLevel": "low",
+      "totalOutstanding": "₹ 4.5L",
+      "avgPaymentDays": 18,
+      "paymentHistory": "excellent",
+      "lastPayment": "2024-01-10",
+      "creditLimit": "₹ 10L",
+      "utilizationPercent": 45
+    }
+  ],
+  "productRevenue": {
+    "products": [
+      { "name": "Virtual Machines", "revenue": "₹ 28.5L", "percentage": 35, "growth": 12, "customers": 234 },
+      { "name": "Kubernetes", "revenue": "₹ 22.3L", "percentage": 27, "growth": 28, "customers": 156 },
+      { "name": "Object Storage", "revenue": "₹ 15.6L", "percentage": 19, "growth": 8, "customers": 289 },
+      { "name": "Databases", "revenue": "₹ 12.1L", "percentage": 15, "growth": 15, "customers": 178 },
+      { "name": "DR/Backup", "revenue": "₹ 3.2L", "percentage": 4, "growth": 5, "customers": 89 }
+    ],
+    "total": "₹ 81.7L"
+  },
+  "teamPerformance": [
+    {
+      "name": "Anita Desai",
+      "role": "Collections Lead",
+      "invoicesProcessed": 234,
+      "amountCollected": "₹ 28.5L",
+      "collectionRate": 94.5,
+      "avgDaysToCollect": 22,
+      "escalations": 3
+    }
+  ],
+  "alerts": [
+    {
+      "id": "ALT-001",
+      "type": "overdue",
+      "severity": "critical",
+      "title": "Large Overdue Payment",
+      "description": "Invoice INV-2023-9876 is 45 days overdue",
+      "customer": "DataTech Solutions",
+      "amount": "₹ 8.5L",
+      "createdAt": "2024-01-14 09:00 AM",
+      "actionRequired": "Escalate to account manager for immediate follow-up"
+    }
+  ]
+}
+
+================================================================================
+ERROR RESPONSE
+================================================================================
+
+{
+  "error": true,
+  "message": "Error description"
+}
+
+HTTP Status Codes:
+- 200: Success
+- 400: Bad Request
+- 500: Internal Server Error
+
+================================================================================

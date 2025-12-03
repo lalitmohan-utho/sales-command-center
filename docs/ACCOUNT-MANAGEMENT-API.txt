@@ -1,0 +1,298 @@
+================================================================================
+                  ACCOUNT MANAGEMENT DASHBOARD API DOCUMENTATION
+================================================================================
+
+ENDPOINT
+--------
+URL:        account-management-api.php
+Method:     GET
+Parameters:
+  - period (optional): "month", "quarter", "year"
+
+================================================================================
+REQUEST
+================================================================================
+
+GET /account-management-api.php?period=month HTTP/1.1
+Host: your-domain.com
+Content-Type: application/json
+
+JavaScript Example:
+-------------------
+fetch('account-management-api.php?period=month')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+================================================================================
+RESPONSE PAYLOAD
+================================================================================
+
+{
+  "kpis": {
+    "totalAccounts": number,
+    "activeAccounts": number,
+    "totalMRR": "string",         // e.g., "₹ 45.6L"
+    "avgHealthScore": number,     // 0-100 scale
+    "atRiskAccounts": number,
+    "renewalsDue": number,
+    "expansionRevenue": "string",
+    "churnRate": "string"         // e.g., "2.3%"
+  },
+
+  "healthDistribution": {
+    "healthy": {
+      "count": number,
+      "percentage": number
+    },
+    "needsAttention": {
+      "count": number,
+      "percentage": number
+    },
+    "atRisk": {
+      "count": number,
+      "percentage": number
+    },
+    "critical": {
+      "count": number,
+      "percentage": number
+    }
+  },
+
+  "atRiskAccounts": [
+    {
+      "company": "string",
+      "healthScore": number,
+      "mrr": "string",
+      "riskFactors": ["string"],
+      "lastContact": "string",
+      "accountManager": "string",
+      "actionRequired": "string"
+    }
+  ],
+
+  "renewals": {
+    "upcoming": [
+      {
+        "company": "string",
+        "renewalDate": "string",
+        "currentMRR": "string",
+        "contractValue": "string",
+        "healthScore": number,
+        "renewalProbability": number,
+        "accountManager": "string"
+      }
+    ],
+    "summary": {
+      "thisMonth": { "count": number, "value": "string" },
+      "nextMonth": { "count": number, "value": "string" },
+      "thisQuarter": { "count": number, "value": "string" }
+    }
+  },
+
+  "mrrTrends": {
+    "labels": ["string"],         // Month labels
+    "newMRR": [number],           // New MRR values
+    "expansionMRR": [number],     // Expansion MRR values
+    "churnMRR": [number],         // Churned MRR values
+    "netMRR": [number]            // Net MRR values
+  },
+
+  "productAdoption": {
+    "products": [
+      {
+        "name": "string",
+        "adoptionRate": number,
+        "activeUsers": number,
+        "revenue": "string"
+      }
+    ]
+  },
+
+  "usageInsights": {
+    "topUsers": [
+      {
+        "company": "string",
+        "usage": "string",
+        "trend": "string",        // "up", "down", "stable"
+        "percentChange": number
+      }
+    ],
+    "lowEngagement": [
+      {
+        "company": "string",
+        "lastActive": "string",
+        "usageDecline": number
+      }
+    ]
+  },
+
+  "tasks": [
+    {
+      "id": "string",
+      "type": "string",           // "renewal", "check-in", "escalation", etc.
+      "company": "string",
+      "description": "string",
+      "dueDate": "string",
+      "priority": "string",
+      "status": "string"
+    }
+  ],
+
+  "referralStats": {
+    "totalReferrals": number,
+    "successfulReferrals": number,
+    "pendingReferrals": number,
+    "referralRevenue": "string"
+  },
+
+  "advocacyCandidates": [
+    {
+      "company": "string",
+      "healthScore": number,
+      "npsScore": number,
+      "tenure": "string",
+      "advocacyPotential": "string"
+    }
+  ],
+
+  "supportStats": {
+    "avgResponseTime": "string",
+    "avgResolutionTime": "string",
+    "openTickets": number,
+    "escalatedTickets": number,
+    "csat": number
+  },
+
+  "ticketsByPriority": {
+    "critical": number,
+    "high": number,
+    "medium": number,
+    "low": number
+  },
+
+  "portfolio": [
+    {
+      "company": "string",
+      "industry": "string",
+      "mrr": "string",
+      "healthScore": number,
+      "products": ["string"],
+      "renewalDate": "string",
+      "accountManager": "string",
+      "lastContact": "string"
+    }
+  ],
+
+  "recentActivity": [
+    {
+      "type": "string",
+      "company": "string",
+      "description": "string",
+      "timestamp": "string",
+      "user": "string"
+    }
+  ]
+}
+
+================================================================================
+SAMPLE RESPONSE
+================================================================================
+
+{
+  "kpis": {
+    "totalAccounts": 342,
+    "activeAccounts": 328,
+    "totalMRR": "₹ 45.6L",
+    "avgHealthScore": 78,
+    "atRiskAccounts": 23,
+    "renewalsDue": 45,
+    "expansionRevenue": "₹ 8.2L",
+    "churnRate": "2.3%"
+  },
+  "healthDistribution": {
+    "healthy": { "count": 234, "percentage": 68.4 },
+    "needsAttention": { "count": 67, "percentage": 19.6 },
+    "atRisk": { "count": 32, "percentage": 9.4 },
+    "critical": { "count": 9, "percentage": 2.6 }
+  },
+  "atRiskAccounts": [
+    {
+      "company": "TechStart Solutions",
+      "healthScore": 35,
+      "mrr": "₹ 1.2L",
+      "riskFactors": ["Low usage", "Support escalations", "Payment delays"],
+      "lastContact": "2024-01-05",
+      "accountManager": "Priya Sharma",
+      "actionRequired": "Schedule executive review"
+    }
+  ],
+  "renewals": {
+    "upcoming": [
+      {
+        "company": "CloudFirst Inc",
+        "renewalDate": "2024-02-15",
+        "currentMRR": "₹ 2.8L",
+        "contractValue": "₹ 33.6L",
+        "healthScore": 85,
+        "renewalProbability": 92,
+        "accountManager": "Rahul Verma"
+      }
+    ],
+    "summary": {
+      "thisMonth": { "count": 12, "value": "₹ 15.6L" },
+      "nextMonth": { "count": 18, "value": "₹ 22.4L" },
+      "thisQuarter": { "count": 45, "value": "₹ 58.2L" }
+    }
+  },
+  "mrrTrends": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "newMRR": [120000, 145000, 132000, 168000, 155000, 178000],
+    "expansionMRR": [45000, 52000, 48000, 61000, 58000, 72000],
+    "churnMRR": [25000, 18000, 32000, 22000, 28000, 19000],
+    "netMRR": [140000, 179000, 148000, 207000, 185000, 231000]
+  },
+  "productAdoption": {
+    "products": [
+      { "name": "Virtual Machines", "adoptionRate": 89, "activeUsers": 298, "revenue": "₹ 18.5L" },
+      { "name": "Kubernetes", "adoptionRate": 67, "activeUsers": 224, "revenue": "₹ 12.3L" },
+      { "name": "Object Storage", "adoptionRate": 78, "activeUsers": 261, "revenue": "₹ 8.9L" }
+    ]
+  },
+  "portfolio": [
+    {
+      "company": "Enterprise Corp",
+      "industry": "Financial Services",
+      "mrr": "₹ 4.5L",
+      "healthScore": 92,
+      "products": ["VMs", "Kubernetes", "Storage"],
+      "renewalDate": "2024-06-30",
+      "accountManager": "Amit Kumar",
+      "lastContact": "2024-01-12"
+    }
+  ],
+  "recentActivity": [
+    {
+      "type": "renewal",
+      "company": "DataTech Solutions",
+      "description": "Contract renewed for 2 years",
+      "timestamp": "2024-01-14 10:30 AM",
+      "user": "Priya Sharma"
+    }
+  ]
+}
+
+================================================================================
+ERROR RESPONSE
+================================================================================
+
+{
+  "error": true,
+  "message": "Error description"
+}
+
+HTTP Status Codes:
+- 200: Success
+- 400: Bad Request
+- 500: Internal Server Error
+
+================================================================================
