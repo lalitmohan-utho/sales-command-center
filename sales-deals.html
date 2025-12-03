@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Deals Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="static-sales-dashboard.html">
+                <i class="bi bi-grid-3x3-gap-fill me-2"></i>CRM Dashboard
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="static-sales-dashboard.html" class="btn btn-outline-light btn-sm me-2">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-1">Sales Deals</h2>
+                <p class="text-muted mb-0">Manage your sales pipeline and deals</p>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDealModal">
+                <i class="bi bi-plus-lg me-2"></i>Add New Deal
+            </button>
+        </div>
+
+        <!-- Pipeline View -->
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h6 class="mb-0">Pipeline Overview</h6>
+            </div>
+            <div class="card-body">
+                <div class="row" id="pipelineContainer">
+                    <div class="col text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deals Table -->
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">All Deals</h6>
+                <div class="d-flex gap-2">
+                    <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="Search deals..." style="width: 200px;">
+                    <select class="form-select form-select-sm" id="stageFilter" style="width: 150px;">
+                        <option value="">All Stages</option>
+                        <option value="New">New</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="Qualified">Qualified</option>
+                        <option value="Proposal">Proposal</option>
+                        <option value="Negotiation">Negotiation</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Deal Name</th>
+                                <th>Company</th>
+                                <th>Value</th>
+                                <th>Stage</th>
+                                <th>Probability</th>
+                                <th>Expected Close</th>
+                                <th>Assigned To</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dealsTableBody">
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Deal Modal -->
+    <div class="modal fade" id="addDealModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Deal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="addDealForm">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Deal Name *</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Company *</label>
+                                <input type="text" class="form-control" name="company" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Value (₹) *</label>
+                                <input type="number" class="form-control" name="value" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Stage</label>
+                                <select class="form-select" name="stage">
+                                    <option value="New">New</option>
+                                    <option value="Contacted">Contacted</option>
+                                    <option value="Qualified">Qualified</option>
+                                    <option value="Proposal">Proposal</option>
+                                    <option value="Negotiation">Negotiation</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Probability (%)</label>
+                                <input type="number" class="form-control" name="probability" value="10" min="0" max="100">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Expected Close Date</label>
+                                <input type="date" class="form-control" name="expected_close_date">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Assigned To</label>
+                                <select class="form-select" name="assigned_to">
+                                    <option value="TRM">TRM</option>
+                                    <option value="ZRM">ZRM</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" name="notes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Deal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Deal Modal -->
+    <div class="modal fade" id="editDealModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Deal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="editDealForm">
+                    <input type="hidden" name="id" id="editDealId">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Deal Name *</label>
+                                <input type="text" class="form-control" name="name" id="editDealName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Company *</label>
+                                <input type="text" class="form-control" name="company" id="editDealCompany" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Value (₹) *</label>
+                                <input type="number" class="form-control" name="value" id="editDealValue" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Stage</label>
+                                <select class="form-select" name="stage" id="editDealStage">
+                                    <option value="New">New</option>
+                                    <option value="Contacted">Contacted</option>
+                                    <option value="Qualified">Qualified</option>
+                                    <option value="Proposal">Proposal</option>
+                                    <option value="Negotiation">Negotiation</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Probability (%)</label>
+                                <input type="number" class="form-control" name="probability" id="editDealProbability" min="0" max="100">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Expected Close Date</label>
+                                <input type="date" class="form-control" name="expected_close_date" id="editDealCloseDate">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Assigned To</label>
+                                <select class="form-select" name="assigned_to" id="editDealAssigned">
+                                    <option value="TRM">TRM</option>
+                                    <option value="ZRM">ZRM</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" name="notes" id="editDealNotes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Deal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'https://jyxpsdqgrnkgknpskgdv.supabase.co/functions/v1/sales-api';
+        let allDeals = [];
+
+        async function fetchDeals() {
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=deals`);
+                const data = await response.json();
+                allDeals = data.deals || [];
+                renderDeals(allDeals);
+                renderPipeline(allDeals);
+            } catch (error) {
+                console.error('Error fetching deals:', error);
+            }
+        }
+
+        function renderPipeline(deals) {
+            const stages = ['New', 'Contacted', 'Qualified', 'Proposal', 'Negotiation'];
+            const colors = ['bg-info', 'bg-primary', 'bg-success', 'bg-warning', 'bg-danger'];
+            
+            const container = document.getElementById('pipelineContainer');
+            container.innerHTML = stages.map((stage, i) => {
+                const stageDeals = deals.filter(d => d.stage === stage);
+                const totalValue = stageDeals.reduce((sum, d) => sum + Number(d.value), 0);
+                return `
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="badge ${colors[i]} mb-2">${stage}</div>
+                                <h3 class="mb-1">${stageDeals.length}</h3>
+                                <small class="text-muted">₹${(totalValue / 100000).toFixed(1)}L</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderDeals(deals) {
+            const tbody = document.getElementById('dealsTableBody');
+            
+            if (!deals || deals.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-5">No deals found</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = deals.map(deal => `
+                <tr>
+                    <td class="fw-medium">${deal.name}</td>
+                    <td>${deal.company}</td>
+                    <td>₹${(deal.value / 100000).toFixed(2)}L</td>
+                    <td><span class="badge ${getStageClass(deal.stage)}">${deal.stage}</span></td>
+                    <td>${deal.probability}%</td>
+                    <td>${deal.expected_close_date || '-'}</td>
+                    <td>${deal.assigned_to || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editDeal('${deal.id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteDeal('${deal.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStageClass(stage) {
+            const classes = {
+                'New': 'bg-info',
+                'Contacted': 'bg-primary',
+                'Qualified': 'bg-success',
+                'Proposal': 'bg-warning text-dark',
+                'Negotiation': 'bg-danger'
+            };
+            return classes[stage] || 'bg-secondary';
+        }
+
+        // Add deal
+        document.getElementById('addDealForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.value = parseFloat(data.value) || 0;
+            data.probability = parseInt(data.probability) || 10;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=deal`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('addDealModal')).hide();
+                    e.target.reset();
+                    fetchDeals();
+                    alert('Deal added successfully!');
+                }
+            } catch (error) {
+                console.error('Error adding deal:', error);
+            }
+        });
+
+        // Edit deal
+        function editDeal(id) {
+            const deal = allDeals.find(d => d.id === id);
+            if (!deal) return;
+
+            document.getElementById('editDealId').value = deal.id;
+            document.getElementById('editDealName').value = deal.name;
+            document.getElementById('editDealCompany').value = deal.company;
+            document.getElementById('editDealValue').value = deal.value;
+            document.getElementById('editDealStage').value = deal.stage;
+            document.getElementById('editDealProbability').value = deal.probability;
+            document.getElementById('editDealCloseDate').value = deal.expected_close_date || '';
+            document.getElementById('editDealAssigned').value = deal.assigned_to || 'TRM';
+            document.getElementById('editDealNotes').value = deal.notes || '';
+
+            new bootstrap.Modal(document.getElementById('editDealModal')).show();
+        }
+
+        document.getElementById('editDealForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const id = data.id;
+            delete data.id;
+            data.value = parseFloat(data.value) || 0;
+            data.probability = parseInt(data.probability) || 10;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=deal&id=${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById('editDealModal')).hide();
+                    fetchDeals();
+                    alert('Deal updated successfully!');
+                }
+            } catch (error) {
+                console.error('Error updating deal:', error);
+            }
+        });
+
+        // Delete deal
+        async function deleteDeal(id) {
+            if (!confirm('Are you sure you want to delete this deal?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=deal&id=${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    fetchDeals();
+                    alert('Deal deleted successfully!');
+                }
+            } catch (error) {
+                console.error('Error deleting deal:', error);
+            }
+        }
+
+        // Filters
+        document.getElementById('searchInput').addEventListener('input', filterDeals);
+        document.getElementById('stageFilter').addEventListener('change', filterDeals);
+
+        function filterDeals() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const stage = document.getElementById('stageFilter').value;
+
+            const filtered = allDeals.filter(deal => {
+                const matchSearch = !search || 
+                    deal.name.toLowerCase().includes(search) || 
+                    deal.company.toLowerCase().includes(search);
+                const matchStage = !stage || deal.stage === stage;
+                return matchSearch && matchStage;
+            });
+
+            renderDeals(filtered);
+        }
+
+        fetchDeals();
+    </script>
+</body>
+</html>

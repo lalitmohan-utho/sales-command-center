@@ -14,7 +14,260 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      sales_activities: {
+        Row: {
+          activity_type: string | null
+          created_at: string
+          deal_id: string | null
+          description: string
+          details: string | null
+          id: string
+          lead_id: string | null
+          user_name: string
+        }
+        Insert: {
+          activity_type?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description: string
+          details?: string | null
+          id?: string
+          lead_id?: string | null
+          user_name: string
+        }
+        Update: {
+          activity_type?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string
+          details?: string | null
+          id?: string
+          lead_id?: string | null
+          user_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_activities_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "sales_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_activities_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "sales_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_deals: {
+        Row: {
+          assigned_to: string | null
+          company: string
+          created_at: string
+          expected_close_date: string | null
+          id: string
+          lead_id: string | null
+          name: string
+          notes: string | null
+          probability: number | null
+          stage: string | null
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          assigned_to?: string | null
+          company: string
+          created_at?: string
+          expected_close_date?: string | null
+          id?: string
+          lead_id?: string | null
+          name: string
+          notes?: string | null
+          probability?: number | null
+          stage?: string | null
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          assigned_to?: string | null
+          company?: string
+          created_at?: string
+          expected_close_date?: string | null
+          id?: string
+          lead_id?: string | null
+          name?: string
+          notes?: string | null
+          probability?: number | null
+          stage?: string | null
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_deals_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "sales_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_followups: {
+        Row: {
+          assigned_to: string | null
+          company: string
+          created_at: string
+          deal_id: string | null
+          id: string
+          lead_id: string | null
+          name: string
+          notes: string | null
+          scheduled_time: string
+          status: string | null
+          task: string
+          task_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          company: string
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          lead_id?: string | null
+          name: string
+          notes?: string | null
+          scheduled_time: string
+          status?: string | null
+          task: string
+          task_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          company?: string
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          lead_id?: string | null
+          name?: string
+          notes?: string | null
+          scheduled_time?: string
+          status?: string | null
+          task?: string
+          task_type?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_followups_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "sales_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_followups_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "sales_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_leads: {
+        Row: {
+          assigned_to: string | null
+          company: string
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          source: string | null
+          stage: string | null
+          status: string | null
+          updated_at: string
+          value: number | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          company: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          source?: string | null
+          stage?: string | null
+          status?: string | null
+          updated_at?: string
+          value?: number | null
+        }
+        Update: {
+          assigned_to?: string | null
+          company?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          source?: string | null
+          stage?: string | null
+          status?: string | null
+          updated_at?: string
+          value?: number | null
+        }
+        Relationships: []
+      }
+      sales_targets: {
+        Row: {
+          achieved_mrr: number
+          achieved_revenue: number
+          created_at: string
+          id: string
+          month: string
+          quarter: string
+          rep: string
+          status: string | null
+          target_business: number
+          target_mrr: number
+          updated_at: string
+        }
+        Insert: {
+          achieved_mrr?: number
+          achieved_revenue?: number
+          created_at?: string
+          id?: string
+          month: string
+          quarter: string
+          rep: string
+          status?: string | null
+          target_business?: number
+          target_mrr?: number
+          updated_at?: string
+        }
+        Update: {
+          achieved_mrr?: number
+          achieved_revenue?: number
+          created_at?: string
+          id?: string
+          month?: string
+          quarter?: string
+          rep?: string
+          status?: string | null
+          target_business?: number
+          target_mrr?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
