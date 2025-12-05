@@ -5,700 +5,193 @@
 ENDPOINT
 --------
 URL:        account-management-api.php
-Method:     GET
+Methods:    GET, POST, PUT
 Parameters:
   - period (optional): "today", "week", "month", "quarter", "custom"
   - user (optional): "all", "my_accounts", "team_accounts"
-  - source (optional): Filter by lead source
 
 ================================================================================
-REQUEST
+GET REQUEST - Fetch Dashboard Data
 ================================================================================
 
-GET /account-management-api.php?period=month&user=all HTTP/1.1
-Host: your-domain.com
-Content-Type: application/json
+GET /account-management-api.php?period=month HTTP/1.1
 
 JavaScript Example:
 -------------------
-fetch('account-management-api.php?period=month&user=all')
+fetch('account-management-api.php?period=month')
   .then(response => response.json())
   .then(data => console.log(data));
 
 ================================================================================
-RESPONSE PAYLOAD
+POST REQUEST - Add New Data
+================================================================================
+
+POST /account-management-api.php HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "referral" | "followup",
+  "data": {
+    // For referral:
+    "referrer": "string",
+    "referred": "string", 
+    "status": "New" | "Interested" | "In contact" | "Converted" | "Lost",
+    "userId": "string",
+    "mrr": number
+    
+    // For followup:
+    "type": "string",
+    "accountName": "string",
+    "lastMessage": "string",
+    "assignedTo": "string",
+    "department": "string",
+    "userId": "string",
+    "accountStatus": "FEED BACK" | "QBR" | "UP CELL" | "CROSS CELL" | "NEGOTIATION" | "DELETED",
+    "amount": number,
+    "followupTime": "string"
+  }
+}
+
+================================================================================
+PUT REQUEST - Update Existing Data
+================================================================================
+
+PUT /account-management-api.php HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "renewal" | "followup" | "referral",
+  "id": number,
+  "status": "string",           // For renewals: "Prepared Lost", "Renewed", "In Process", "Closed", "Pending"
+  "accountStatus": "string"     // For followups: "FEED BACK", "QBR", "UP CELL", "CROSS CELL", "NEGOTIATION", "DELETED"
+}
+
+================================================================================
+RESPONSE PAYLOAD STRUCTURE
 ================================================================================
 
 {
-  "kpis": {
-    "totalMRR": {
-      "value": "string",
-      "subtitle": "string",
-      "trend": "string",
-      "trendDirection": "up" | "down"
-    },
-    "netRevenueChange": {
-      "value": "string",
-      "subtitle": "string",
-      "trend": "string",
-      "trendDirection": "up" | "down"
-    },
-    "churnRate": {
-      "value": "string",
-      "subtitle": "string"
-    },
-    "atRiskAccounts": {
-      "value": number,
-      "subtitle": "string"
-    },
-    "activeAdvocates": {
-      "value": number,
-      "subtitle": "string",
-      "trend": "string",
-      "trendDirection": "up" | "down"
-    },
-    "avgHealthScore": {
-      "value": "string",
-      "subtitle": "string"
-    }
+  "kpis": [...],
+  
+  "followupKpis": {
+    "overdue": number,
+    "today": number,
+    "week": number,
+    "month": number
   },
 
-  "healthDistribution": {
-    "chart": {
-      "labels": ["string"],
-      "data": [number],
-      "colors": ["string"]
-    },
-    "legend": [
-      {
-        "label": "string",
-        "value": number,
-        "color": "string"
-      }
-    ]
-  },
-
-  "atRiskAccounts": [
+  "renewals": [
     {
-      "company": "string",
-      "mrr": "string",
-      "healthScore": number,
-      "arr": "string",
-      "riskBadge": "string",
-      "riskTags": ["string"],
-      "lastContact": "string",
-      "renewalDate": "string"
-    }
-  ],
-
-  "upcomingRenewals": [
-    {
+      "id": number,
       "date": "string",
       "account": "string",
-      "accountOwner": "string",
-      "mrr": "string",
-      "status": "string",
-      "statusClass": "string"
-    }
-  ],
-
-  "mrrTrend": {
-    "summary": {
-      "existingMRR": "string",
-      "collectionMRR": "string",
-      "churnMRR": "string",
-      "netMRRGrowth": "string"
-    },
-    "chart": {
-      "labels": ["string"],
-      "datasets": {
-        "existingMRR": [number],
-        "collectionMRR": [number]
-      }
-    }
-  },
-
-  "productAdoption": [
-    {
-      "icon": "string",
-      "name": "string",
-      "accountCount": number,
-      "adoptionRate": "string",
-      "adoptionLevel": "string"
-    }
-  ],
-
-  "usageInsights": [
-    {
-      "account": "string",
-      "keyUsage": "string",
-      "utilization": "string",
-      "utilizationClass": "string",
-      "recommendedAction": "string"
+      "manager": "string",
+      "mrr": number,
+      "status": "Prepared Lost" | "Renewed" | "In Process" | "Closed" | "Pending"
     }
   ],
 
   "followUps": [
     {
-      "priority": "string",
-      "priorityClass": "string",
-      "customer": "string",
-      "taskType": "string",
-      "description": "string",
-      "scheduledTime": "string",
-      "timeTag": "string",
-      "timeTagClass": "string"
+      "id": number,
+      "type": "string",
+      "followupTime": "string",
+      "accountName": "string",
+      "lastMessage": "string",
+      "assignedTo": "string",
+      "department": "string",
+      "userId": "string",
+      "accountStatus": "FEED BACK" | "QBR" | "UP CELL" | "CROSS CELL" | "NEGOTIATION" | "DELETED",
+      "amount": number,
+      "entryTime": "string",
+      "completed": boolean,
+      "accountDetails": {
+        "id": number,
+        "company": "string",
+        "contactName": "string",
+        "customerSince": "string",
+        "currentCredit": "string",
+        "freeCredit": "string",
+        "totalBusiness": "string",
+        "recentCoupon": "string",
+        "firstname": "string",
+        "lastname": "string",
+        "jobTitle": "string",
+        "mobile": "string",
+        "email": "string",
+        "city": "string",
+        "state": "string",
+        "country": "string",
+        "owner": "string",
+        "status": "string",
+        "source": "string",
+        "medium": "string",
+        "activities": [
+          {
+            "user": "string",
+            "createdAt": "string",
+            "dueAt": "string",
+            "description": "string",
+            "completed": boolean
+          }
+        ]
+      }
+    }
+  ],
+
+  "referralPipeline": [
+    {
+      "id": number,
+      "referrer": "string",
+      "referred": "string",
+      "status": "New" | "Interested" | "In contact" | "Converted" | "Lost",
+      "mrr": number,
+      "userId": "string"
     }
   ],
 
   "referralStats": {
     "referrals": number,
     "testimonials": number,
-    "potentialMRR": "string"
-  },
-
-  "referralPipeline": [
-    {
-      "referrer": "string",
-      "referredCompany": "string",
-      "status": "string",
-      "statusClass": "string",
-      "potentialMRR": "string"
-    }
-  ],
-
-  "advocacyCandidates": [
-    {
-      "company": "string",
-      "contactName": "string",
-      "quote": "string",
-      "note": "string",
-      "score": "string"
-    }
-  ],
-
-  "supportStats": {
-    "openTickets": number,
-    "escalated": number,
-    "avgResponseTime": "string",
-    "csatScore": "string"
-  },
-
-  "ticketPriority": {
-    "chart": {
-      "labels": ["string"],
-      "data": [number],
-      "colors": ["string"]
-    },
-    "legend": [
-      {
-        "label": "string",
-        "value": number,
-        "color": "string"
-      }
-    ]
-  },
-
-  "criticalTickets": [
-    {
-      "ticketId": "string",
-      "description": "string",
-      "account": "string",
-      "priority": "string",
-      "priorityClass": "string",
-      "age": "string"
-    }
-  ],
-
-  "portfolio": [
-    {
-      "account": "string",
-      "email": "string",
-      "segment": "string",
-      "mrr": "string",
-      "healthScore": number,
-      "healthClass": "string",
-      "products": ["string"],
-      "renewalDate": "string",
-      "growthStatus": "string",
-      "growthClass": "string"
-    }
-  ],
-
-  "recentActivity": [
-    {
-      "type": "string",
-      "typeIcon": "string",
-      "typeClass": "string",
-      "title": "string",
-      "description": "string",
-      "timestamp": "string",
-      "user": "string",
-      "badge": "string",
-      "badgeClass": "string"
-    }
-  ]
+    "potentialMrr": "string"
+  }
 }
 
 ================================================================================
-SAMPLE RESPONSE
+ACCOUNT STATUS VALUES
+================================================================================
+
+For followUps accountStatus:
+- "FEED BACK"
+- "QBR"
+- "UP CELL" (shows amount below dropdown)
+- "CROSS CELL" (shows amount below dropdown)
+- "NEGOTIATION"
+- "DELETED"
+
+For renewals status:
+- "Prepared Lost"
+- "Renewed"
+- "In Process"
+- "Closed"
+- "Pending"
+
+For referral status:
+- "New"
+- "Interested"
+- "In contact"
+- "Converted"
+- "Lost"
+
+================================================================================
+SUCCESS RESPONSE (POST/PUT)
 ================================================================================
 
 {
-  "kpis": {
-    "totalMRR": {
-      "value": "₹42.8L",
-      "subtitle": "Monthly Recurring Revenue",
-      "trend": "↑ 8.5% vs last month",
-      "trendDirection": "up"
-    },
-    "netRevenueChange": {
-      "value": "₹3.2L",
-      "subtitle": "Expansion - Contraction - Churn",
-      "trend": "↑ Last 30 days",
-      "trendDirection": "up"
-    },
-    "churnRate": {
-      "value": "2.4%",
-      "subtitle": "Last 90 days"
-    },
-    "atRiskAccounts": {
-      "value": 12,
-      "subtitle": "Based on health score"
-    },
-    "activeAdvocates": {
-      "value": 34,
-      "subtitle": "Referral & testimonial ready",
-      "trend": "↑ 5 new this month",
-      "trendDirection": "up"
-    },
-    "avgHealthScore": {
-      "value": "78/100",
-      "subtitle": "Weighted average"
-    }
-  },
-
-  "healthDistribution": {
-    "chart": {
-      "labels": ["Healthy", "Watchlist", "At Risk", "Critical"],
-      "data": [85, 34, 19, 9],
-      "colors": ["#15803d", "#eab308", "#f97316", "#dc2626"]
-    },
-    "legend": [
-      { "label": "Healthy", "value": 85, "color": "#15803d" },
-      { "label": "Watchlist", "value": 34, "color": "#eab308" },
-      { "label": "At Risk", "value": 19, "color": "#f97316" },
-      { "label": "Critical", "value": 9, "color": "#dc2626" }
-    ]
-  },
-
-  "atRiskAccounts": [
-    {
-      "company": "TechStart Solutions",
-      "mrr": "₹3.2L",
-      "healthScore": 32,
-      "arr": "₹38.4L",
-      "riskBadge": "Score: 32",
-      "riskTags": ["Low usage", "High tickets"],
-      "lastContact": "15 days ago",
-      "renewalDate": "Jan 15, 2025"
-    },
-    {
-      "company": "Digital Innovation Pvt Ltd",
-      "mrr": "₹1.2L",
-      "healthScore": 45,
-      "arr": "₹14.4L",
-      "riskBadge": "CRITICAL",
-      "riskTags": ["Payment delays", "No engagement"],
-      "lastContact": "Payment delayed",
-      "renewalDate": "No engagement"
-    },
-    {
-      "company": "CloudFirst Systems",
-      "mrr": "₹8L",
-      "healthScore": 51,
-      "arr": "₹96L",
-      "riskBadge": "Score: 51",
-      "riskTags": ["Critical tickets", "Low adoption"],
-      "lastContact": "7 days ago",
-      "renewalDate": "Feb 10, 2025"
-    }
-  ],
-
-  "upcomingRenewals": [
-    {
-      "date": "Feb 15, 2025",
-      "account": "Acme Corp",
-      "accountOwner": "Priya Sharma",
-      "mrr": "₹2,50,000",
-      "status": "Prepared Lost",
-      "statusClass": "danger"
-    },
-    {
-      "date": "Feb 22, 2025",
-      "account": "Beta Solutions",
-      "accountOwner": "Buying FMCG SAAS",
-      "mrr": "₹3,50,000",
-      "status": "Renewed",
-      "statusClass": "success"
-    },
-    {
-      "date": "Mar 3, 2025",
-      "account": "Gamma Tech",
-      "accountOwner": "In Process",
-      "mrr": "₹5,00,000",
-      "status": "In Process",
-      "statusClass": "warning"
-    },
-    {
-      "date": "Mar 12, 2025",
-      "account": "Delta Platforms",
-      "accountOwner": "Getting Offer",
-      "mrr": "₹85,000",
-      "status": "Closed",
-      "statusClass": "danger"
-    }
-  ],
-
-  "mrrTrend": {
-    "summary": {
-      "existingMRR": "₹1.4L",
-      "collectionMRR": "₹1.6L",
-      "churnMRR": "₹1.6L",
-      "netMRRGrowth": "+13.2%"
-    },
-    "chart": {
-      "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-      "datasets": {
-        "existingMRR": [38, 39, 40, 41, 42, 42.8],
-        "collectionMRR": [36, 37, 38, 39, 40, 41]
-      }
-    }
-  },
-
-  "productAdoption": [
-    { "icon": "☁️", "name": "Cloud Instances", "accountCount": 145, "adoptionRate": "87%", "adoptionLevel": "High" },
-    { "icon": "🔧", "name": "Kubernetes", "accountCount": 89, "adoptionRate": "65%", "adoptionLevel": "High" },
-    { "icon": "💾", "name": "Databases", "accountCount": 94, "adoptionRate": "", "adoptionLevel": "Medium" },
-    { "icon": "🗄️", "name": "Object Storage", "accountCount": 76, "adoptionRate": "59%", "adoptionLevel": "High" },
-    { "icon": "⚖️", "name": "Load Balancers", "accountCount": 42, "adoptionRate": "", "adoptionLevel": "Medium" },
-    { "icon": "🔄", "name": "Other Services", "accountCount": 34, "adoptionRate": "", "adoptionLevel": "Low" }
-  ],
-
-  "usageInsights": [
-    {
-      "account": "Maya Solutions",
-      "keyUsage": "+ 55% MoM | 438 GB",
-      "utilization": "Overpaid usage",
-      "utilizationClass": "active",
-      "recommendedAction": "Schedule expansion call"
-    },
-    {
-      "account": "Sapthagiri Cloud Co",
-      "keyUsage": "49 VMs | 826 GB | 21 TB",
-      "utilization": "Over-utilized",
-      "utilizationClass": "",
-      "recommendedAction": "Recommend upgrade to higher-tier"
-    },
-    {
-      "account": "Sterling Labs",
-      "keyUsage": "5 VMs | 324 GB | 1.3 TB",
-      "utilization": "Healthy",
-      "utilizationClass": "info",
-      "recommendedAction": "All good"
-    },
-    {
-      "account": "Tool Integrators",
-      "keyUsage": "1 VM | 185 GB | 0.4 TB",
-      "utilization": "Low usage",
-      "utilizationClass": "inactive",
-      "recommendedAction": "< $25 / $ 600 over 99c months"
-    }
-  ],
-
-  "followUps": [
-    {
-      "priority": "HIGH",
-      "priorityClass": "high",
-      "customer": "Acme Corp",
-      "taskType": "Renewal QBR",
-      "description": "Discuss Q4 contract renewal + check on 2 critical tickets",
-      "scheduledTime": "Today - 11:00 AM",
-      "timeTag": "HIGH",
-      "timeTagClass": "high"
-    },
-    {
-      "priority": "MEDIUM",
-      "priorityClass": "medium",
-      "customer": "Beta Solutions",
-      "taskType": "Jira closed",
-      "description": "Review closed tickets + send followup to see if it's resolved",
-      "scheduledTime": "Today - 3:00 PM",
-      "timeTag": "In 35 min",
-      "timeTagClass": "medium"
-    }
-  ],
-
-  "referralStats": {
-    "referrals": 28,
-    "testimonials": 12,
-    "potentialMRR": "₹8.4L"
-  },
-
-  "referralPipeline": [
-    {
-      "referrer": "Acme Corp",
-      "referredCompany": "NewTech Solutions",
-      "status": "Interested",
-      "statusClass": "info",
-      "potentialMRR": "₹1,50,000"
-    },
-    {
-      "referrer": "Beta Solutions",
-      "referredCompany": "Gamma Tech",
-      "status": "In contact",
-      "statusClass": "warning",
-      "potentialMRR": "₹90,000"
-    },
-    {
-      "referrer": "Gamma Tech",
-      "referredCompany": "Epsilon Ltd",
-      "status": "New",
-      "statusClass": "gray",
-      "potentialMRR": "₹1,50,000"
-    }
-  ],
-
-  "advocacyCandidates": [
-    {
-      "company": "Acme Corp",
-      "contactName": "Priya Sharma",
-      "quote": "Wow, AI with Multicloud",
-      "note": "Good for next case study",
-      "score": "98%"
-    },
-    {
-      "company": "Beta Solutions",
-      "contactName": "Rajesh Malhotra",
-      "quote": "Really satisfied",
-      "note": "Good on next support visit",
-      "score": "98%"
-    },
-    {
-      "company": "Epsilon Inc",
-      "contactName": "Sanaa Mehra",
-      "quote": "Partner of choice",
-      "note": "Ready to refer again",
-      "score": "94%"
-    }
-  ],
-
-  "supportStats": {
-    "openTickets": 45,
-    "escalated": 5,
-    "avgResponseTime": "4.2h",
-    "csatScore": "4.3/5"
-  },
-
-  "ticketPriority": {
-    "chart": {
-      "labels": ["Critical", "High", "Medium", "Low"],
-      "data": [5, 9, 22, 14],
-      "colors": ["#dc2626", "#f97316", "#fbbf24", "#dbeafe"]
-    },
-    "legend": [
-      { "label": "Off 5", "value": 9, "color": "#dbeafe" },
-      { "label": "Medium", "value": 22, "color": "#fed7aa" },
-      { "label": "Low", "value": 14, "color": "#fef3c7" }
-    ]
-  },
-
-  "criticalTickets": [
-    {
-      "ticketId": "N7876768",
-      "description": "VM resource increased",
-      "account": "Acme Corp",
-      "priority": "Critical",
-      "priorityClass": "danger",
-      "age": "2d"
-    },
-    {
-      "ticketId": "N7876857",
-      "description": "DB backup assessment",
-      "account": "Beta Solutions",
-      "priority": "High",
-      "priorityClass": "warning",
-      "age": "1d"
-    },
-    {
-      "ticketId": "N7867838",
-      "description": "Domain help",
-      "account": "Gamma Tech",
-      "priority": "Medium",
-      "priorityClass": "warning",
-      "age": "5h"
-    }
-  ],
-
-  "portfolio": [
-    {
-      "account": "Acme Corp",
-      "email": "Acme@utho.in",
-      "segment": "Enterprise",
-      "mrr": "₹2,50,000",
-      "healthScore": 85,
-      "healthClass": "high",
-      "products": ["☁️", "🔧", "💾", "🗄️"],
-      "renewalDate": "Apr 15, 2025",
-      "growthStatus": "Expanded",
-      "growthClass": "success"
-    },
-    {
-      "account": "Beta Solutions",
-      "email": "connect@beta.in",
-      "segment": "Mid-Market",
-      "mrr": "₹1,50,000",
-      "healthScore": 32,
-      "healthClass": "low",
-      "products": ["☁️", "💾"],
-      "renewalDate": "Apr 7, 2025",
-      "growthStatus": "Stable",
-      "growthClass": "gray"
-    },
-    {
-      "account": "Gamma Tech",
-      "email": "PHPTeamtech",
-      "segment": "SMB",
-      "mrr": "₹65,000",
-      "healthScore": 68,
-      "healthClass": "medium",
-      "products": ["☁️"],
-      "renewalDate": "Jun 10, 2025",
-      "growthStatus": "Expanded",
-      "growthClass": "success"
-    },
-    {
-      "account": "Delta Platforms",
-      "email": "OPTeam@delta",
-      "segment": "Enterprise",
-      "mrr": "₹2,80,000",
-      "healthScore": 92,
-      "healthClass": "high",
-      "products": ["☁️", "🔧", "💾", "🗄️", "⚖️"],
-      "renewalDate": "Jul 20, 2025",
-      "growthStatus": "Expanded",
-      "growthClass": "success"
-    }
-  ],
-
-  "recentActivity": [
-    {
-      "type": "renewal",
-      "typeIcon": "✅",
-      "typeClass": "renewal",
-      "title": "Renewal closed: ACME",
-      "description": "Acme Corp a new Kubernetes add-on for 12M+K/E/P",
-      "timestamp": "2 minutes ago",
-      "user": "Priya",
-      "badge": "",
-      "badgeClass": ""
-    },
-    {
-      "type": "qbr",
-      "typeIcon": "📅",
-      "typeClass": "qbr",
-      "title": "QBR completed",
-      "description": "Beta Solutions reviewed all goals and KPIs",
-      "timestamp": "9 minutes ago",
-      "user": "You",
-      "badge": "",
-      "badgeClass": ""
-    },
-    {
-      "type": "upsell",
-      "typeIcon": "💰",
-      "typeClass": "upsell",
-      "title": "Upsell achieved",
-      "description": "Deals with a double their K8s unit + 5 DB add-on",
-      "timestamp": "5 minutes ago",
-      "user": "Amit Patel",
-      "badge": "",
-      "badgeClass": ""
-    },
-    {
-      "type": "churn",
-      "typeIcon": "❌",
-      "typeClass": "churn",
-      "title": "Churn alert: 3Q50(SL) - Reason: Budget cuts",
-      "description": "Epsilon Infotech did not move renewal + opted ARR+K",
-      "timestamp": "1 day ago",
-      "user": "Rajesh Kr",
-      "badge": "Lost",
-      "badgeClass": "danger"
-    },
-    {
-      "type": "call",
-      "typeIcon": "📞",
-      "typeClass": "renewal",
-      "title": "Customer call",
-      "description": "Weekly touchbase with TechVision about integration",
-      "timestamp": "2 days ago",
-      "user": "You",
-      "badge": "",
-      "badgeClass": ""
-    },
-    {
-      "type": "email",
-      "typeIcon": "📧",
-      "typeClass": "qbr",
-      "title": "Follow-up sent",
-      "description": "Sent renewal proposal + pricing to CloudBase SO",
-      "timestamp": "2 days ago",
-      "user": "Neha M",
-      "badge": "",
-      "badgeClass": ""
-    }
-  ]
+  "success": true,
+  "message": "Data updated successfully",
+  "data": { ... submitted data ... }
 }
-
-================================================================================
-HEALTH SCORE CLASSES
-================================================================================
-
-For portfolio healthClass:
-- "high" - Score 80-100 (green)
-- "medium" - Score 50-79 (yellow)
-- "low" - Score <50 (red)
-
-================================================================================
-STATUS CLASSES
-================================================================================
-
-For upcomingRenewals and badges:
-- "success" - Renewed, Expanded
-- "warning" - In Process, High priority
-- "danger" - Prepared Lost, Closed, Critical, Lost
-- "info" - Interested, Healthy
-- "gray" - New, Stable
-
-================================================================================
-SEGMENT VALUES
-================================================================================
-
-- "Enterprise"
-- "Mid-Market"
-- "SMB"
-
-================================================================================
-ACTIVITY TYPE VALUES
-================================================================================
-
-- "renewal" - Contract renewals
-- "qbr" - Quarterly business reviews
-- "upsell" - Expansion/upsell activities
-- "churn" - Churn alerts
-- "call" - Customer calls
-- "email" - Email follow-ups
 
 ================================================================================
 ERROR RESPONSE
