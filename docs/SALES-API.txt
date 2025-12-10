@@ -31,12 +31,40 @@ RESPONSE PAYLOAD
 {
   "followUpTasks": [
     {
-      "name": "string",
-      "company": "string",
-      "task": "string",
+      "id": "string",
       "type": "string",
-      "time": "string",
-      "status": "string"
+      "status": "string",
+      "followup_time": "string",
+      "reference": "string",
+      "last_message": "string",
+      "assigned_to": "string",
+      "department": "string",
+      "refrence": "string",
+      "entrytime": "string",
+      "completed": "string",
+      "contact": {
+        "firstname": "string",
+        "lastname": "string",
+        "email": "string",
+        "mobile": "string",
+        "job_title": "string",
+        "city": "string",
+        "state": "string",
+        "country": "string",
+        "owner": "string",
+        "status": "string",
+        "source": "string",
+        "medium": "string"
+      },
+      "activities": [
+        {
+          "user": "string",
+          "datetime": "string",
+          "due": "string",
+          "note": "string",
+          "completed": boolean
+        }
+      ]
     }
   ],
 
@@ -51,9 +79,45 @@ RESPONSE PAYLOAD
     "newLeads": "string",
     "leadQualified": "string",
     "followUp": "string",
-    "proposalsSent": "string",
-    "dealsLost": "string",
-    "dealsWon": "string"
+    "proposalsSent": "string"
+  },
+
+  "total_funnel_value": {
+    "deals_lost": "string",
+    "deals_won": "string",
+    "aspects_added": "string",
+    "funnel_value": "string"
+  },
+
+  "dealsWonData": [
+    {
+      "id": number,
+      "name": "string",
+      "company": "string",
+      "value": "string",
+      "contractType": "string (3Years|Annual|Hourly|MRR|Quarterly)",
+      "closedDate": "string (YYYY-MM-DD)",
+      "rep": "string"
+    }
+  ],
+
+  "dealsLostData": [
+    {
+      "id": number,
+      "name": "string",
+      "company": "string",
+      "value": "string",
+      "lossReason": "string (see LOSS REASON VALUES)",
+      "lostDate": "string (YYYY-MM-DD)",
+      "rep": "string"
+    }
+  ],
+
+  "headerList": {
+    "overdue_followups": number,
+    "today_due_followups": number,
+    "this_week_due_followups": number,
+    "next_30_days_due": number
   },
 
   "charts": {
@@ -83,24 +147,6 @@ RESPONSE PAYLOAD
         "achieved": [number]
       }
     }
-  },
-
-  "pipeline": {
-    "stages": [
-      {
-        "name": "string",
-        "count": number,
-        "value": "string",
-        "deals": [
-          {
-            "name": "string",
-            "company": "string",
-            "value": "string",
-            "stage": "string"
-          }
-        ]
-      }
-    ]
   },
 
   "recentActivity": [
@@ -457,6 +503,38 @@ For leadStages chart:
 - "Negotiation"
 - "Closed"
 - "Lost"
+
+================================================================================
+CONTRACT TYPE VALUES (DEALS WON)
+================================================================================
+
+For dealsWonData contractType:
+- "3Years" - 3-year contract
+- "Annual" - Annual contract
+- "Hourly" - Hourly billing
+- "MRR" - Monthly recurring revenue
+- "Quarterly" - Quarterly contract
+
+================================================================================
+LOSS REASON VALUES (DEALS LOST)
+================================================================================
+
+For dealsLostData lossReason:
+- "High Quote"
+- "Budget Constraints"
+- "Support Quality"
+- "Scalability Concerns"
+- "Limited Trial Period"
+- "Lack of Awareness"
+- "Migration Concerns"
+- "Integration Challenges"
+- "Change Resistance"
+- "Internal Approval Delays"
+- "Non-Serviceable"
+- "Product Unavailability"
+- "Feature Unavailability"
+- "Lack of Paperwork"
+- "Unresponsive"
 
 ================================================================================
 TARGET STATUS VALUES
