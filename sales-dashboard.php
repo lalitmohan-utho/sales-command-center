@@ -273,6 +273,13 @@
         .task-table tbody tr {
             background: #F9FAFB;
             border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .task-table tbody tr:hover {
+            background: #EEF2FF;
+            transform: scale(1.002);
         }
 
         .task-table tbody td {
@@ -1107,6 +1114,302 @@
             font-weight: 500;
         }
 
+        /* Contact Sidebar */
+        .contact-sidebar {
+            position: fixed;
+            right: -450px;
+            top: 0;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+            z-index: 3000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .contact-sidebar.show {
+            right: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 2999;
+            display: none;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F9FAFB;
+        }
+
+        .sidebar-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6B7280;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .sidebar-close:hover {
+            color: #1F2937;
+        }
+
+        .contact-info {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .contact-avatar-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667EEA, #764BA2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .contact-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+
+        .contact-email {
+            font-size: 13px;
+            color: #6B7280;
+            margin: 0 0 12px 0;
+        }
+
+        .contact-details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .contact-detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-detail-label {
+            font-size: 11px;
+            color: #6B7280;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .contact-detail-value {
+            font-size: 13px;
+            color: #1F2937;
+            font-weight: 500;
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: #F9FAFB;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6B7280;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sidebar-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .sidebar-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 40px;
+            width: 2px;
+            height: calc(100% - 20px);
+            background: #E5E7EB;
+        }
+
+        .timeline-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #EEF2FF;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 6px;
+        }
+
+        .timeline-user {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1F2937;
+        }
+
+        .timeline-date {
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .timeline-note {
+            font-size: 13px;
+            color: #4B5563;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .timeline-due {
+            font-size: 11px;
+            color: #EF4444;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .add-followup-form {
+            background: #F9FAFB;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .add-followup-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .add-followup-form button {
+            width: 100%;
+            padding: 8px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .add-followup-form button:hover {
+            background: #0052CC;
+        }
+
+        .filter-table-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .filter-table-container.show {
+            display: block;
+        }
+
+        .filter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .filter-table thead th {
+            background: #F9FAFB;
+            font-size: 11px;
+            font-weight: 600;
+            color: #6B7280;
+            text-transform: uppercase;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .filter-table tbody td {
+            padding: 12px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-table tbody tr:hover {
+            background: #F9FAFB;
+        }
+
         @media (max-width: 1200px) {
 
             .stats-grid-row-1,
@@ -1144,6 +1447,11 @@
             .modal-content {
                 margin: 16px;
             }
+
+            .contact-sidebar {
+                width: 100%;
+                right: -100%;
+            }
         }
     </style>
 </head>
@@ -1176,10 +1484,7 @@
                         <i class="bi bi-bell"></i>
                         <span class="notification-badge">3</span>
                     </button>
-                    <button class="btn-icon">
-                        <i class="bi bi-chat-dots"></i>
-                    </button>
-                    <div class="user-avatar">JD</div>
+                    <div class="user-avatar">AS</div>
                 </div>
             </div>
         </div>
@@ -1187,16 +1492,14 @@
         <!-- Filter Bar -->
         <div class="filter-bar">
             <div class="filter-chips">
-                <button class="filter-chip">All Years</button>
-                <button class="filter-chip active">Today</button>
-                <button class="filter-chip">This Week</button>
-                <button class="filter-chip">This Month</button>
-                <button class="filter-chip">This Quarter</button>
-                <button class="filter-chip">Custom</button>
-                <button class="filter-chip">All Statuses</button>
+                <button class="filter-chip active">All Leads</button>
+                <button class="filter-chip">Hot Leads</button>
+                <button class="filter-chip">Meetings Today</button>
+                <button class="filter-chip">Follow-ups Pending</button>
+                <button class="filter-chip">Deals in Progress</button>
             </div>
             <div class="filter-actions">
-                <button class="btn-filter">Reset</button>
+                <button class="btn-filter"><i class="bi bi-funnel"></i> More Filters</button>
                 <button class="btn-filter primary">Apply</button>
             </div>
         </div>
@@ -1299,7 +1602,7 @@
             </div>
 
 
-            <!-- Stats Grid - Row 2: 8 Smaller Cards -->
+            <!-- Stats Grid - Row 2: 6 Smaller Cards -->
             <div class="stats-grid-row-2" id="statsGridRow2">
                 <!-- Small stats will be populated here -->
             </div>
@@ -1330,6 +1633,45 @@
             </div>
             <div class="stats-grid-row-1" id="totalFunnelValue">
                 <!-- Pipeline stages will be populated here -->
+            </div>
+            <!-- Filter Tables -->
+            <div class="filter-table-container" id="dealsLostTable">
+                <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">Deals Lost Details</h4>
+                <table class="filter-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Value</th>
+                            <th>Loss Reason</th>
+                            <th>Lost Date</th>
+                            <th>Rep</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dealsLostTableBody">
+                        <!-- Will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="filter-table-container" id="dealsWonTable">
+                <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">Deals Won Details</h4>
+                <table class="filter-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Value</th>
+                            <th>Contract Type</th>
+                            <th>Closed Date</th>
+                            <th>Rep</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dealsWonTableBody">
+                        <!-- Will be populated dynamically -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -1553,170 +1895,96 @@
         </div>
     </div>
 
+    <!-- Contact Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeContactSidebar()"></div>
+    <div class="contact-sidebar" id="contactSidebar">
+        <div class="sidebar-header">
+            <h3>Contact Details</h3>
+            <button class="sidebar-close" onclick="closeContactSidebar()">&times;</button>
+        </div>
+        <div class="contact-info" id="contactInfoContent">
+            <!-- Contact info will be populated here -->
+        </div>
+        <div class="sidebar-tabs">
+            <button class="sidebar-tab active" onclick="switchTab('timeline')">Timeline</button>
+            <button class="sidebar-tab" onclick="switchTab('notes')">Notes</button>
+            <button class="sidebar-tab" onclick="switchTab('calls')">Calls</button>
+            <button class="sidebar-tab" onclick="switchTab('logs')">Logs</button>
+        </div>
+        <div class="sidebar-content">
+            <div class="tab-content active" id="timeline-tab">
+                <div class="add-followup-form">
+                    <textarea placeholder="Add a follow-up note..."></textarea>
+                    <button>Add Follow-up</button>
+                </div>
+                <div id="timelineContent">
+                    <!-- Timeline items will be populated here -->
+                </div>
+            </div>
+            <div class="tab-content" id="notes-tab">
+                <p style="color: #6B7280; font-size: 13px;">No notes available</p>
+            </div>
+            <div class="tab-content" id="calls-tab">
+                <p style="color: #6B7280; font-size: 13px;">No call logs available</p>
+            </div>
+            <div class="tab-content" id="logs-tab">
+                <p style="color: #6B7280; font-size: 13px;">No activity logs available</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_URL = 'sales-api.php';
+        let dashboardData = {};
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let filteredTasks = [];
         let allTasks = [];
-        let currentTaskPage = 1;
-        let tasksPerPage = 5;
-        let currentTaskFilter = 'all';
         let dealsLostReasons = [];
         let dealsWonTypes = [];
+        let dealsLostData = [];
+        let dealsWonData = [];
         let selectedDealsLostReason = '';
         let selectedDealsWonType = '';
 
-        // Fetch and render dashboard data
         async function loadDashboard() {
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
-
+                dashboardData = data;
                 allTasks = data.followUpTasks || [];
+                filteredTasks = allTasks;
                 dealsLostReasons = data.dealsLostReasons || [];
                 dealsWonTypes = data.dealsWonTypes || [];
+                dealsLostData = data.dealsLostData || [];
+                dealsWonData = data.dealsWonData || [];
 
-                renderTasks(allTasks);
-                renderStats(data.kpis);
-                totalFunnelValue(data.total_funnel_value);
-                renderCharts(data);
-                headerCards(data.headerList);
-                renderActivity(data.recentActivity);
-                renderTargetsTable(data.salesTargets);
                 populateDealsLostDropdown();
                 populateDealsWonDropdown();
+                renderKPICards(data.kpis);
+                renderStatsRow2(data.kpis);
+                totalFunnelValue(data.total_funnel_value);
+                headerCards(data.headerList);
+                renderTasks(currentPage);
+                renderCharts(data);
+                renderActivity(data.recentActivity);
+                renderTargetsTable(data.salesTargets);
             } catch (error) {
                 console.error('Error loading dashboard:', error);
             }
         }
 
-        function getStatusBadgeClass(status) {
-            const statusLower = status.toLowerCase();
-            if (statusLower === 'completed') return 'completed';
-            if (statusLower === 'overdue') return 'overdue';
-            return 'pending';
-        }
-
-        function renderTasks(tasks) {
-            const filteredTasks = currentTaskFilter === 'all' ? tasks : tasks.filter(t => t.category === currentTaskFilter);
-            const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
-            const startIndex = (currentTaskPage - 1) * tasksPerPage;
-            const endIndex = startIndex + tasksPerPage;
-            const paginatedTasks = filteredTasks.slice(startIndex, endIndex);
-
-            const tbody = document.getElementById('tasksTableBody');
-            tbody.innerHTML = paginatedTasks.map((task, index) => {
-                const typeIcon = task.type === 'Call' ? 'bi-telephone' : task.type === 'Email' ? 'bi-envelope' : 'bi-calendar-event';
-                const typeColor = task.type === 'Call' ? '#3B82F6' : task.type === 'Email' ? '#F59E0B' : '#10B981';
-                return `
-                    <tr>
-                        <td>${startIndex + index + 1}</td>
-                        <td>
-                            <span style="display: flex; align-items: center; gap: 6px;">
-                                <i class="${typeIcon}" style="color: ${typeColor};"></i>
-                                ${task.type}
-                            </span>
-                        </td>
-                        <td><span class="badge ${getStatusBadgeClass(task.status)}">${task.status}</span></td>
-                        <td>${task.followup_time}</td>
-                        <td>${task.reference}</td>
-                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${task.last_message}</td>
-                        <td>${task.assigned_to}</td>
-                        <td>${task.department}</td>
-                        <td>${task.refrence}</td>
-                        <td>${task.entrytime}</td>
-                        <td>${task.completed}</td>
-                        <td>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn-icon" style="width: 28px; height: 28px; font-size: 12px;" title="Call">
-                                    <i class="bi bi-telephone"></i>
-                                </button>
-                                <button class="btn-icon" style="width: 28px; height: 28px; font-size: 12px;" title="Email">
-                                    <i class="bi bi-envelope"></i>
-                                </button>
-                                <button class="btn-icon" style="width: 28px; height: 28px; font-size: 12px;" title="More">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            renderTasksPagination(totalPages);
-        }
-
-        function renderTasksPagination(totalPages) {
-            const container = document.getElementById('tasksPagination');
-            if (totalPages <= 1) {
-                container.innerHTML = '';
-                return;
-            }
-
-            let html = `
-                <button class="pagination-btn" onclick="goToTaskPage(${currentTaskPage - 1})" ${currentTaskPage === 1 ? 'disabled' : ''}>
-                    <i class="bi bi-chevron-left"></i>
-                </button>
-            `;
-
-            // Show first page
-            html += `<button class="pagination-btn ${currentTaskPage === 1 ? 'active' : ''}" onclick="goToTaskPage(1)">1</button>`;
-
-            if (totalPages > 1) {
-                html += `<button class="pagination-btn ${currentTaskPage === 2 ? 'active' : ''}" onclick="goToTaskPage(2)">2</button>`;
-            }
-
-            // Input for page number
-            html += `
-                <input type="number" class="pagination-input" value="${currentTaskPage}" min="1" max="${totalPages}" 
-                    onchange="goToTaskPage(parseInt(this.value))" onkeypress="if(event.key==='Enter') goToTaskPage(parseInt(this.value))">
-            `;
-
-            if (totalPages > 3) {
-                html += `<button class="pagination-btn ${currentTaskPage === totalPages - 1 ? 'active' : ''}" onclick="goToTaskPage(${totalPages - 1})">${totalPages - 1}</button>`;
-            }
-
-            if (totalPages > 2) {
-                html += `<button class="pagination-btn ${currentTaskPage === totalPages ? 'active' : ''}" onclick="goToTaskPage(${totalPages})">${totalPages}</button>`;
-            }
-
-            html += `
-                <button class="pagination-btn" onclick="goToTaskPage(${currentTaskPage + 1})" ${currentTaskPage === totalPages ? 'disabled' : ''}>
-                    <i class="bi bi-chevron-right"></i>
-                </button>
-            `;
-
-            container.innerHTML = html;
-        }
-
-        function goToTaskPage(page) {
-            const filteredTasks = currentTaskFilter === 'all' ? allTasks : allTasks.filter(t => t.category === currentTaskFilter);
-            const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
-            if (page < 1) page = 1;
-            if (page > totalPages) page = totalPages;
-            currentTaskPage = page;
-            renderTasks(allTasks);
-        }
-
-        function filterTasksByCategory(category) {
-            currentTaskFilter = category;
-            currentTaskPage = 1;
-            renderTasks(allTasks);
-        }
-
-        function renderStats(kpis) {
-            const statsGridRow0 = document.getElementById('statsGridRow0');
-            const statsGridRow2 = document.getElementById('statsGridRow2');
-
-            // Row 1: 6 Large Cards
-            const firstStats = [
-                { title: 'Total Business', value: kpis.total_business, change: '+12.5% vs last quarter', icon: 'bi-file-earmark-text', color: 'blue' },
-                { title: 'Active MRR', value: kpis.active_mrr, change: '+8.2% vs last quarter', icon: 'bi-telephone', color: 'green' },
-                { title: 'New Business', value: kpis.new_business, change: '+15.3% vs last quarter', icon: 'bi-pie-chart', color: 'green' },
-                { title: 'Funnel Size', value: kpis.funnel_size, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' },
-                { title: 'Total Leads', value: kpis.total_leads, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' },
-                { title: 'Converted Leads', value: kpis.converted_leads, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' }
+        function renderKPICards(kpis) {
+            const statsGrid = document.getElementById('statsGridRow0');
+            const largeStats = [
+                { title: 'Total Business', value: kpis.total_business, change: '+12.5% vs last quarter', icon: 'bi-currency-rupee', color: 'blue' },
+                { title: 'Active MRR', value: kpis.active_mrr, change: '+8.2% vs last quarter', icon: 'bi-arrow-repeat', color: 'green' },
+                { title: 'New Business (This Q)', value: kpis.new_business, change: '+15.3% vs last quarter', icon: 'bi-graph-up-arrow', color: 'purple' },
+                { title: 'Total Funnel Size', value: kpis.funnel_size, change: '+18.7% vs last quarter', icon: 'bi-funnel', color: 'orange' }
             ];
-            statsGridRow0.innerHTML = firstStats.map(stat => `
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2">
+
+            statsGrid.innerHTML = largeStats.map(stat => `
+                <div class="col-md-3">
                     <div class="stat-card stat-card-large">
                         <div class="stat-info">
                             <h6>${stat.title}</h6>
@@ -1729,29 +1997,24 @@
                     </div>
                 </div>
             `).join('');
+        }
 
-            // Row 2: 8 Smaller Cards
+        function renderStatsRow2(kpis) {
+            const statsRow2 = document.getElementById('statsGridRow2');
             const smallStats = [
-                { title: 'New', value: kpis.newMeetings, change: '+6.3% vs last week', icon: 'bi-calendar-check', color: 'blue' },
-                { title: 'Active', value: kpis.newLeads, change: '-2.4% vs last week', icon: 'bi-person-plus', color: 'blue' },
-                { title: 'Retargeting', value: kpis.leadQualified, change: '+9.1% vs last week', icon: 'bi-check-circle', color: 'green' },
-                { title: 'Urgent', value: kpis.followUp, change: '+3.2% vs last week', icon: 'bi-clock-history', color: 'yellow' },
-                { title: 'Not Contacted', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
-                { title: 'Contacted', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
-                { title: 'Junk', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
-                { title: 'Meeting Joined', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
-                { title: 'Meeting Not Joined', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
-                { title: 'Payment Done', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
-                { title: 'POC', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
-                { title: 'Negotiation And Review', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'New Meetings', value: kpis.newMeetings, icon: 'bi-calendar-check', color: 'blue' },
+                { title: 'Lead Qualified', value: kpis.leadQualified, icon: 'bi-check-circle', color: 'green' },
+                { title: 'New Leads', value: kpis.newLeads, icon: 'bi-person-plus', color: 'purple' },
+                { title: 'Cold Calling', value: kpis.coldCalling, icon: 'bi-telephone-outbound', color: 'orange' },
+                { title: 'Follow Up', value: kpis.followUp, icon: 'bi-arrow-clockwise', color: 'yellow' },
+                { title: 'Proposals Sent', value: kpis.proposalsSent, icon: 'bi-file-earmark-text', color: 'red' }
             ];
 
-            statsGridRow2.innerHTML = smallStats.map(stat => `
+            statsRow2.innerHTML = smallStats.map(stat => `
                 <div class="stat-card">
                     <div class="stat-info">
                         <h6>${stat.title}</h6>
                         <h3>${stat.value}</h3>
-                        <small>${stat.change}</small>
                     </div>
                     <div class="stat-icon ${stat.color}">
                         <i class="${stat.icon}"></i>
@@ -1760,8 +2023,99 @@
             `).join('');
         }
 
+        function filterTasksByCategory(category) {
+            filteredTasks = allTasks.filter(task => task.category === category);
+            currentPage = 1;
+            renderTasks(currentPage);
+        }
+
+        function renderTasks(page) {
+            const tbody = document.getElementById('tasksTableBody');
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageTasks = filteredTasks.slice(start, end);
+
+            tbody.innerHTML = pageTasks.map((task, index) => `
+                <tr onclick="openContactSidebar('${task.id}')">
+                    <td>${start + index + 1}</td>
+                    <td><span class="badge ${task.type === 'Call' ? 'status-new' : task.type === 'Email' ? 'status-qualified' : 'status-contacted'}">${task.type}</span></td>
+                    <td><span class="badge ${task.status === 'Completed' ? 'completed' : task.status === 'Overdue' ? 'overdue' : 'pending'}">${task.status}</span></td>
+                    <td>${task.followup_time}</td>
+                    <td>${task.reference}</td>
+                    <td>${task.last_message}</td>
+                    <td>${task.assigned_to}</td>
+                    <td>${task.department}</td>
+                    <td>${task.refrence}</td>
+                    <td>${task.entrytime}</td>
+                    <td>${task.completed}</td>
+                    <td><button class="btn-sm" onclick="event.stopPropagation(); viewDetails('${task.id}')">View</button></td>
+                </tr>
+            `).join('');
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('tasksPagination');
+            const totalPages = Math.ceil(filteredTasks.length / itemsPerPage);
+
+            let paginationHTML = `
+                <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            `;
+
+            // Show page 1
+            paginationHTML += `<button class="pagination-btn ${currentPage === 1 ? 'active' : ''}" onclick="changePage(1)">1</button>`;
+
+            // Show page 2 if exists
+            if (totalPages >= 2) {
+                paginationHTML += `<button class="pagination-btn ${currentPage === 2 ? 'active' : ''}" onclick="changePage(2)">2</button>`;
+            }
+
+            // Show page 3 if exists
+            if (totalPages >= 3 && currentPage <= 3) {
+                paginationHTML += `<button class="pagination-btn ${currentPage === 3 ? 'active' : ''}" onclick="changePage(3)">3</button>`;
+            }
+
+            // Show input if more than 3 pages
+            if (totalPages > 3) {
+                paginationHTML += `<input type="number" class="pagination-input" value="${currentPage}" min="1" max="${totalPages}" onchange="changePage(parseInt(this.value))">`;
+            }
+
+            // Show last pages
+            if (totalPages > 3 && currentPage < totalPages - 2) {
+                paginationHTML += `<button class="pagination-btn" onclick="changePage(${totalPages - 1})">${totalPages - 1}</button>`;
+                paginationHTML += `<button class="pagination-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+            } else if (totalPages > 3) {
+                for (let i = Math.max(4, currentPage); i <= totalPages; i++) {
+                    paginationHTML += `<button class="pagination-btn ${currentPage === i ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                }
+            }
+
+            paginationHTML += `
+                <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            `;
+
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredTasks.length / itemsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTasks(currentPage);
+            }
+        }
+
+        function viewDetails(id) {
+            console.log('View details for task:', id);
+        }
+
         function renderCharts(data) {
-            // Quarter Target Achievement Chart
+            // Quarter Target Chart
             const quarterCtx = document.getElementById('quarterTargetChart').getContext('2d');
             new Chart(quarterCtx, {
                 type: 'doughnut',
@@ -1774,118 +2128,36 @@
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
                     cutout: '75%',
                     plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            enabled: true,
-                            bodyFont: { size: 16 },
-                            titleFont: { size: 18 },
-                            padding: 12,
-                            displayColors: false
-                        }
-                    }
-                }
-            });
-
-            // Sales Target Chart
-            const salesCtx = document.getElementById('salesTargetChart').getContext('2d');
-            new Chart(salesCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Q1', 'Q2', 'Q3'],
-                    datasets: [
-                        {
-                            label: 'Target',
-                            data: [80, 90, 85, 95],
-                            backgroundColor: '#9CA3AF',
-                            borderRadius: 8
-                        },
-                        {
-                            label: 'Achieved',
-                            data: [75, 92, 88, 90],
-                            backgroundColor: '#3B82F6',
-                            borderRadius: 8
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
                         legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 15
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                callback: value => value + '%'
-                            }
+                            display: false
                         },
-                        x: {
-                            grid: {
-                                display: false
-                            }
+                        tooltip: {
+                            enabled: false
                         }
                     }
                 }
             });
 
             // Lead Source Chart
-            const sourceCtx = document.getElementById('leadSourceChart').getContext('2d');
-            new Chart(sourceCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Website', 'Referral', 'LinkedIn', 'Cold Call', 'Partner'],
-                    datasets: [{
-                        data: [420, 240, 145, 130, 90],
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '60%',
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                padding: 12,
-                                font: {
-                                    size: 11
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Lead Stages Chart
-            const stagesCtx = document.getElementById('leadStagesChart').getContext('2d');
-            new Chart(stagesCtx, {
+            const leadSourceCtx = document.getElementById('leadSourceChart').getContext('2d');
+            new Chart(leadSourceCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['New', 'Contacted', 'Qualified', 'Proposal', 'Negotiation', 'Closed', 'Lost'],
+                    labels: ['Website', 'Referral', 'Cold Call', 'Partner', 'Event'],
                     datasets: [{
-                        data: [89, 342, 234, 156, 78, 523, 45],
-                        backgroundColor: '#3B82F6',
+                        data: [245, 189, 156, 98, 67],
+                        backgroundColor: '#0066FF',
                         borderRadius: 6
                     }]
                 },
                 options: {
-                    responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: {
+                            display: false
+                        }
                     },
                     scales: {
                         y: {
@@ -1894,6 +2166,108 @@
                                 font: {
                                     size: 10
                                 }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Lead Stages Chart
+            const leadStagesCtx = document.getElementById('leadStagesChart').getContext('2d');
+            new Chart(leadStagesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['New', 'Contacted', 'Qualified', 'Proposal', 'Won'],
+                    datasets: [{
+                        data: [89, 156, 234, 178, 123],
+                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Sales Target Chart
+            const salesTargetCtx = document.getElementById('salesTargetChart').getContext('2d');
+            new Chart(salesTargetCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['TRM', 'PRS', 'AKM', 'NKS', 'RMS'],
+                    datasets: [
+                        {
+                            label: 'Target',
+                            data: [7.16, 6.5, 8.2, 5.9, 7.8],
+                            backgroundColor: '#E5E7EB',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Achieved',
+                            data: [6.23, 5.8, 7.5, 4.2, 6.9],
+                            backgroundColor: '#10B981',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            grid: {
+                                display: false
                             }
                         },
                         x: {
@@ -2017,6 +2391,28 @@
         function applyDealsLostFilter() {
             selectedDealsLostReason = document.getElementById('dealsLostReason').value;
             closeDealsLostModal();
+            
+            // Filter and display table
+            const filtered = selectedDealsLostReason 
+                ? dealsLostData.filter(d => d.lossReason === selectedDealsLostReason)
+                : dealsLostData;
+            
+            const tbody = document.getElementById('dealsLostTableBody');
+            tbody.innerHTML = filtered.map((deal, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${deal.name}</td>
+                    <td>${deal.company}</td>
+                    <td>${deal.value}</td>
+                    <td><span class="badge at-risk">${deal.lossReason}</span></td>
+                    <td>${deal.lostDate}</td>
+                    <td>${deal.rep}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('dealsLostTable').classList.add('show');
+            document.getElementById('dealsWonTable').classList.remove('show');
+            
             // Re-render to show selected filter
             loadDashboard();
         }
@@ -2042,8 +2438,120 @@
         function applyDealsWonFilter() {
             selectedDealsWonType = document.getElementById('dealsWonType').value;
             closeDealsWonModal();
+            
+            // Filter and display table
+            const filtered = selectedDealsWonType 
+                ? dealsWonData.filter(d => d.contractType === selectedDealsWonType)
+                : dealsWonData;
+            
+            const tbody = document.getElementById('dealsWonTableBody');
+            tbody.innerHTML = filtered.map((deal, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${deal.name}</td>
+                    <td>${deal.company}</td>
+                    <td>${deal.value}</td>
+                    <td><span class="badge on-track">${deal.contractType}</span></td>
+                    <td>${deal.closedDate}</td>
+                    <td>${deal.rep}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('dealsWonTable').classList.add('show');
+            document.getElementById('dealsLostTable').classList.remove('show');
+            
             // Re-render to show selected filter
             loadDashboard();
+        }
+
+        // Contact Sidebar Functions
+        function openContactSidebar(taskId) {
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task || !task.contact) return;
+
+            const contact = task.contact;
+            const activities = task.activities || [];
+
+            // Populate contact info
+            const initials = (contact.firstname.charAt(0) + contact.lastname.charAt(0)).toUpperCase();
+            document.getElementById('contactInfoContent').innerHTML = `
+                <div class="contact-avatar-large">${initials}</div>
+                <h4 class="contact-name">${contact.firstname} ${contact.lastname}</h4>
+                <p class="contact-email">${contact.email}</p>
+                <div class="contact-details-grid">
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-label">Mobile</span>
+                        <span class="contact-detail-value">${contact.mobile}</span>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-label">Job Title</span>
+                        <span class="contact-detail-value">${contact.job_title}</span>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-label">City</span>
+                        <span class="contact-detail-value">${contact.city}</span>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-label">State</span>
+                        <span class="contact-detail-value">${contact.state}</span>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-label">Country</span>
+                        <span class="contact-detail-value">${contact.country}</span>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-label">Owner</span>
+                        <span class="contact-detail-value">${contact.owner}</span>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-label">Status</span>
+                        <span class="contact-detail-value">${contact.status}</span>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-label">Source</span>
+                        <span class="contact-detail-value">${contact.source}</span>
+                    </div>
+                </div>
+            `;
+
+            // Populate timeline
+            document.getElementById('timelineContent').innerHTML = activities.map(activity => `
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="bi ${activity.completed ? 'bi-check-circle-fill' : 'bi-clock'}"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <span class="timeline-user">${activity.user}</span>
+                            <span class="timeline-date">${activity.datetime}</span>
+                        </div>
+                        <p class="timeline-note">${activity.note}</p>
+                        ${!activity.completed ? `<div class="timeline-due">Due: ${activity.due}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('sidebarOverlay').classList.add('show');
+            document.getElementById('contactSidebar').classList.add('show');
+        }
+
+        function closeContactSidebar() {
+            document.getElementById('sidebarOverlay').classList.remove('show');
+            document.getElementById('contactSidebar').classList.remove('show');
+        }
+
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.sidebar-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Add active class to selected tab
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
         }
 
         function getStatusClass(status) {
