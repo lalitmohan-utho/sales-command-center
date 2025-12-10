@@ -33,7 +33,7 @@
             color: #1F2937;
         }
 
-        
+
         /* Main Content */
         .main-content {
             margin-left: 240px;
@@ -344,7 +344,7 @@
 
         .stats-grid-row-2 {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 16px;
             margin-top: 16px;
         }
@@ -418,12 +418,7 @@
 
         .stat-icon.orange {
             background: #FFEDD5;
-            color: #9A3412;
-        }
-
-        .stat-icon.purple {
-            background: #EDE9FE;
-            color: #5B21B6;
+            color: #C2410C;
         }
 
         .stat-icon.red {
@@ -431,39 +426,35 @@
             color: #991B1B;
         }
 
-        /* Two Column Layout */
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+        .stat-icon.purple {
+            background: #EDE9FE;
+            color: #5B21B6;
         }
 
+        /* Chart Styles */
         .chart-container {
-            background: white;
-            border: 1px solid var(--border-color);
+            padding: 16px;
+            background: #F9FAFB;
             border-radius: 12px;
-            padding: 20px;
         }
 
         .chart-title {
             font-size: 14px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin: 0 0 4px 0;
         }
 
         .chart-subtitle {
             font-size: 12px;
             color: #6B7280;
-            margin-bottom: 16px;
+            margin: 0 0 16px 0;
         }
 
         .chart-wrapper {
             position: relative;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
         }
 
         .chart-center-text {
@@ -472,31 +463,30 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            pointer-events: none;
         }
 
         .chart-center-text h2 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             margin: 0;
             color: var(--success-color);
         }
 
         .chart-center-text small {
-            font-size: 12px;
+            font-size: 11px;
             color: #6B7280;
         }
 
         .chart-legend {
-            margin-top: 16px;
+            margin-top: 20px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #F3F4F6;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .legend-item:last-child {
@@ -511,49 +501,14 @@
         }
 
         .legend-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
         }
 
         .legend-value {
             font-weight: 600;
-            font-size: 14px;
-        }
-
-        /* Status Grid */
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        .status-card {
-            padding: 16px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-
-        .status-card h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 8px 0 4px 0;
-        }
-
-        .status-card small {
-            font-size: 12px;
-            color: #6B7280;
-            font-weight: 500;
-        }
-
-        .status-card i {
-            font-size: 24px;
-            padding: 8px;
-            border-radius: 8px;
+            font-size: 13px;
         }
 
         /* Pipeline */
@@ -561,75 +516,80 @@
             display: flex;
             gap: 16px;
             overflow-x: auto;
-            padding: 10px 0;
-            width: 100%;
+            padding-bottom: 12px;
         }
 
         .pipeline-stage {
-            flex: 1 0 260px;
-            /* ⭐ FILL FULL WIDTH + AUTO SCROLL */
-            min-width: 260px;
-            /* Prevent shrinking */
-            background: #fff;
+            min-width: 200px;
+            background: #F9FAFB;
+            border-radius: 12px;
             padding: 16px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
         }
 
         .stage-header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
             margin-bottom: 8px;
         }
 
         .stage-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
         }
 
         .stage-count {
-            font-size: 15px;
-            font-weight: bold;
-            color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
         }
 
         .stage-value {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #4b5563;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
         }
 
         .pipeline-card {
-            background: #f9fafb;
-            padding: 12px;
+            background: white;
             border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #e5e7eb;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .pipeline-card h6 {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
         }
 
         .pipeline-card-row {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 4px;
         }
 
         .pipeline-card-value {
-            font-weight: 600;
+            font-weight: 500;
+            color: #1F2937;
         }
-
 
         /* Activity Timeline */
         .activity-timeline {
-            position: relative;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         .activity-item {
             display: flex;
             gap: 12px;
             padding: 12px 0;
-            border-bottom: 1px solid #F3F4F6;
-            position: relative;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .activity-item:last-child {
@@ -651,13 +611,13 @@
         }
 
         .activity-content p {
-            margin: 0 0 4px 0;
             font-size: 13px;
+            margin: 0 0 4px 0;
         }
 
         .activity-content small {
-            color: #9CA3AF;
             font-size: 12px;
+            color: #6B7280;
         }
 
         .activity-time {
@@ -665,38 +625,74 @@
             color: #9CA3AF;
         }
 
-        /* Table - Enhanced Styling */
-        .data-table {
+        /* Status Colors */
+        .status-new {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-contacted {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-qualified {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-proposal {
+            background: #E0E7FF;
+            color: #3730A3;
+        }
+
+        .status-negotiation {
+            background: #FFEDD5;
+            color: #C2410C;
+        }
+
+        /* Targets Table */
+        .targets-table {
             width: 100%;
             border-collapse: collapse;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        .data-table thead th {
-            background: #F9FAFB;
-            padding: 12px 14px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #6B7280;
-            text-align: left;
-            border: 1px solid var(--border-color);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            vertical-align: middle;
-        }
-
-        /* Targets table specific styles */
-        .targets-table {
-            min-width: 1400px;
+            margin-top: 16px;
         }
 
         .targets-table thead th {
+            background: #F9FAFB;
+            font-size: 11px;
+            font-weight: 600;
+            color: #6B7280;
+            text-transform: uppercase;
             padding: 10px 12px;
-            font-size: 10px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
         }
 
-        .targets-table tbody td {
+        .targets-table thead th[colspan] {
+            text-align: center;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .targets-table thead th[rowspan] {
+            vertical-align: middle;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table thead th {
+            background: linear-gradient(135deg, #F8FAFC, #F1F5F9);
+            font-size: 11px;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
             padding: 12px 14px;
             font-size: 12px;
         }
@@ -758,6 +754,11 @@
         }
 
         /* Status badges */
+        .badge.ahead {
+            background: #D1FAE5;
+            color: #054231ff;
+        }
+
         .badge.on-track {
             background: #D1FAE5;
             color: #065F46;
@@ -769,6 +770,21 @@
         }
 
         .badge.behind {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge.pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge.completed {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge.overdue {
             background: #FEE2E2;
             color: #991B1B;
         }
@@ -841,7 +857,7 @@
             top: 100%;
             background: white;
             min-width: 140px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border-radius: 8px;
             z-index: 1000;
             border: 1px solid var(--border-color);
@@ -905,7 +921,7 @@
             max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
         .modal-header {
@@ -1017,6 +1033,80 @@
             background: #0052CC;
         }
 
+        /* Pagination Styles */
+        .pagination-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 16px 0;
+        }
+
+        .pagination-btn {
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .pagination-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-input {
+            width: 60px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .pagination-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Clickable Card */
+        .stat-card.clickable {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .stat-card.clickable:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.1);
+        }
+
+        .selected-filter {
+            display: block;
+            font-size: 11px;
+            color: var(--primary-color);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
         @media (max-width: 1200px) {
 
             .stats-grid-row-1,
@@ -1122,21 +1212,32 @@
                         <button class="btn-sm">All Parts</button>
                     </div>
                 </div>
-                <table class="task-table">
+                <div class="stats-grid-row-1" id="header_card">
+                </div>
+                <table class="task-table" style="margin-top: 20px;">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>TODAY (3)</th>
-                            <th>OVERDUE (0)</th>
-                            <th>NEXT 7 DAYS (2)</th>
-                            <th>NEXT 30 DAYS (0)</th>
-                            <th></th>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Followup Time</th>
+                            <th>Reference #</th>
+                            <th>Last Message</th>
+                            <th>Assigned to</th>
+                            <th>Department</th>
+                            <th>Reference</th>
+                            <th>Entry Time</th>
+                            <th>Completed</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tasksTableBody">
                         <!-- Tasks will be populated here -->
                     </tbody>
                 </table>
+                <div class="pagination-container" id="tasksPagination">
+                    <!-- Pagination will be populated here -->
+                </div>
             </div>
 
             <div class="section">
@@ -1180,7 +1281,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="chart-container">                            
+                        <div class="chart-container">
                             <div class="section-header">
                                 <h2 class="section-title">Lead Source & Stage Distribution</h2>
                             </div>
@@ -1197,11 +1298,6 @@
                 </div>
             </div>
 
-
-            <!-- Stats Grid - Row 1: 4 Large Cards -->
-            <div class="stats-grid-row-1" id="statsGridRow1">
-                <!-- Large stats will be populated here -->
-            </div>
 
             <!-- Stats Grid - Row 2: 8 Smaller Cards -->
             <div class="stats-grid-row-2" id="statsGridRow2">
@@ -1228,11 +1324,11 @@
         <!-- Deals -->
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title">Deals</h2>
+                <h2 class="section-title">Total Funnel Value</h2>
                 <a href="#" style="color: var(--primary-color); text-decoration: none; font-size: 14px;">View Full
                     Pipeline →</a>
             </div>
-            <div class="pipeline-container" id="pipelineContainer">
+            <div class="stats-grid-row-1" id="totalFunnelValue">
                 <!-- Pipeline stages will be populated here -->
             </div>
         </div>
@@ -1268,9 +1364,12 @@
                             <i class="bi bi-chevron-down"></i>
                         </button>
                         <div class="period-dropdown-content" id="periodDropdown">
-                            <button class="period-dropdown-item" onclick="selectPeriod('Yearly', 'yearly')">Yearly</button>
-                            <button class="period-dropdown-item" onclick="selectPeriod('Monthly', 'monthly')">Monthly</button>
-                            <button class="period-dropdown-item active" onclick="selectPeriod('Quarterly', 'quarterly')">Quarterly</button>
+                            <button class="period-dropdown-item"
+                                onclick="selectPeriod('Yearly', 'yearly')">Yearly</button>
+                            <button class="period-dropdown-item"
+                                onclick="selectPeriod('Monthly', 'monthly')">Monthly</button>
+                            <button class="period-dropdown-item active"
+                                onclick="selectPeriod('Quarterly', 'quarterly')">Quarterly</button>
                             <button class="period-dropdown-item" onclick="selectPeriod('Q1', 'Q1')">Q1</button>
                             <button class="period-dropdown-item" onclick="selectPeriod('Q2', 'Q2')">Q2</button>
                             <button class="period-dropdown-item" onclick="selectPeriod('Q3', 'Q3')">Q3</button>
@@ -1286,12 +1385,13 @@
                             <th rowspan="3">#</th>
                             <th rowspan="3">REP</th>
                             <th rowspan="3">QUARTER</th>
-                            <th rowspan="3">WHOLE TOTAL TARGET<br><small style="font-weight: 400; color: #6B7280;">(MRR + WHOLE)</small></th>
+                            <th rowspan="3">TOTAL TARGET<br><small style="font-weight: 400; color: #6B7280;">(MRR +
+                                    WHOLE)</small></th>
+                            <th rowspan="3">TARGET<br>MRR</th>
                             <th colspan="6" style="text-align: center; background: #F3F4F6;">MONTH WISE</th>
                             <th rowspan="3">ACHIEVED<br>REVENUE</th>
-                            <th rowspan="3">TARGET<br>MRR</th>
                             <th rowspan="3">ACHIEVED<br>MRR</th>
-                            <th rowspan="3">ACHIEVE-<br>MENT</th>
+                            <th rowspan="3">ACHIEVEMENT</th>
                             <th rowspan="3">STATUS</th>
                         </tr>
                         <tr>
@@ -1314,7 +1414,6 @@
             </div>
         </div>
     </div>
-    </div>
 
     <!-- Edit Target Modal -->
     <div class="modal-overlay" id="editTargetModal">
@@ -1326,15 +1425,17 @@
             <div class="modal-body">
                 <form id="editTargetForm">
                     <input type="hidden" id="targetId" name="id">
-                    
+
                     <div class="form-group">
                         <label>Sales Rep <span>*</span></label>
-                        <input type="text" class="form-control" id="targetRep" name="rep" placeholder="e.g., TRM, PRS, AKM" required>
+                        <input type="text" class="form-control" id="targetRep" name="rep"
+                            placeholder="e.g., TRM, PRS, AKM" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Quarter <span>*</span></label>
-                        <select class="form-control" id="targetQuarter" name="quarter" required onchange="updateCalculatedFields()">
+                        <select class="form-control" id="targetQuarter" name="quarter" required
+                            onchange="updateCalculatedFields()">
                             <option value="">Select Quarter</option>
                             <option value="Q1">Q1 (Jan-Mar)</option>
                             <option value="Q2">Q2 (Apr-Jun)</option>
@@ -1342,11 +1443,13 @@
                             <option value="Q4">Q4 (Oct-Dec)</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Whole Total Target (MRR + WHOLE) ₹ <span>*</span></label>
-                        <input type="number" class="form-control" id="wholeTotalTarget" name="wholeTotalTarget" placeholder="e.g., 1000000" required oninput="updateCalculatedFields()">
-                        <small style="color: #6B7280; font-size: 11px; margin-top: 4px; display: block;">Enter the combined target for MRR and WHOLE business</small>
+                        <input type="number" class="form-control" id="wholeTotalTarget" name="wholeTotalTarget"
+                            placeholder="e.g., 1000000" required oninput="updateCalculatedFields()">
+                        <small style="color: #6B7280; font-size: 11px; margin-top: 4px; display: block;">Enter the
+                            combined target for MRR and WHOLE business</small>
                     </div>
 
                     <!-- Auto-calculated fields preview -->
@@ -1367,9 +1470,11 @@
                                     <span class="calc-label">Month 3 (30%)</span>
                                     <span class="calc-value" id="mrrMonth3">₹0</span>
                                 </div>
-                                <div class="calc-item" style="border-top: 1px solid #E5E7EB; margin-top: 8px; padding-top: 8px;">
+                                <div class="calc-item"
+                                    style="border-top: 1px solid #E5E7EB; margin-top: 8px; padding-top: 8px;">
                                     <span class="calc-label"><strong>Total MRR</strong></span>
-                                    <span class="calc-value" id="totalMRR" style="color: var(--primary-color);">₹0</span>
+                                    <span class="calc-value" id="totalMRR"
+                                        style="color: var(--primary-color);">₹0</span>
                                 </div>
                             </div>
                             <div>
@@ -1386,9 +1491,11 @@
                                     <span class="calc-label">Month 3 (30%)</span>
                                     <span class="calc-value" id="wholeMonth3">₹0</span>
                                 </div>
-                                <div class="calc-item" style="border-top: 1px solid #E5E7EB; margin-top: 8px; padding-top: 8px;">
+                                <div class="calc-item"
+                                    style="border-top: 1px solid #E5E7EB; margin-top: 8px; padding-top: 8px;">
                                     <span class="calc-label"><strong>Total WHOLE</strong></span>
-                                    <span class="calc-value" id="totalWHOLE" style="color: var(--success-color);">₹0</span>
+                                    <span class="calc-value" id="totalWHOLE"
+                                        style="color: var(--success-color);">₹0</span>
                                 </div>
                             </div>
                         </div>
@@ -1402,8 +1509,60 @@
         </div>
     </div>
 
+    <!-- Deals Lost Modal -->
+    <div class="modal-overlay" id="dealsLostModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Filter Deals Lost</h3>
+                <button class="modal-close" onclick="closeDealsLostModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Lost Reason</label>
+                    <select class="form-control" id="dealsLostReason" onchange="applyDealsLostFilter()">
+                        <option value="">All Reasons</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeDealsLostModal()">Cancel</button>
+                <button class="btn-save" onclick="applyDealsLostFilter()">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deals Won Modal -->
+    <div class="modal-overlay" id="dealsWonModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Filter Deals Won</h3>
+                <button class="modal-close" onclick="closeDealsWonModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Deal Type</label>
+                    <select class="form-control" id="dealsWonType" onchange="applyDealsWonFilter()">
+                        <option value="">All Types</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeDealsWonModal()">Cancel</button>
+                <button class="btn-save" onclick="applyDealsWonFilter()">Apply</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_URL = 'sales-api.php';
+        let allTasks = [];
+        let currentTaskPage = 1;
+        let tasksPerPage = 5;
+        let currentTaskFilter = 'all';
+        let dealsLostReasons = [];
+        let dealsWonTypes = [];
+        let selectedDealsLostReason = '';
+        let selectedDealsWonType = '';
 
         // Fetch and render dashboard data
         async function loadDashboard() {
@@ -1411,58 +1570,140 @@
                 const response = await fetch(API_URL);
                 const data = await response.json();
 
-                renderTasks(data.followUpTasks);
+                allTasks = data.followUpTasks || [];
+                dealsLostReasons = data.dealsLostReasons || [];
+                dealsWonTypes = data.dealsWonTypes || [];
+
+                renderTasks(allTasks);
                 renderStats(data.kpis);
+                totalFunnelValue(data.total_funnel_value);
                 renderCharts(data);
-                // renderStatusGrid(data.leadStatus);
-                renderPipeline(data.pipeline);
+                headerCards(data.headerList);
                 renderActivity(data.recentActivity);
                 renderTargetsTable(data.salesTargets);
+                populateDealsLostDropdown();
+                populateDealsWonDropdown();
             } catch (error) {
                 console.error('Error loading dashboard:', error);
             }
         }
 
+        function getStatusBadgeClass(status) {
+            const statusLower = status.toLowerCase();
+            if (statusLower === 'completed') return 'completed';
+            if (statusLower === 'overdue') return 'overdue';
+            return 'pending';
+        }
+
         function renderTasks(tasks) {
+            const filteredTasks = currentTaskFilter === 'all' ? tasks : tasks.filter(t => t.category === currentTaskFilter);
+            const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
+            const startIndex = (currentTaskPage - 1) * tasksPerPage;
+            const endIndex = startIndex + tasksPerPage;
+            const paginatedTasks = filteredTasks.slice(startIndex, endIndex);
+
             const tbody = document.getElementById('tasksTableBody');
-            tbody.innerHTML = tasks.map((task, index) => {
-                const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D'];
-                const bgColor = colors[index % colors.length];
+            tbody.innerHTML = paginatedTasks.map((task, index) => {
+                const typeIcon = task.type === 'Call' ? 'bi-telephone' : task.type === 'Email' ? 'bi-envelope' : 'bi-calendar-event';
+                const typeColor = task.type === 'Call' ? '#3B82F6' : task.type === 'Email' ? '#F59E0B' : '#10B981';
                 return `
                     <tr>
-                        <td><input type="checkbox"></td>
+                        <td>${startIndex + index + 1}</td>
                         <td>
-                            <div class="user-info">
-                                <div class="user-avatar-sm" style="background: ${bgColor};">
-                                    ${task.name.split(' ').map(n => n[0]).join('')}
-                                </div>
-                                <div class="user-details">
-                                    <h6>${task.name}</h6>
-                                    <small>${task.company}</small>
-                                </div>
+                            <span style="display: flex; align-items: center; gap: 6px;">
+                                <i class="${typeIcon}" style="color: ${typeColor};"></i>
+                                ${task.type}
+                            </span>
+                        </td>
+                        <td><span class="badge ${getStatusBadgeClass(task.status)}">${task.status}</span></td>
+                        <td>${task.followup_time}</td>
+                        <td>${task.reference}</td>
+                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${task.last_message}</td>
+                        <td>${task.assigned_to}</td>
+                        <td>${task.department}</td>
+                        <td>${task.refrence}</td>
+                        <td>${task.entrytime}</td>
+                        <td>${task.completed}</td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-icon" style="width: 28px; height: 28px; font-size: 12px;" title="Call">
+                                    <i class="bi bi-telephone"></i>
+                                </button>
+                                <button class="btn-icon" style="width: 28px; height: 28px; font-size: 12px;" title="Email">
+                                    <i class="bi bi-envelope"></i>
+                                </button>
+                                <button class="btn-icon" style="width: 28px; height: 28px; font-size: 12px;" title="More">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
                             </div>
-                        </td>
-                        <td>${task.task}</td>
-                        <td>
-                            <i class="bi bi-${task.type === 'Call' ? 'telephone' : task.type === 'Meeting' ? 'calendar-event' : 'envelope'}"></i>
-                            ${task.type}
-                        </td>
-                        <td>${task.time}</td>
-                        <td><span class="badge ${task.status.toLowerCase()}">${task.status}</span></td>
-                        <td>
-                            <i class="bi bi-telephone"></i>
-                            <i class="bi bi-envelope"></i>
-                            <i class="bi bi-chat-dots"></i>
-                            <i class="bi bi-three-dots-vertical"></i>
                         </td>
                     </tr>
                 `;
             }).join('');
+
+            renderTasksPagination(totalPages);
+        }
+
+        function renderTasksPagination(totalPages) {
+            const container = document.getElementById('tasksPagination');
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = `
+                <button class="pagination-btn" onclick="goToTaskPage(${currentTaskPage - 1})" ${currentTaskPage === 1 ? 'disabled' : ''}>
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            `;
+
+            // Show first page
+            html += `<button class="pagination-btn ${currentTaskPage === 1 ? 'active' : ''}" onclick="goToTaskPage(1)">1</button>`;
+
+            if (totalPages > 1) {
+                html += `<button class="pagination-btn ${currentTaskPage === 2 ? 'active' : ''}" onclick="goToTaskPage(2)">2</button>`;
+            }
+
+            // Input for page number
+            html += `
+                <input type="number" class="pagination-input" value="${currentTaskPage}" min="1" max="${totalPages}" 
+                    onchange="goToTaskPage(parseInt(this.value))" onkeypress="if(event.key==='Enter') goToTaskPage(parseInt(this.value))">
+            `;
+
+            if (totalPages > 3) {
+                html += `<button class="pagination-btn ${currentTaskPage === totalPages - 1 ? 'active' : ''}" onclick="goToTaskPage(${totalPages - 1})">${totalPages - 1}</button>`;
+            }
+
+            if (totalPages > 2) {
+                html += `<button class="pagination-btn ${currentTaskPage === totalPages ? 'active' : ''}" onclick="goToTaskPage(${totalPages})">${totalPages}</button>`;
+            }
+
+            html += `
+                <button class="pagination-btn" onclick="goToTaskPage(${currentTaskPage + 1})" ${currentTaskPage === totalPages ? 'disabled' : ''}>
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function goToTaskPage(page) {
+            const filteredTasks = currentTaskFilter === 'all' ? allTasks : allTasks.filter(t => t.category === currentTaskFilter);
+            const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
+            if (page < 1) page = 1;
+            if (page > totalPages) page = totalPages;
+            currentTaskPage = page;
+            renderTasks(allTasks);
+        }
+
+        function filterTasksByCategory(category) {
+            currentTaskFilter = category;
+            currentTaskPage = 1;
+            renderTasks(allTasks);
         }
 
         function renderStats(kpis) {
             const statsGridRow0 = document.getElementById('statsGridRow0');
-            // const statsGridRow1 = document.getElementById('statsGridRow1');
             const statsGridRow2 = document.getElementById('statsGridRow2');
 
             // Row 1: 6 Large Cards
@@ -1474,52 +1715,35 @@
                 { title: 'Total Leads', value: kpis.total_leads, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' },
                 { title: 'Converted Leads', value: kpis.converted_leads, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' }
             ];
-console.log(firstStats);
-           statsGridRow0.innerHTML = firstStats.map(stat => `
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2">
-        <div class="stat-card stat-card-large">
-            <div class="stat-info">
-                <h6>${stat.title}</h6>
-                <h3 class="large">${stat.value}</h3>
-                <small>${stat.change}</small>
-            </div>
-            <div class="stat-icon large ${stat.color}">
-                <i class="${stat.icon}"></i>
-            </div>
-        </div>
-    </div>
-`).join('');
-
-            // // Row 1: 4 Large Cards
-            // const largeStats = [
-            //     { title: 'Total Allocated (Q4)', value: kpis.totalAllocated, change: '+12.5% vs last quarter', icon: 'bi-file-earmark-text', color: 'blue' },
-            //     { title: 'Contacted & Hot', value: kpis.contactedHot, change: '+8.2% vs last quarter', icon: 'bi-telephone', color: 'green' },
-            //     { title: 'Deals In Pipe', value: kpis.dealsInPipe, change: '+15.3% vs last quarter', icon: 'bi-pie-chart', color: 'green' },
-            //     { title: 'Expected Value', value: kpis.expectedValue, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow' }
-            // ];
-
-            // statsGridRow1.innerHTML = largeStats.map(stat => `
-            //     <div class="stat-card stat-card-large">
-            //         <div class="stat-info">
-            //             <h6>${stat.title}</h6>
-            //             <h3 class="large">${stat.value}</h3>
-            //             <small>${stat.change}</small>
-            //         </div>
-            //         <div class="stat-icon large ${stat.color}">
-            //             <i class="${stat.icon}"></i>
-            //         </div>
-            //     </div>
-            // `).join('');
+            statsGridRow0.innerHTML = firstStats.map(stat => `
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2">
+                    <div class="stat-card stat-card-large">
+                        <div class="stat-info">
+                            <h6>${stat.title}</h6>
+                            <h3 class="large">${stat.value}</h3>
+                            <small>${stat.change}</small>
+                        </div>
+                        <div class="stat-icon large ${stat.color}">
+                            <i class="${stat.icon}"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
 
             // Row 2: 8 Smaller Cards
             const smallStats = [
-                { title: 'New Meetings', value: kpis.newMeetings, change: '+6.3% vs last week', icon: 'bi-calendar-check', color: 'blue' },
-                { title: 'New Leads', value: kpis.newLeads, change: '-2.4% vs last week', icon: 'bi-person-plus', color: 'blue' },
-                { title: 'Qualified Lead', value: kpis.leadQualified, change: '+9.1% vs last week', icon: 'bi-check-circle', color: 'green' },
-                { title: 'Follow Up', value: kpis.followUp, change: '+3.2% vs last week', icon: 'bi-clock-history', color: 'yellow' },
-                { title: 'Proposals Sent', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
-                { title: 'Deals Lost', value: kpis.dealsLost, change: '-5.7% vs last week', icon: 'bi-x-circle', color: 'red' },
-                { title: 'Deals Won', value: kpis.dealsWon, change: '+14.2% vs last week', icon: 'bi-trophy', color: 'green' }
+                { title: 'New', value: kpis.newMeetings, change: '+6.3% vs last week', icon: 'bi-calendar-check', color: 'blue' },
+                { title: 'Active', value: kpis.newLeads, change: '-2.4% vs last week', icon: 'bi-person-plus', color: 'blue' },
+                { title: 'Retargeting', value: kpis.leadQualified, change: '+9.1% vs last week', icon: 'bi-check-circle', color: 'green' },
+                { title: 'Urgent', value: kpis.followUp, change: '+3.2% vs last week', icon: 'bi-clock-history', color: 'yellow' },
+                { title: 'Not Contacted', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'Contacted', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'Junk', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'Meeting Joined', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'Meeting Not Joined', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'Payment Done', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'POC', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
+                { title: 'Negotiation And Review', value: kpis.proposalsSent, change: '+11.5% vs last week', icon: 'bi-file-earmark-arrow-up', color: 'orange' },
             ];
 
             statsGridRow2.innerHTML = smallStats.map(stat => `
@@ -1566,28 +1790,6 @@ console.log(firstStats);
                 }
             });
 
-            // Lead Allocation Chart
-            // const leadCtx = document.getElementById('leadAllocationChart').getContext('2d');
-            // new Chart(leadCtx, {
-            //     type: 'doughnut',
-            //     data: {
-            //         labels: ['Contacted & Hot', 'In Pipeline', 'Conversion Funnel', 'Remaining'],
-            //         datasets: [{
-            //             data: [25, 30, 20, 25],
-            //             backgroundColor: ['#10B981', '#3B82F6', '#EAB308', '#E5E7EB'],
-            //             borderWidth: 0
-            //         }]
-            //     },
-            //     options: {
-            //         responsive: true,
-            //         maintainAspectRatio: true,
-            //         cutout: '60%',
-            //         plugins: {
-            //             legend: { display: false }
-            //         }
-            //     }
-            // });
-
             // Sales Target Chart
             const salesCtx = document.getElementById('salesTargetChart').getContext('2d');
             new Chart(salesCtx, {
@@ -1597,14 +1799,14 @@ console.log(firstStats);
                     datasets: [
                         {
                             label: 'Target',
-                            data: [80, 90, 85, 95],   // dummy target values
-                            backgroundColor: '#9CA3AF', // grey
+                            data: [80, 90, 85, 95],
+                            backgroundColor: '#9CA3AF',
                             borderRadius: 8
                         },
                         {
                             label: 'Achieved',
-                            data: [75, 92, 88, 90],   // dummy achieved values
-                            backgroundColor: '#3B82F6', // blue
+                            data: [75, 92, 88, 90],
+                            backgroundColor: '#3B82F6',
                             borderRadius: 8
                         }
                     ]
@@ -1709,36 +1911,6 @@ console.log(firstStats);
             });
         }
 
-
-        function renderPipeline(pipeline) {
-            const container = document.getElementById('pipelineContainer');
-            container.innerHTML = pipeline.stages.map(stage => `
-                <div class="pipeline-stage">
-                    <div class="stage-header">
-                        <span class="stage-title">${stage.name}</span>
-                        <span class="stage-count">${stage.count}</span>
-                    </div>
-                    <div class="stage-value">${stage.value}</div>
-                    ${stage.deals.map(deal => `
-                        <div class="pipeline-card">
-                            <h6>${deal.name}</h6>
-                            <div class="pipeline-card-row">
-                                <span>${deal.company}</span>
-                            </div>
-                            <div class="pipeline-card-row">
-                                <span>Value:</span>
-                                <span class="pipeline-card-value">${deal.value}</span>
-                            </div>
-                            <div class="pipeline-card-row">
-                                <span>Stage:</span>
-                                <span class="pipeline-card-value">${deal.stage}</span>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `).join('');
-        }
-
         function renderActivity(activities) {
             const timeline = document.getElementById('activityTimeline');
             const iconMap = {
@@ -1765,8 +1937,118 @@ console.log(firstStats);
             }).join('');
         }
 
+        function totalFunnelValue(kpie) {
+            const totalFunnelValue = document.getElementById('totalFunnelValue');
+            const largeStats = [
+                { title: 'Deals Lost', value: kpie.deals_lost, change: '+12.5% vs last quarter', icon: 'bi-x-circle', color: 'red', clickable: true, modal: 'dealsLost' },
+                { title: 'Deals Won', value: kpie.deals_won, change: '+8.2% vs last quarter', icon: 'bi-trophy', color: 'green', clickable: true, modal: 'dealsWon' },
+                { title: 'Total No. of Aspects Added In Deals', value: kpie.aspects_added, change: '+15.3% vs last quarter', icon: 'bi-plus-circle', color: 'blue', clickable: false },
+                { title: 'Total funnel Value', value: kpie.funnel_value, change: '+18.7% vs last quarter', icon: 'bi-currency-rupee', color: 'yellow', clickable: false }
+            ];
+
+            totalFunnelValue.innerHTML = largeStats.map(stat => `
+                <div class="stat-card stat-card-large ${stat.clickable ? 'clickable' : ''}" 
+                     ${stat.clickable ? `onclick="open${stat.modal === 'dealsLost' ? 'DealsLost' : 'DealsWon'}Modal()"` : ''}>
+                    <div class="stat-info">
+                        <h6>${stat.title}</h6>
+                        <h3 class="large">${stat.value}</h3>
+                        <small>${stat.change}</small>
+                        ${stat.modal === 'dealsLost' && selectedDealsLostReason ? `<span class="selected-filter">Filter: ${selectedDealsLostReason}</span>` : ''}
+                        ${stat.modal === 'dealsWon' && selectedDealsWonType ? `<span class="selected-filter">Type: ${selectedDealsWonType}</span>` : ''}
+                    </div>
+                    <div class="stat-icon large ${stat.color}">
+                        <i class="${stat.icon}"></i>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function headerCards(kpie) {
+            const headerCards = document.getElementById('header_card');
+            const largeStats = [
+                { title: 'Overdue Followups', value: kpie.overdue_followups, icon: 'bi-exclamation-triangle', color: 'red', category: 'overdue' },
+                { title: 'Today Due Followups', value: kpie.today_due_followups, icon: 'bi-calendar-check', color: 'blue', category: 'today' },
+                { title: 'This Week Due Followup', value: kpie.this_week_due_followups, icon: 'bi-calendar-week', color: 'green', category: 'week' },
+                { title: 'Next 30 Days Due', value: kpie.next_30_days_due, icon: 'bi-calendar-range', color: 'yellow', category: 'next30' }
+            ];
+
+            headerCards.innerHTML = largeStats.map(stat => `
+                <div class="stat-card stat-card-large" style="flex-direction:column; align-items:flex-start;">
+                    <!-- Top section (title & icon row) -->
+                    <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                        <div class="stat-info">
+                            <h6>${stat.title}</h6>
+                            <h3 class="large">${stat.value}</h3>
+                        </div>
+                        <div class="stat-icon large ${stat.color}">
+                            <i class="bi ${stat.icon}"></i>
+                        </div>
+                    </div>
+                    <!-- HR inside card -->
+                    <hr style="width:100%; margin:10px 0;">
+                    <!-- View List inside card -->
+                    <a href="javascript:void(0)" onclick="filterTasksByCategory('${stat.category}')"
+                       class="text-primary"
+                       style="font-size:13px; text-decoration:underline; cursor:pointer;">
+                       <i class="bi bi-list-ul"></i> View List
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        // Deals Lost Modal Functions
+        function populateDealsLostDropdown() {
+            const select = document.getElementById('dealsLostReason');
+            select.innerHTML = '<option value="">All Reasons</option>';
+            dealsLostReasons.forEach(reason => {
+                select.innerHTML += `<option value="${reason}">${reason}</option>`;
+            });
+        }
+
+        function openDealsLostModal() {
+            document.getElementById('dealsLostModal').classList.add('show');
+            document.getElementById('dealsLostReason').value = selectedDealsLostReason;
+        }
+
+        function closeDealsLostModal() {
+            document.getElementById('dealsLostModal').classList.remove('show');
+        }
+
+        function applyDealsLostFilter() {
+            selectedDealsLostReason = document.getElementById('dealsLostReason').value;
+            closeDealsLostModal();
+            // Re-render to show selected filter
+            loadDashboard();
+        }
+
+        // Deals Won Modal Functions
+        function populateDealsWonDropdown() {
+            const select = document.getElementById('dealsWonType');
+            select.innerHTML = '<option value="">All Types</option>';
+            dealsWonTypes.forEach(type => {
+                select.innerHTML += `<option value="${type}">${type}</option>`;
+            });
+        }
+
+        function openDealsWonModal() {
+            document.getElementById('dealsWonModal').classList.add('show');
+            document.getElementById('dealsWonType').value = selectedDealsWonType;
+        }
+
+        function closeDealsWonModal() {
+            document.getElementById('dealsWonModal').classList.remove('show');
+        }
+
+        function applyDealsWonFilter() {
+            selectedDealsWonType = document.getElementById('dealsWonType').value;
+            closeDealsWonModal();
+            // Re-render to show selected filter
+            loadDashboard();
+        }
+
         function getStatusClass(status) {
-            switch(status) {
+            switch (status) {
+                case 'Ahead': return 'ahead';
                 case 'On Track': return 'on-track';
                 case 'Behind': return 'behind';
                 case 'At Risk': return 'at-risk';
@@ -1782,6 +2064,7 @@ console.log(firstStats);
                     <td style="color: #0066FF; font-weight: 600;">${target.rep}</td>
                     <td>${target.quarter}</td>
                     <td>${target.wholeTotalTarget || target.targetBusiness}</td>
+                    <td>${target.targetMRR}</td>
                     <td style="text-align: center;">${target.wholeMonth1 || '-'}</td>
                     <td style="text-align: center;">${target.wholeMonth2 || '-'}</td>
                     <td style="text-align: center;">${target.wholeMonth3 || '-'}</td>
@@ -1789,7 +2072,7 @@ console.log(firstStats);
                     <td style="text-align: center;">${target.mrrMonth2 || '-'}</td>
                     <td style="text-align: center;">${target.mrrMonth3 || '-'}</td>
                     <td>${target.achievedRevenue || target.achievedWhole}</td>
-                    <td>${target.targetMRR}</td>
+                   
                     <td>${target.achievedMRR}</td>
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -1805,7 +2088,7 @@ console.log(firstStats);
         }
 
         function getProgressColor(status) {
-            switch(status) {
+            switch (status) {
                 case 'On Track': return '#10B981';
                 case 'Behind': return '#EF4444';
                 case 'At Risk': return '#F59E0B';
@@ -1829,27 +2112,27 @@ console.log(firstStats);
         function updateCalculatedFields() {
             const wholeTotalTarget = parseFloat(document.getElementById('wholeTotalTarget').value) || 0;
             const preview = document.getElementById('calculatedPreview');
-            
+
             if (wholeTotalTarget > 0) {
                 preview.style.display = 'block';
-                
+
                 // MRR = 33% of total
                 const mrrTotal = wholeTotalTarget * 0.33;
                 const mrrMonth1 = mrrTotal * 0.30;
                 const mrrMonth2 = mrrTotal * 0.40;
                 const mrrMonth3 = mrrTotal * 0.30;
-                
+
                 // WHOLE = 67% of total
                 const wholeTotal = wholeTotalTarget * 0.67;
                 const wholeMonth1 = wholeTotal * 0.30;
                 const wholeMonth2 = wholeTotal * 0.40;
                 const wholeMonth3 = wholeTotal * 0.30;
-                
+
                 document.getElementById('mrrMonth1').textContent = formatCurrency(mrrMonth1);
                 document.getElementById('mrrMonth2').textContent = formatCurrency(mrrMonth2);
                 document.getElementById('mrrMonth3').textContent = formatCurrency(mrrMonth3);
                 document.getElementById('totalMRR').textContent = formatCurrency(mrrTotal);
-                
+
                 document.getElementById('wholeMonth1').textContent = formatCurrency(wholeMonth1);
                 document.getElementById('wholeMonth2').textContent = formatCurrency(wholeMonth2);
                 document.getElementById('wholeMonth3').textContent = formatCurrency(wholeMonth3);
@@ -1860,12 +2143,13 @@ console.log(firstStats);
         }
 
         function calculateStatus(achievementPercent) {
-            // 50-70% = On Track, <40% = Behind, rest = At Risk
-            if (achievementPercent >= 50 && achievementPercent <= 70) {
+            if (achievementPercent > 80) {
+                return 'Ahead';
+            } else if (achievementPercent >= 70 && achievementPercent <= 80) {
                 return 'On Track';
-            } else if (achievementPercent < 40) {
+            } else if (achievementPercent >= 40 && achievementPercent < 70) {
                 return 'Behind';
-            } else {
+            } else if (achievementPercent < 40) {
                 return 'At Risk';
             }
         }
@@ -1873,19 +2157,16 @@ console.log(firstStats);
         function openEditModal(target = null) {
             const modal = document.getElementById('editTargetModal');
             modal.classList.add('show');
-            
+
             if (target) {
-                // Editing existing target
                 currentTargetData = target;
                 document.getElementById('targetId').value = target.id || '';
                 document.getElementById('targetRep').value = target.rep || '';
                 document.getElementById('targetQuarter').value = target.quarter || '';
-                // Parse whole total target from the data
                 const wholeTotalTarget = parseAmount(target.wholeTotalTarget);
                 document.getElementById('wholeTotalTarget').value = wholeTotalTarget || '';
                 updateCalculatedFields();
             } else {
-                // New target - clear form
                 currentTargetData = null;
                 document.getElementById('editTargetForm').reset();
                 document.getElementById('calculatedPreview').style.display = 'none';
@@ -1902,7 +2183,6 @@ console.log(firstStats);
         function parseAmount(amountStr) {
             if (typeof amountStr === 'number') return amountStr;
             if (!amountStr) return 0;
-            // Remove ₹, commas, L, K, Lk suffixes and parse
             const cleaned = amountStr.replace(/[₹,\s]/g, '');
             if (cleaned.includes('Lk') || cleaned.includes('L')) {
                 return parseFloat(cleaned.replace(/Lk|L/g, '')) * 100000;
@@ -1929,23 +2209,20 @@ console.log(firstStats);
 
         async function saveTarget() {
             const form = document.getElementById('editTargetForm');
-            
+
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
             }
-            
+
             const wholeTotalTarget = parseFloat(document.getElementById('wholeTotalTarget').value);
             const quarter = document.getElementById('targetQuarter').value;
             const months = getQuarterMonths(quarter);
-            
-            // Calculate breakdown
+
             const mrrTotal = wholeTotalTarget * 0.33;
             const wholeTotal = wholeTotalTarget * 0.67;
-            
-            // Month distribution: 30%, 40%, 30%
             const monthDistribution = [0.30, 0.40, 0.30];
-            
+
             const formData = {
                 id: document.getElementById('targetId').value || null,
                 rep: document.getElementById('targetRep').value,
@@ -1968,12 +2245,12 @@ console.log(firstStats);
                     },
                     body: JSON.stringify(formData)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     closeEditModal();
-                    loadDashboard(); // Refresh the data
+                    loadDashboard();
                     alert('Target saved successfully!');
                 } else {
                     alert('Error saving target: ' + (result.message || 'Unknown error'));
@@ -1994,14 +2271,12 @@ console.log(firstStats);
         function selectPeriod(label, value) {
             document.getElementById('selectedPeriod').textContent = label;
             document.getElementById('periodDropdown').classList.remove('show');
-            
-            // Update active state
+
             document.querySelectorAll('.period-dropdown-item').forEach(item => {
                 item.classList.remove('active');
             });
             event.target.classList.add('active');
-            
-            // Fetch filtered data
+
             filterTargetsByPeriod(value);
         }
 
@@ -2009,7 +2284,7 @@ console.log(firstStats);
             try {
                 const response = await fetch(API_URL + '?action=targets&filter=' + period);
                 const data = await response.json();
-                
+
                 if (data.salesTargets) {
                     renderTargetsTable(data.salesTargets);
                 }
@@ -2019,17 +2294,29 @@ console.log(firstStats);
         }
 
         // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const dropdown = document.getElementById('periodDropdown');
             if (!event.target.closest('.period-dropdown')) {
                 dropdown.classList.remove('show');
             }
         });
 
-        // Close modal when clicking outside
-        document.getElementById('editTargetModal').addEventListener('click', function(event) {
+        // Close modals when clicking outside
+        document.getElementById('editTargetModal').addEventListener('click', function (event) {
             if (event.target === this) {
                 closeEditModal();
+            }
+        });
+
+        document.getElementById('dealsLostModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeDealsLostModal();
+            }
+        });
+
+        document.getElementById('dealsWonModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeDealsWonModal();
             }
         });
 
