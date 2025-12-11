@@ -1410,6 +1410,67 @@
             background: #F9FAFB;
         }
 
+        /* Tasks Filter Form */
+        .tasks-filter-form {
+            background: #F9FAFB;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        .filter-form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            align-items: end;
+        }
+
+        .filter-form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-form-group label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6B7280;
+            margin-bottom: 4px;
+        }
+
+        .filter-form-group .form-control {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+        .filter-actions-group {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .filter-actions-group .btn-filter {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        @media (max-width: 1200px) {
+            .filter-form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filter-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 1200px) {
 
             .stats-grid-row-1,
@@ -1512,9 +1573,70 @@
                     <h2 class="section-title">Follow-ups & Tasks</h2>
                     <div class="section-actions">
                         <button class="btn-sm">See Tasks</button>
+                        <button class="btn-sm" onclick="toggleTasksFilter()"><i class="bi bi-search"></i></button>
                         <button class="btn-sm">All Parts</button>
                     </div>
                 </div>
+                
+                <!-- Tasks Filter Form -->
+                <div class="tasks-filter-form" id="tasksFilterForm" style="display: none;">
+                    <div class="filter-form-grid">
+                        <div class="filter-form-group">
+                            <label>Department</label>
+                            <input type="text" class="form-control" id="filterDepartment" placeholder="Enter department">
+                        </div>
+                        <div class="filter-form-group">
+                            <label>Status</label>
+                            <select class="form-control" id="filterStatus">
+                                <option value="">All Status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Overdue">Overdue</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="filter-form-group">
+                            <label>Followup Staff</label>
+                            <select class="form-control" id="filterStaff">
+                                <option value="">All Staff</option>
+                                <option value="Amit Sharma">Amit Sharma</option>
+                                <option value="Priya Singh">Priya Singh</option>
+                                <option value="Rahul Kumar">Rahul Kumar</option>
+                                <option value="Sneha Patel">Sneha Patel</option>
+                                <option value="Vikram Joshi">Vikram Joshi</option>
+                            </select>
+                        </div>
+                        <div class="filter-form-group">
+                            <label>Date From</label>
+                            <input type="date" class="form-control" id="filterDateFrom">
+                        </div>
+                        <div class="filter-form-group">
+                            <label>Date To</label>
+                            <input type="date" class="form-control" id="filterDateTo">
+                        </div>
+                        <div class="filter-form-group">
+                            <label>Ref Type</label>
+                            <select class="form-control" id="filterRefType">
+                                <option value="">All Types</option>
+                                <option value="Lead">Lead</option>
+                                <option value="Deal">Deal</option>
+                                <option value="Contact">Contact</option>
+                                <option value="Account">Account</option>
+                                <option value="Quote">Quote</option>
+                            </select>
+                        </div>
+                        <div class="filter-form-group">
+                            <label>Ref ID</label>
+                            <input type="text" class="form-control" id="filterRefId" placeholder="Enter Ref ID">
+                        </div>
+                        <div class="filter-form-group filter-actions-group">
+                            <button class="btn-filter primary" onclick="applyTasksFilter()"><i class="bi bi-funnel"></i> Apply</button>
+                            <button class="btn-filter" onclick="clearTasksFilter()"><i class="bi bi-x-circle"></i> Clear</button>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="stats-grid-row-1" id="header_card">
                 </div>
                 <table class="task-table" style="margin-top: 20px;">
@@ -2827,6 +2949,79 @@
                 closeDealsWonModal();
             }
         });
+
+        // ============ TASKS FILTER FUNCTIONS ============
+        function toggleTasksFilter() {
+            const filterForm = document.getElementById('tasksFilterForm');
+            if (filterForm.style.display === 'none' || filterForm.style.display === '') {
+                filterForm.style.display = 'block';
+            } else {
+                filterForm.style.display = 'none';
+            }
+        }
+
+        function applyTasksFilter() {
+            const department = document.getElementById('filterDepartment').value.toLowerCase().trim();
+            const status = document.getElementById('filterStatus').value;
+            const staff = document.getElementById('filterStaff').value;
+            const dateFrom = document.getElementById('filterDateFrom').value;
+            const dateTo = document.getElementById('filterDateTo').value;
+            const refType = document.getElementById('filterRefType').value;
+            const refId = document.getElementById('filterRefId').value.toLowerCase().trim();
+
+            filteredTasks = allTasks.filter(task => {
+                // Filter by Department
+                if (department && !task.department.toLowerCase().includes(department)) {
+                    return false;
+                }
+                // Filter by Status
+                if (status && task.status !== status) {
+                    return false;
+                }
+                // Filter by Staff
+                if (staff && task.assigned_to !== staff) {
+                    return false;
+                }
+                // Filter by Date Range
+                if (dateFrom) {
+                    const taskDate = new Date(task.followup_time);
+                    const fromDate = new Date(dateFrom);
+                    if (taskDate < fromDate) return false;
+                }
+                if (dateTo) {
+                    const taskDate = new Date(task.followup_time);
+                    const toDate = new Date(dateTo);
+                    toDate.setHours(23, 59, 59);
+                    if (taskDate > toDate) return false;
+                }
+                // Filter by Ref Type
+                if (refType && task.refrence !== refType) {
+                    return false;
+                }
+                // Filter by Ref ID
+                if (refId && !task.reference.toLowerCase().includes(refId)) {
+                    return false;
+                }
+                return true;
+            });
+
+            currentPage = 1;
+            renderTasks(currentPage);
+        }
+
+        function clearTasksFilter() {
+            document.getElementById('filterDepartment').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterStaff').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            document.getElementById('filterRefType').value = '';
+            document.getElementById('filterRefId').value = '';
+
+            filteredTasks = allTasks;
+            currentPage = 1;
+            renderTasks(currentPage);
+        }
 
         // Load dashboard on page load
         document.addEventListener('DOMContentLoaded', loadDashboard);
