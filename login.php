@@ -4,28 +4,43 @@ include_once 'common.php';
 // Handle login action
 if (isset($_REQUEST['action'])) {
     if ($_POST['action'] == 'login') {
-        $data['username'] = $_POST['username'];
-        $data['password'] = $_POST['password'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
         
-        $return_data = CALLAPI('POST', 'auth', $data);
+        // Call API with username and password as query parameters
+        $data = array(
+            'username' => $username,
+            'password' => $password
+        );
         
-        if ($return_data['rcode'] == 'error') {
-            echo $return_data['rmessage'];
-        } else {
-            if ($return_data['token']) {
-                setcookie('microhost_admin_api_auth', $return_data['token'], time() + 86400, "/", "$domain");
-                setcookie('microhost_admin_api_auth', $return_data['token'], time() + 86400, "/", ".utho.com");
-                
-                if (isset($_SESSION['redirect_to'])) {
-                    $url = $base_url . $_SESSION['redirect_to'];
-                    header("Location: $url");
-                    $_SESSION['redirect_to'] = '';
-                } else {
-                    header('Location: ' . $base_url . 'sales-dashboard-optimized.php');
-                }
-            }
+        $return_data = CALLAPI('GET', 'auth/', $data);
+        
+        // Check if API returned valid response
+        if (!$return_data || !isset($return_data['rcode'])) {
+            header('Location: ' . $base_url . 'login.php?error=' . urlencode('Unable to connect to server. Please try again.'));
+            exit;
         }
-        exit;
+        
+        if ($return_data['rcode'] == 'success' && isset($return_data['token'])) {
+            // Login successful - set cookies
+            setcookie('microhost_admin_api_auth', $return_data['token'], time() + 86400, "/", "$domain");
+            setcookie('microhost_admin_api_auth', $return_data['token'], time() + 86400, "/", ".utho.com");
+            
+            // Redirect to dashboard or stored redirect URL
+            if (isset($_SESSION['redirect_to']) && !empty($_SESSION['redirect_to'])) {
+                $url = $base_url . $_SESSION['redirect_to'];
+                header("Location: $url");
+                $_SESSION['redirect_to'] = '';
+            } else {
+                header('Location: ' . $base_url . 'sales-dashboard-optimized.php');
+            }
+            exit;
+        } else {
+            // Login failed - redirect with error message
+            $error_message = isset($return_data['rmessage']) ? $return_data['rmessage'] : 'Invalid username or password';
+            header('Location: ' . $base_url . 'login.php?error=' . urlencode($error_message));
+            exit;
+        }
     }
     
     if ($_REQUEST['action'] == 'logout') {
