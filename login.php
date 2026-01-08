@@ -1,9 +1,61 @@
+<?php
+include_once 'common.php';
+
+// Handle login action
+if (isset($_REQUEST['action'])) {
+    if ($_POST['action'] == 'login') {
+        $data['username'] = $_POST['username'];
+        $data['password'] = $_POST['password'];
+        
+        $return_data = CALLAPI('POST', 'auth', $data);
+        
+        if ($return_data['rcode'] == 'error') {
+            echo $return_data['rmessage'];
+        } else {
+            if ($return_data['token']) {
+                setcookie('microhost_admin_api_auth', $return_data['token'], time() + 86400, "/", "$domain");
+                setcookie('microhost_admin_api_auth', $return_data['token'], time() + 86400, "/", ".utho.com");
+                
+                if (isset($_SESSION['redirect_to'])) {
+                    $url = $base_url . $_SESSION['redirect_to'];
+                    header("Location: $url");
+                    $_SESSION['redirect_to'] = '';
+                } else {
+                    header('Location: ' . $base_url . 'sales-dashboard-optimized.php');
+                }
+            }
+        }
+        exit;
+    }
+    
+    if ($_REQUEST['action'] == 'logout') {
+        session_start();
+        CALLAPI("DELETE", "logout", $data);
+        
+        $_SESSION = array();
+        setcookie('microhost_admin_api_auth', null, time() - 3600, "/", "$domain");
+        unset($_COOKIE['microhost_admin_api_auth']);
+        setcookie('microhost_api_auth', null, time() - 3600, "/", "$domain");
+        setcookie('microhost_api_auth', null, time() - 3600, "/", ".utho.com");
+        
+        unset($_COOKIE['microhost_api_auth']);
+        header('Location: ' . $base_url . 'login.php');
+        exit;
+    }
+}
+
+// If already logged in, redirect to dashboard
+if (isset($_COOKIE['microhost_admin_api_auth']) && $_REQUEST['action'] != 'logout') {
+    header('Location: ' . $base_url . 'sales-dashboard-optimized.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sales Dashboard</title>
+    <title><?php echo isset($system_name) ? $system_name : 'FlowAura - Login'; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -286,7 +338,7 @@
     <div class="login-container">
         <!-- Left Panel -->
         <div class="login-left">
-            <img src="src/assets/logo_black.png" alt="Company Logo">
+            <img src="<?php echo $base_url; ?>src/assets/logo_black.png" alt="Company Logo">
             <h2>Welcome Back!</h2>
             <p>Access your sales dashboard, manage leads, track performance, and grow your business with our comprehensive CRM solution.</p>
         </div>
@@ -301,7 +353,9 @@
                 <span id="alertMessage"></span>
             </div>
 
-            <form id="loginForm" onsubmit="return handleLogin(event)">
+            <form id="loginForm" action="<?php echo $base_url; ?>login.php" method="post">
+                <input type="hidden" name="action" value="login">
+                
                 <div class="form-group">
                     <label for="username">Username</label>
                     <div class="input-wrapper">
@@ -365,115 +419,12 @@
             alertBox.style.display = 'flex';
         }
 
-        // Hide alert
-        function hideAlert() {
-            document.getElementById('alertBox').style.display = 'none';
-        }
-
-        // Set loading state
-        function setLoading(loading) {
-            const btn = document.getElementById('loginBtn');
-            const spinner = document.getElementById('loginSpinner');
-            const text = document.getElementById('loginText');
-            const arrow = document.getElementById('loginArrow');
-            
-            if (loading) {
-                btn.disabled = true;
-                spinner.style.display = 'block';
-                text.textContent = 'Signing In...';
-                arrow.style.display = 'none';
-            } else {
-                btn.disabled = false;
-                spinner.style.display = 'none';
-                text.textContent = 'Sign In';
-                arrow.style.display = 'inline';
-            }
-        }
-
-        // Handle login form submission
-        function handleLogin(event) {
-            event.preventDefault();
-            hideAlert();
-            
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            
-            // Basic validation
-            if (!username || !password) {
-                showAlert('Please enter both username and password');
-                return false;
-            }
-            
-            if (username.length < 3) {
-                showAlert('Username must be at least 3 characters');
-                return false;
-            }
-            
-            if (password.length < 4) {
-                showAlert('Password must be at least 4 characters');
-                return false;
-            }
-            
-            setLoading(true);
-            
-            // API call for authentication
-            // Replace 'YOUR_API_ENDPOINT' with your actual login API URL
-            fetch('YOUR_API_ENDPOINT/login.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                    remember_me: rememberMe
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                setLoading(false);
-                
-                if (data.success) {
-                    showAlert('Login successful! Redirecting...', 'success');
-                    
-                    // Store session/token if provided
-                    if (data.token) {
-                        if (rememberMe) {
-                            localStorage.setItem('auth_token', data.token);
-                        } else {
-                            sessionStorage.setItem('auth_token', data.token);
-                        }
-                    }
-                    
-                    // Store user info
-                    if (data.user) {
-                        sessionStorage.setItem('user', JSON.stringify(data.user));
-                    }
-                    
-                    // Redirect to dashboard after 1 second
-                    setTimeout(() => {
-                        window.location.href = 'sales-dashboard-optimized.php';
-                    }, 1000);
-                } else {
-                    showAlert(data.message || 'Invalid username or password');
-                }
-            })
-            .catch(error => {
-                setLoading(false);
-                console.error('Login error:', error);
-                showAlert('Connection error. Please try again.');
-            });
-            
-            return false;
-        }
-
-        // Check if already logged in
+        // Check URL for error message from PHP
         document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-            if (token) {
-                // Optionally verify token with API before redirecting
-                window.location.href = 'sales-dashboard-optimized.php';
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            if (error) {
+                showAlert(decodeURIComponent(error));
             }
         });
     </script>
