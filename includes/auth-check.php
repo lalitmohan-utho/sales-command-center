@@ -6,38 +6,36 @@
  * Usage: include 'includes/auth-check.php';
  */
 
-session_start();
+include_once 'common.php';
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+// Check if user is logged in via cookie
+if (!isset($_COOKIE['microhost_admin_api_auth']) || empty($_COOKIE['microhost_admin_api_auth'])) {
+    // Store current page for redirect after login
+    $_SESSION['redirect_to'] = $_SERVER['REQUEST_URI'];
+    
     // Redirect to login page
-    header('Location: login.php');
+    header('Location: ' . $base_url . 'login.php');
     exit();
 }
 
-// Optional: Check session timeout (30 minutes)
-$session_timeout = 30 * 60; // 30 minutes in seconds
+// Get auth token from cookie
+$auth_token = $_COOKIE['microhost_admin_api_auth'];
 
-if (isset($_SESSION['last_activity'])) {
-    $inactive_time = time() - $_SESSION['last_activity'];
-    
-    if ($inactive_time > $session_timeout) {
-        // Session expired
-        session_unset();
-        session_destroy();
-        header('Location: login.php?expired=1');
-        exit();
-    }
+// Optional: Validate token with API (uncomment if needed)
+/*
+$token_check = CALLAPI('GET', 'validate-token', ['token' => $auth_token]);
+if (!$token_check || $token_check['rcode'] == 'error') {
+    // Token is invalid, clear cookies and redirect to login
+    setcookie('microhost_admin_api_auth', null, time() - 3600, "/", "$domain");
+    unset($_COOKIE['microhost_admin_api_auth']);
+    header('Location: ' . $base_url . 'login.php');
+    exit();
 }
+*/
 
-// Update last activity time
-$_SESSION['last_activity'] = time();
-
-// Get current user info
+// Get current user info (if stored in session or from API)
 $current_user = [
-    'id' => $_SESSION['user_id'] ?? null,
-    'username' => $_SESSION['username'] ?? null,
-    'full_name' => $_SESSION['full_name'] ?? null,
-    'role' => $_SESSION['role'] ?? null
+    'token' => $auth_token,
+    'is_authenticated' => true
 ];
 ?>
